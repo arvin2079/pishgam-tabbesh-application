@@ -33,8 +33,8 @@ class _SplashScreenState extends State<SplashScreen>
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: authBloc,
-      builder: (context, state) {
-        if (state.state == ApplicationAuthState.landing && state.user == null) {
+      builder: (context , state) {
+        if(state.state == ApplicationAuthState.landing && state.user == null) {
           authBloc.add(ApplicationAuthEvent.landing);
           startAnimation();
           return Scaffold(
@@ -73,11 +73,9 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           );
-        } else if (state.state == ApplicationAuthState.SignedOut &&
-            state.user == null) {
+        } else if(state.state == ApplicationAuthState.SignedOut && state.user == null) {
           return SigninPage();
-        } else if (state.state == ApplicationAuthState.signedIn &&
-            state.user != null) {
+        } else if(state.state == ApplicationAuthState.signedIn && state.user != null) {
           disposAnimation();
           return null;
         } else {
@@ -161,12 +159,6 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(
         parent: _controller,
         curve: Interval(0.6, 1.0, curve: Curves.fastLinearToSlowEaseIn),
-      ),
-    );
-    _animationMoveToSignInPage = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller2,
-        curve: Interval(0.9, 1.0, curve: Curves.linear),
       ),
     );
   }
