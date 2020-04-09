@@ -32,9 +32,9 @@ class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
   Stream<AuthState> mapEventToState(ApplicationAuthEvent event) async* {
     switch (event) {
       case ApplicationAuthEvent.landing: {
-        //todo : omit delay later
-        await Future.delayed(Duration(seconds: 6));
           User user = await auth.currentUser();
+          if(user == null)
+            await Future.delayed(Duration(seconds: 5));
           yield AuthState(
             user: user,
             state: user == null

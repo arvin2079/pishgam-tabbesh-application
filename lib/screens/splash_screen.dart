@@ -18,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController _controller2;
   Animation<RelativeRect> _animationPishgamMoveToTop;
   Animation<RelativeRect> _animationTetha;
-  Animation _animationMoveToSignInPage;
 
   @override
   void dispose() {
@@ -31,14 +30,15 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     initAnimation();
-    startAnimation();
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: authBloc,
-      builder: (context , state){
-        if(state.state == ApplicationAuthState.landing && state.user == null) {
+      builder: (context, state) {
+        if (state.state == ApplicationAuthState.landing && state.user == null) {
           authBloc.add(ApplicationAuthEvent.landing);
+          startAnimation();
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.black,
             body: SafeArea(
               child: Container(
@@ -66,10 +66,6 @@ class _SplashScreenState extends State<SplashScreen>
                           child: tethaIcon(),
                           rect: _animationTetha,
                         ),
-//                  FadeTransition(
-//                    child: SignIn(),
-//                    opacity: _animationMoveToSignInPage,
-//                  ),
                       ],
                     ),
                   ),
@@ -77,9 +73,11 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           );
-        } else if(state.state == ApplicationAuthState.SignedOut && state.user == null) {
+        } else if (state.state == ApplicationAuthState.SignedOut &&
+            state.user == null) {
           return SigninPage();
-        } else if(state.state == ApplicationAuthState.signedIn && state.user != null) {
+        } else if (state.state == ApplicationAuthState.signedIn &&
+            state.user != null) {
           disposAnimation();
           return null;
         } else {
@@ -143,7 +141,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _controller2 = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 4700),
+      duration: Duration(milliseconds: 4000),
     );
 
     _animationPishgamMoveToTop = RelativeRectTween(
