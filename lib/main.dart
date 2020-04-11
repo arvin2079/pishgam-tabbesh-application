@@ -16,6 +16,8 @@ class PishgamDemo extends StatelessWidget {
       create: (context) => AuthBloc(),
       child: MaterialApp(
 
+
+
         debugShowCheckedModeBanner: false,
         theme: PTheme,
         home: SplashScreen(),
@@ -23,3 +25,8 @@ class PishgamDemo extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
