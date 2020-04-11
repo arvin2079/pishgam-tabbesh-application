@@ -4,34 +4,34 @@ import 'package:pishgamv2/components/signInInputs.dart';
 import 'package:pishgamv2/screens/anonymous_entry.dart';
 
 class SigninPage extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/background.png'),
-              fit: BoxFit.fitHeight,
+        body: Column(children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background.png'),
+                fit: BoxFit.fitHeight,
+              ),
             ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Container(
-              color: Colors.black.withOpacity(0.1),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: BodyColumn(context),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: Colors.black.withOpacity(0.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: BodyColumn(context),
+                ),
               ),
             ),
           ),
-        ),
+        ]),
       ),
     );
   }
@@ -67,7 +67,6 @@ class SigninPage extends StatelessWidget {
           ),
         ),
       ),
-
       Container(
         margin: EdgeInsets.fromLTRB(30, 35, 30, 0),
         decoration: new BoxDecoration(
@@ -178,5 +177,3 @@ class SigninPage extends StatelessWidget {
     ];
   }
 }
-
-
