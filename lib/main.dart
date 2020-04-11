@@ -18,6 +18,12 @@ class PishgamDemo extends StatelessWidget {
 
 
 
+
+
+
+
+
+
         debugShowCheckedModeBanner: false,
         theme: PTheme,
         home: SplashScreen(),
