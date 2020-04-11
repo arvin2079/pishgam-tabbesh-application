@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class VerificationCode extends StatefulWidget {
+class PhoneNumVerifierDialog extends StatefulWidget {
   @override
-  _VerificationCodeState createState() => _VerificationCodeState();
+  _PhoneNumVerifierDialogState createState() => _PhoneNumVerifierDialogState();
 }
 
-class _VerificationCodeState extends State<VerificationCode> {
-
+class _PhoneNumVerifierDialogState extends State<PhoneNumVerifierDialog> {
   final _controller = TextEditingController();
-  bool _isButtonEnabled=false;
+  bool _isButtonEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +15,7 @@ class _VerificationCodeState extends State<VerificationCode> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
             child: Column(
@@ -29,7 +29,8 @@ class _VerificationCodeState extends State<VerificationCode> {
                       'كد تاييد را وارد كنيد',
                       style: TextStyle(
                         fontSize: 16,
-                        fontFamily:'VazirMedium' ,
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
@@ -37,22 +38,23 @@ class _VerificationCodeState extends State<VerificationCode> {
                       'کد تایید به شماره همراه شما ارسال شد',
                       style: TextStyle(
                         fontSize: 12,
-                        fontFamily:'VazirMedium' ,
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
                         color: Colors.grey[700],
                       ),
                     ),
                   ],
                 ),
                 TextField(
-                  onChanged: (val){
+                  onChanged: (val) {
                     _isValid();
                   },
                   textDirection: TextDirection.ltr,
                   controller: _controller,
                   decoration: InputDecoration(
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.limeAccent[700], width: 2.0),
+                      borderSide:
+                          BorderSide(color: Colors.limeAccent[700], width: 2.0),
                     ),
                   ),
                 ),
@@ -64,31 +66,36 @@ class _VerificationCodeState extends State<VerificationCode> {
                       child: Text(
                         'تاييد',
                         style: TextStyle(
-                          fontFamily: 'VazirMedium',
+                          fontFamily: 'vazir',
                           fontSize: 17,
                           fontWeight: FontWeight.w100,
-                          color:_isButtonEnabled? Colors.white: Colors.grey[700],
+                          color: _isButtonEnabled
+                              ? Colors.white
+                              : Colors.grey[700],
                         ),
                       ),
-                      padding: EdgeInsets.only(left: 20,right: 20),
+                      padding: EdgeInsets.only(left: 20, right: 20),
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(10.0),
-                          side: BorderSide(color: _isButtonEnabled? Colors.grey[700]: Colors.grey[300])
-                      ),
+                          side: BorderSide(
+                              color: _isButtonEnabled
+                                  ? Colors.grey[700]
+                                  : Colors.grey[300])),
                       color: Colors.grey[700],
                       elevation: 2,
-                      onPressed: _isButtonEnabled? (){} : null,
+                      onPressed: _isButtonEnabled ? () {} : null,
                     ),
                     FlatButton(
                       child: Text(
                         'ارسال دوباره',
                         style: TextStyle(
-                          fontFamily: 'VazirMedium',
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w500,
                           fontSize: 17,
                           color: Colors.grey[700],
                         ),
                       ),
-                      onPressed:(){},
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -99,10 +106,13 @@ class _VerificationCodeState extends State<VerificationCode> {
       ),
     );
   }
-  bool _isValid(){
+
+  bool _isValid() {
     setState(() {
-      if(_controller.text.trim().length > 0) _isButtonEnabled= true;
-      else _isButtonEnabled= false;
+      if (_controller.text.trim().length > 0)
+        _isButtonEnabled = true;
+      else
+        _isButtonEnabled = false;
     });
     return _isButtonEnabled;
   }

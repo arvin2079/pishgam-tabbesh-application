@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/screens/splash_screen.dart';
 import 'brain/authBloc.dart';
 import 'constants/PishgamTheme.dart';
+import 'dialogs/phoneNumberVerification.dart';
+import 'dialogs/verificationCode.dart';
 
 void main() {
   runApp(PishgamDemo());
@@ -17,7 +19,7 @@ class PishgamDemo extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: PTheme,
-        home: SplashScreen(),
+        home: PhoneNumVerifierDialog(),
       ),
     );
   }
