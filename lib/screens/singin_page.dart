@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
+import 'package:pishgamv2/dialogs/phoneNumberVerification.dart';
 import 'package:pishgamv2/screens/anonymous_entry.dart';
 
 class SigninPage extends StatelessWidget {
@@ -121,7 +122,11 @@ class SigninPage extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(context: context, builder: (context) {
+                        return PhoneNumGetterDialog();
+                      });
+                    },
                     child: Text(
                       'ثبت نام کنید',
                       textDirection: TextDirection.rtl,

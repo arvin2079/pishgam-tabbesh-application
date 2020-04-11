@@ -11,39 +11,52 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(9),
+      ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
         child: Column(
           textDirection: TextDirection.rtl,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              textDirection: TextDirection.rtl,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'تاييد شماره تلفن همراه',
-                  style: TextStyle(
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  '.برای دریافت کد تایید شماره همراه خود را وارد کنید',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
+            Text(
+              'تاييد شماره تلفن همراه',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontFamily: 'vazir',
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              '.برای دریافت کد تایید شماره همراه خود را وارد کنید',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'vazir',
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
+              ),
+            ),
+            Text(
+              '.دقت کنید شماره وارد شده باید دقیقا 11 رقم باشد*',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'vazir',
+                fontWeight: FontWeight.w100,
+                color: Colors.grey[700],
+              ),
+            ),
+            SizedBox(
+              height: 15,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,14 +64,11 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               children: <Widget>[
                 Text(
                   '+98',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(width: 15),
-                SizedBox(
-                  width: 7 * (MediaQuery.of(context).size.width) / 10,
+                Expanded(
                   child: TextField(
-                    maxLength: 11,
-                    maxLengthEnforced: false,
                     minLines: 1,
                     textAlignVertical: TextAlignVertical.bottom,
                     controller: _controller,
@@ -70,7 +80,9 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.limeAccent[700], width: 2.0),
+                          color: Colors.limeAccent[700],
+                          width: 2.0,
+                        ),
                       ),
                     ),
                     onChanged: (val) {
@@ -80,12 +92,19 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 15,
+            ),
             RaisedButton(
-              padding: EdgeInsets.only(left: 25, right: 20),
               disabledColor: Colors.grey[300],
               color: Colors.grey[700],
               elevation: 2,
-              onPressed: _isNumberValid ? () {} : null,
+              onPressed: _isNumberValid
+                  ? () {
+                      // TODO : complete sms module handelling using blocs
+                      Navigator.pop(context);
+                    }
+                  : null,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0),
                 side: BorderSide(
@@ -94,6 +113,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               ),
               child: Text(
                 'تاييد',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'vazir',
                   fontSize: 17,
@@ -105,7 +125,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   bool _isValid() {
