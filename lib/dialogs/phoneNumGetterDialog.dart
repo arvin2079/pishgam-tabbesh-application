@@ -21,7 +21,6 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
             const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
         child: Column(
           textDirection: TextDirection.rtl,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -107,9 +106,6 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                   : null,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0),
-                side: BorderSide(
-                    color:
-                        _isNumberValid ? Colors.grey[700] : Colors.grey[300]),
               ),
               child: Text(
                 'تاييد',

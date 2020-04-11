@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
-import 'package:pishgamv2/dialogs/phoneNumberVerification.dart';
+import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
 import 'package:pishgamv2/screens/anonymous_entry.dart';
 
 class SigninPage extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,7 +66,6 @@ class SigninPage extends StatelessWidget {
           ),
         ),
       ),
-
       Container(
         margin: EdgeInsets.fromLTRB(30, 35, 30, 0),
         decoration: new BoxDecoration(
@@ -123,8 +120,13 @@ class SigninPage extends StatelessWidget {
                   SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
-                      showDialog(context: context, builder: (context) {
-                        return PhoneNumGetterDialog();
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PhoneNumGetterDialog();
+                          }).then((val) {
+                        // TODO : handel situation that when first dialog confirm or dismiss
+                        FocusScope.of(context).requestFocus(FocusNode());
                       });
                     },
                     child: Text(
@@ -183,5 +185,3 @@ class SigninPage extends StatelessWidget {
     ];
   }
 }
-
-

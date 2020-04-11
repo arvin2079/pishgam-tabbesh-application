@@ -24,13 +24,14 @@ class SigninTextInput extends StatelessWidget {
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(50),
             ),
             filled: true,
             fillColor: Colors.white,
             border: new OutlineInputBorder(
+              borderSide: BorderSide.none,
               borderRadius: const BorderRadius.all(
-                const Radius.circular(50),
+                const Radius.circular(7),
               ),
             ),
           ),
