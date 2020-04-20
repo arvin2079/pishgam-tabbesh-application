@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
 import 'package:pishgamv2/components/mainMenuSliderCard.dart';
+import 'package:pishgamv2/components/round_icon_avatar.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -39,7 +40,6 @@ class _HomePageState extends State<HomePage>
     _controller = AnimationController(vsync: this);
     _controller.addListener(() {
       setState(() {
-        print(_animation.value);
         _alignment = _animation.value;
       });
     });
@@ -97,6 +97,54 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       body: Stack(
         children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  width: size.width - 20,
+                  height: 120,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            'نام و نام خانوادگی',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'vazir',
+                              color: settinPageTitleColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Text(
+                            'پایه تحصیلی',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'vazir',
+                              color: settinPageTitleColor,
+                              fontWeight: FontWeight.w100,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Avatar(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           GestureDetector(
             onVerticalDragUpdate: (details) {
               setState(() {
