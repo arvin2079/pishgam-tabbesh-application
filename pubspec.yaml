@@ -30,6 +30,7 @@ dependencies:
   bloc: ^3.0.0
   flutter_bloc: ^3.2.0
   intl_phone_number_input: ^0.3.0
+  slide_countdown_clock: ^1.0.3
 
 dev_dependencies:
   flutter_test:

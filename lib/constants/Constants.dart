@@ -14,4 +14,6 @@ const settingSubTitleColor = Color(0xFF6A6A6A);
 const imageIconBorderColor = Color(0xFFD9D9D9);
 const settingSubtitleIconColor = Color(0xFF8C8C8C);
 const homeIconColor = Color(0xFFCDCCCC);
+const homeTextColor = Color(0xFF6E652A);
+
 

@@ -7,6 +7,7 @@ class RoundIconButton extends StatelessWidget {
         @required this.iconSize,
         @required this.backgroundColor,
         @required this.iconColor,
+        this.elevation,
         this.onPressed});
 
   final IconData icon;
@@ -15,6 +16,7 @@ class RoundIconButton extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
   final double buttonSize;
+  final double elevation;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class RoundIconButton extends StatelessWidget {
         color: iconColor,
         size: iconSize,
       ),
+      focusElevation: elevation,
       fillColor: backgroundColor,
       shape: CircleBorder(),
       constraints:

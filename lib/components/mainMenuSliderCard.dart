@@ -11,6 +11,7 @@ class MainMenuSliderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
@@ -48,7 +49,7 @@ class MainMenuSliderCard extends StatelessWidget {
           Icon(
             icon,
             color: homeIconColor,
-            size: 200,
+            size: size.height - 500,
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 30),
