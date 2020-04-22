@@ -102,57 +102,127 @@ class _HomePageState extends State<HomePage>
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: size.width - 20,
-                    height: 120,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              'نام و نام خانوادگی',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontFamily: 'vazir',
-                                color: settinPageTitleColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                              ),
-                            ),
-                            Text(
-                              'پایه تحصیلی',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontFamily: 'vazir',
-                                color: settinPageTitleColor,
-                                fontWeight: FontWeight.w100,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Avatar(),
-                      ],
+            _buildBackground(size),
+            _buildForeground(size, _radius),
+          ],
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _buildForeground(Size size, Radius _radius) {
+    return GestureDetector(
+      onVerticalDragUpdate: (details) {
+        setState(() {
+          if (_alignment.y > _startAlignment.y)
+            _alignment += Alignment(0, details.delta.dy / (size.height / 10));
+          else if (_alignment == _startAlignment && details.delta.dy > 0)
+            _alignment += Alignment(0, details.delta.dy / (size.height / 10));
+          else if (_alignment.y < _startAlignment.y)
+            _alignment = _startAlignment;
+        });
+      },
+      onVerticalDragDown: (details) {
+        _controller.stop();
+      },
+      onVerticalDragEnd: (details) {
+        if (details.velocity.pixelsPerSecond.dy > 0 || _alignment.y > 7.2)
+          _runForwardAnimation(details.velocity.pixelsPerSecond, size);
+        else
+          _runBackwardAnimation(details.velocity.pixelsPerSecond, size);
+      },
+      child: Align(
+        alignment: _alignment,
+        child: Container(
+          width: size.width,
+          height: size.height - 100,
+          decoration: BoxDecoration(
+            color: cardBackgroudColor,
+            borderRadius:
+                BorderRadius.only(topLeft: _radius, topRight: _radius),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 3,
+                width: size.width - 200,
+                margin: EdgeInsets.only(top: 5),
+                decoration: BoxDecoration(
+                  color: settingSubtitleIconColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              Text('منو کاربری'),
+              Expanded(
+                child: CarouselSlider(
+                  items: _slidingListItems,
+                  enableInfiniteScroll: false,
+                  autoPlay: false,
+                  enlargeCenterPage: false,
+                  initialPage: 0,
+                  height: size.height - 320,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildBackground(Size size) {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: size.width - 20,
+            height: 120,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      'نام و نام خانوادگی',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        color: settinPageTitleColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    width: size.width - 20,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    Text(
+                      'پایه تحصیلی',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        color: settinPageTitleColor,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Avatar(),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            width: size.width - 20,
+            height: 180,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
 //                      boxShadow: [
 //                        BoxShadow(
 //                          color: Colors.black26,
@@ -166,151 +236,84 @@ class _HomePageState extends State<HomePage>
 //                          ),
 //                        ),
 //                      ],
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          Colors.white,
-                          scaffoldDefaultBackgroundColor,
-                        ],
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'مانده تا شروع کلاس',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'vazir',
-                            color: Colors.black.withOpacity(0.6),
-                            fontWeight: FontWeight.w900,
-                            fontSize: 30,
-                          ),
-                        ),
-                        Text(
-                          'نام کلاس',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'vazir',
-                            color: Colors.black.withOpacity(0.6),
-                            fontWeight: FontWeight.w100,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Spacer(),
-                        SlideCountdownClock(
-                          duration: Duration(days: 20),
-                          slideDirection: SlideDirection.Up,
-                          separator: ":",
-                          tightLabel: true,
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-//                            color: Colors.black12,
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                          ),
-                          textStyle: TextStyle(
-                            fontSize: 40,
-                            color: Colors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        RoundIconButton(
-                          backgroundColor: Colors.white,
-                          icon: Icons.settings,
-                          iconColor: Colors.black54,
-                          iconSize: 30,
-                          buttonSize: 55,
-                          elevation: 5,
-                          onPressed: () {},
-                        ),
-                        RoundIconButton(
-                          backgroundColor: Colors.white,
-                          icon: Icons.group,
-                          iconColor: Colors.black54,
-                          iconSize: 30,
-                          buttonSize: 55,
-                          elevation: 5,
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                  )
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: <Color>[
+                  Colors.white,
+                  scaffoldDefaultBackgroundColor,
                 ],
               ),
             ),
-            GestureDetector(
-              onVerticalDragUpdate: (details) {
-                setState(() {
-                  if (_alignment.y > _startAlignment.y)
-                    _alignment +=
-                        Alignment(0, details.delta.dy / (size.height / 10));
-                  else if (_alignment == _startAlignment &&
-                      details.delta.dy > 0)
-                    _alignment +=
-                        Alignment(0, details.delta.dy / (size.height / 10));
-                  else if (_alignment.y < _startAlignment.y)
-                    _alignment = _startAlignment;
-                });
-              },
-              onVerticalDragDown: (details) {
-                _controller.stop();
-              },
-              onVerticalDragEnd: (details) {
-                if (details.velocity.pixelsPerSecond.dy > 0 ||
-                    _alignment.y > 7.2)
-                  _runForwardAnimation(details.velocity.pixelsPerSecond, size);
-                else
-                  _runBackwardAnimation(details.velocity.pixelsPerSecond, size);
-              },
-              child: Align(
-                alignment: _alignment,
-                child: Container(
-                  width: size.width,
-                  height: size.height - 100,
-                  decoration: BoxDecoration(
-                    color: cardBackgroudColor,
-                    borderRadius:
-                        BorderRadius.only(topLeft: _radius, topRight: _radius),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: 3,
-                        width: size.width - 200,
-                        margin: EdgeInsets.only(top: 5),
-                        decoration: BoxDecoration(
-                          color: settingSubtitleIconColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      Text('منو کاربری'),
-                      Expanded(
-                        child: CarouselSlider(
-                          items: _slidingListItems,
-                          enableInfiniteScroll: false,
-                          autoPlay: false,
-                          enlargeCenterPage: false,
-                          initialPage: 0,
-                          height: size.height - 320,
-                        ),
-                      ),
-                    ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'مانده تا شروع کلاس',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'vazir',
+                    color: Colors.black.withOpacity(0.6),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
                   ),
                 ),
-              ),
+                Text(
+                  'نام کلاس',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'vazir',
+                    color: Colors.black.withOpacity(0.6),
+                    fontWeight: FontWeight.w100,
+                    fontSize: 20,
+                  ),
+                ),
+                Spacer(),
+                SlideCountdownClock(
+                  duration: Duration(days: 20),
+                  slideDirection: SlideDirection.Up,
+                  separator: ":",
+                  tightLabel: true,
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                  ),
+                  textStyle: TextStyle(
+                    fontSize: 40,
+                    color: Colors.black.withOpacity(0.7),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RoundIconButton(
+                  backgroundColor: Colors.white,
+                  icon: Icons.settings,
+                  iconColor: Colors.black54,
+                  iconSize: 30,
+                  buttonSize: 55,
+                  elevation: 5,
+                  onPressed: () {},
+                ),
+                RoundIconButton(
+                  backgroundColor: Colors.white,
+                  icon: Icons.group,
+                  iconColor: Colors.black54,
+                  iconSize: 30,
+                  buttonSize: 55,
+                  elevation: 5,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
