@@ -4,6 +4,7 @@ import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/splash_screen.dart';
 import 'brain/authBloc.dart';
 import 'constants/PishgamTheme.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(PishgamDemo());
@@ -21,5 +22,8 @@ class PishgamDemo extends StatelessWidget {
         home: SplashScreen(),
       ),
     );
+
+
+
   }
 }
