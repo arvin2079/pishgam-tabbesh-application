@@ -46,7 +46,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               ),
             ),
             Text(
-              '.دقت کنید شماره وارد شده باید دقیقا 11 رقم باشد*',
+              '.دقت کنید شماره وارد شده باید دقیقا 10 رقم باشد*',
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 12,
@@ -78,6 +78,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                         fontSize: 18,
                         fontWeight: FontWeight.w100),
                     decoration: InputDecoration(
+                      hintText: '9123456789',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.limeAccent[700],
@@ -86,7 +87,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                       ),
                     ),
                     onChanged: (val) {
-                      setState(() {});
+                      setState(() {print(widget.isValid(val));});
                     },
                   ),
                 ),
