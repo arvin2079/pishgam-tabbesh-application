@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/brain/validator.dart';
 
-class PhoneNumGetterDialog extends StatefulWidget {
+class PhoneNumGetterDialog extends StatefulWidget with PhoneNumberStringValidator {
   @override
   _PhoneNumGetterDialogState createState() => _PhoneNumGetterDialogState();
 }
 
 class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
   var _controller = TextEditingController();
-  bool _isNumberValid = false;
+//  bool _isNumberValid = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +86,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                       ),
                     ),
                     onChanged: (val) {
-                      _isValid();
+                      setState(() {});
                     },
                   ),
                 ),
@@ -98,7 +99,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               disabledColor: Colors.grey[300],
               color: Colors.grey[700],
               elevation: 2,
-              onPressed: _isNumberValid
+              onPressed: widget.isValid(_controller.text)
                   ? () {
                       // TODO : complete sms module handelling using blocs
                       Navigator.pop(context);
@@ -114,7 +115,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                   fontFamily: 'vazir',
                   fontSize: 17,
                   fontWeight: FontWeight.w100,
-                  color: _isNumberValid ? Colors.white : Colors.grey[700],
+                  color: widget.isValid(_controller.text) ? Colors.white : Colors.grey[700],
                 ),
               ),
             ),
@@ -122,15 +123,5 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
         ),
       ),
     );
-  }
-
-  bool _isValid() {
-    setState(() {
-      if (_controller.text.trim().length == 11)
-        _isNumberValid = true;
-      else
-        _isNumberValid = false;
-    });
-    return _isNumberValid;
   }
 }
