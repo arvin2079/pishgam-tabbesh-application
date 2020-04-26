@@ -17,4 +17,8 @@ const settingSubtitleIconColor = Color(0xFF8C8C8C);
 const homeIconColor = Color(0xFFCDCCCC);
 const homeTextColor = Color(0xFF6E652A);
 
+final DialogShape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(9),
+);
+
 

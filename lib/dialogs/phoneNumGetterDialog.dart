@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/brain/validator.dart';
+import 'package:pishgamv2/constants/Constants.dart';
 
 class PhoneNumGetterDialog extends StatefulWidget with PhoneNumberStringValidator {
   @override
@@ -13,9 +14,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(9),
-      ),
+      shape: DialogShape,
       backgroundColor: Colors.white,
       child: Padding(
         padding:
