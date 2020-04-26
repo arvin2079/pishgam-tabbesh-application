@@ -54,6 +54,9 @@ flutter:
           weight: 500
         - asset: assets/fonts/Vazir-Medium.ttf
           weight: 100
+    - family: WeblogmaYekan
+      fonts:
+        - asset: assets/fonts/WeblogmaYekan-Regular.ttf
     #    - family: champagne
     #      fonts:
     #        - asset: assets/fonts/Champagne & Limousines.ttf
