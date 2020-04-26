@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const primaryColor = Color(0xFF272727);
 const scaffoldDefaultBackgroundColor = Color(0xFFFFDE03);
+//const scaffoldDefaultBackgroundColor = Colors.blue;
 const secondaryColor = Color(0xFFB2DF18);
 const backgroundColor = Color(0xFFEFEFEF);
 const cardBackgroundColor = Color(0xFFF8F8F8);

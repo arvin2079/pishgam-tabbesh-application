@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   Alignment _alignment = Alignment(0, 2);
   Alignment _startAlignment = Alignment(0, 2);
-  Alignment _finishAlignment = Alignment(0, 9.0);
+  Alignment _finishAlignment = Alignment(0, 9.8);
   Animation<Alignment> _animation;
   AnimationController _controller;
 
@@ -219,31 +219,35 @@ class _HomePageState extends State<HomePage>
           Container(
             padding: EdgeInsets.all(10),
             width: size.width - 20,
-            height: 180,
+            height: 191,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(15)),
-//                      boxShadow: [
-//                        BoxShadow(
-//                          color: Colors.black26,
-//                          blurRadius: 6.0,
-//                          // has the effect of softening the shadow
-//                          spreadRadius: 0.0,
-//                          // has the effect of extending the shadow
-//                          offset: Offset(
-//                            0.0, // horizontal, move right 10
-//                            3.0, // vertical, move down 10
-//                          ),
-//                        ),
-//                      ],
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: <Color>[
-                  Colors.white,
-                  scaffoldDefaultBackgroundColor,
-                ],
-              ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6.0,
+                          // has the effect of softening the shadow
+                          spreadRadius: 0.0,
+                          // has the effect of extending the shadow
+                          offset: Offset(
+                            0.0, // horizontal, move right 10
+                            3.0, // vertical, move down 10
+                          ),
+                        ),
+                      ],
+//              gradient: LinearGradient(
+//                begin: Alignment.topCenter,
+//                end: Alignment.bottomCenter,
+//                colors: <Color>[
+////                  Colors.red,
+////                  Colors.green,
+////                  Colors.purpleAccent,
+//                  Colors.orange,
+//                  scaffoldDefaultBackgroundColor,
+//                  Colors.white,
+//                ],
+//              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -280,10 +284,34 @@ class _HomePageState extends State<HomePage>
                   ),
                   textStyle: TextStyle(
                     fontSize: 40,
+                    fontFamily: 'fredricka',
                     color: Colors.black.withOpacity(0.7),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        'روز',
+                      ),
+                    ),
+                    Text(
+                      'ساعت',
+                    ),
+                    Text(
+                      'دقیقه',
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Text(
+                        'ثانیه',
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -292,23 +320,55 @@ class _HomePageState extends State<HomePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                RoundIconButton(
-                  backgroundColor: Colors.white,
-                  icon: Icons.settings,
-                  iconColor: Colors.black54,
-                  iconSize: 30,
-                  buttonSize: 55,
-                  elevation: 5,
-                  onPressed: () {},
+                Column(
+                  children: <Widget>[
+                    RoundIconButton(
+                      backgroundColor: Colors.white,
+                      icon: Icons.settings,
+                      iconColor: Colors.black54,
+                      iconSize: 30,
+                      buttonSize: 55,
+                      elevation: 5,
+                      onPressed: () {},
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'تنظیمات',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
-                RoundIconButton(
-                  backgroundColor: Colors.white,
-                  icon: Icons.group,
-                  iconColor: Colors.black54,
-                  iconSize: 30,
-                  buttonSize: 55,
-                  elevation: 5,
-                  onPressed: () {},
+                Column(
+                  children: <Widget>[
+                    RoundIconButton(
+                      backgroundColor: Colors.white,
+                      icon: Icons.group,
+                      iconColor: Colors.black54,
+                      iconSize: 30,
+                      buttonSize: 55,
+                      elevation: 5,
+                      onPressed: () {},
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'درباره ما',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
