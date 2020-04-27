@@ -17,7 +17,7 @@ class PishgamDemo extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: PTheme,
-        home: HomePage(),
+        home: Scaffold(),
       ),
     );
   }
