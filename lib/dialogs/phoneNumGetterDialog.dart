@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/brain/validator.dart';
+import 'package:pishgamv2/constants/Constants.dart';
 
-class PhoneNumGetterDialog extends StatefulWidget {
+class PhoneNumGetterDialog extends StatefulWidget with PhoneNumberStringValidator {
   @override
   _PhoneNumGetterDialogState createState() => _PhoneNumGetterDialogState();
 }
 
 class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
   var _controller = TextEditingController();
-  bool _isNumberValid = false;
+//  bool _isNumberValid = false;
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(9),
-      ),
+      shape: DialogShape,
       backgroundColor: Colors.white,
       child: Padding(
         padding:
@@ -45,7 +45,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               ),
             ),
             Text(
-              '.دقت کنید شماره وارد شده باید دقیقا 11 رقم باشد*',
+              '.دقت کنید شماره وارد شده باید دقیقا 10 رقم باشد*',
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 12,
@@ -77,6 +77,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                         fontSize: 18,
                         fontWeight: FontWeight.w100),
                     decoration: InputDecoration(
+                      hintText: '9123456789',
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.limeAccent[700],
@@ -85,7 +86,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                       ),
                     ),
                     onChanged: (val) {
-                      _isValid();
+                      setState(() {print(widget.isValid(val));});
                     },
                   ),
                 ),
@@ -98,7 +99,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
               disabledColor: Colors.grey[300],
               color: Colors.grey[700],
               elevation: 2,
-              onPressed: _isNumberValid
+              onPressed: widget.isValid(_controller.text)
                   ? () {
                       // TODO : complete sms module handelling using blocs
                       Navigator.pop(context);
@@ -114,7 +115,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                   fontFamily: 'vazir',
                   fontSize: 17,
                   fontWeight: FontWeight.w100,
-                  color: _isNumberValid ? Colors.white : Colors.grey[700],
+                  color: widget.isValid(_controller.text) ? Colors.white : Colors.grey[700],
                 ),
               ),
             ),
@@ -122,15 +123,5 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
         ),
       ),
     );
-  }
-
-  bool _isValid() {
-    setState(() {
-      if (_controller.text.trim().length == 11)
-        _isNumberValid = true;
-      else
-        _isNumberValid = false;
-    });
-    return _isNumberValid;
   }
 }

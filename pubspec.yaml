@@ -54,6 +54,10 @@ flutter:
           weight: 500
         - asset: assets/fonts/Vazir-Medium.ttf
           weight: 100
+
+    - family: fredricka
+      fonts:
+        - asset: assets/fonts/time_tracker_font/FrederickatheGreat_Regular.ttf
     #    - family: champagne
     #      fonts:
     #        - asset: assets/fonts/Champagne & Limousines.ttf

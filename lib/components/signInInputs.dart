@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SigninTextInput extends StatelessWidget {
-  const SigninTextInput({this.obsecureText, this.inputType});
+  const SigninTextInput({this.onEditingComplete, this.onChange, this.focusNode, this.controller, this.obsecureText, this.inputType});
   final TextInputType inputType;
+  final FocusNode focusNode;
+  final TextEditingController controller;
   final bool obsecureText;
+  final Function onEditingComplete;
+  final Function onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +16,12 @@ class SigninTextInput extends StatelessWidget {
       child: Container(
         height: 45,
         child: TextField(
+          focusNode: focusNode,
+          controller: controller,
           keyboardType: inputType,
           cursorColor: Colors.black,
+          onEditingComplete: onEditingComplete,
+          onChanged: onChange,
           toolbarOptions: ToolbarOptions(
             paste: false,
           ),
@@ -22,6 +30,7 @@ class SigninTextInput extends StatelessWidget {
             height: 1.0,
           ),
           decoration: InputDecoration(
+//            errorText: 'hello',
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
               borderRadius: BorderRadius.circular(50),
