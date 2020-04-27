@@ -2,42 +2,50 @@ import 'package:bloc/bloc.dart';
 import 'authClass.dart';
 
 enum ApplicationAuthEvent {
-  landing,
+  initialize,
   signIn,
   signOut,
+  phoneNumberValidation,
 }
 
-//can be (UserDoesntExist) or ...
+class BlocEvent {
+  BlocEvent(this.applicationEvent, {this.arguments});
+
+  final Map<String, String> arguments;
+  final ApplicationAuthEvent applicationEvent;
+}
+
 enum ApplicationAuthState {
   landing,
   signedIn,
   SignedOut,
 }
 
-class AuthState {
-  AuthState({this.user, this.state});
+class BlocState {
+  BlocState(this.applicationState, {this.arguments});
 
-  final User user;
-  final ApplicationAuthState state;
+  final Map<String, String> arguments;
+  final ApplicationAuthState applicationState;
 }
 
-class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
+class AuthBloc extends Bloc<BlocEvent, BlocState> {
   final AuthBase auth = Auth();
 
   @override
-  get initialState =>
-      AuthState(user: null, state: ApplicationAuthState.landing);
+  get initialState => BlocState(ApplicationAuthState.landing);
 
   @override
-  Stream<AuthState> mapEventToState(ApplicationAuthEvent event) async* {
-    switch (event) {
-      case ApplicationAuthEvent.landing: {
+  Stream<BlocState> mapEventToState(BlocEvent event) async* {
+    switch (event.applicationEvent) {
+      case ApplicationAuthEvent.initialize:
+        {
           User user = await auth.currentUser();
-          if(user == null)
-            await Future.delayed(Duration(seconds: 5));
-          yield AuthState(
-            user: user,
-            state: user == null
+          if (user == null) await Future.delayed(Duration(seconds: 5));
+
+          // FIXME : send user arguments if its needed with the state
+
+          yield BlocState(
+            user == null
                 ? ApplicationAuthState.SignedOut
                 : ApplicationAuthState.signedIn,
           );
@@ -47,6 +55,9 @@ class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
         // TODO: Handle this case.
         break;
       case ApplicationAuthEvent.signOut:
+        // TODO: Handle this case.
+        break;
+      case ApplicationAuthEvent.phoneNumberValidation:
         // TODO: Handle this case.
         break;
     }

@@ -22,8 +22,5 @@ class PishgamDemo extends StatelessWidget {
         home: SplashScreen(),
       ),
     );
-
-
-
   }
 }

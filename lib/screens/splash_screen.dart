@@ -86,6 +86,45 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  Scaffold _buildLoaderScreen() {
+    return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background.png'),
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      PositionedTransition(
+                        rect: _animationPishgamMoveToTop,
+                        child: initalIcon(),
+                      ),
+                      const SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      PositionedTransition(
+                        child: tethaIcon(),
+                        rect: _animationTetha,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+  }
+
   Text tethaIcon() {
     return Text(
       'Tetha',
