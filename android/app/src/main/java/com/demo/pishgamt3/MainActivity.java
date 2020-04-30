@@ -10,19 +10,49 @@ import java.util.List;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
-  public static final String URI_SHOW_PARAMS = "";
+  private static final String CHANNEL = "";
+  public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
+  String Inquiry="";
   List<AsyncTask> tasks = new ArrayList<>();
+  MyHttpUtils myHttpUtils;
+
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
 
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(
+            ((call, result) -> {
+              if(call.method.equals(""))
+              {
+
+                MyHttpUtils.RequestData requestData =
+                        new MyHttpUtils.RequestData(URI_SHOW_PARAMS, "POST");
+
+                requestData.setParameter("firstname", "ali");
+                requestData.setParameter("lastname", "ali");
+                requestData.setParameter("gender", "male");
+                requestData.setParameter("grade", "highschool");
+                requestData.setParameter("city", "london");
+                requestData.setParameter("phonenumber", "123");
+                requestData.setParameter("socialnumber", "7889");
+                requestData.setParameter("address", "london");
+
+                new MyTask().execute(requestData);
+
+
+                result.success(Inquiry);
+              }
+
+            })
+    );
 
     GeneratedPluginRegistrant.registerWith(flutterEngine);
-  }
 
+  }
 
 
   public class MyTask extends AsyncTask<MyHttpUtils.RequestData, Void, String> {
@@ -31,7 +61,7 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onPreExecute() {
 
-      tasks.add(this);
+
     }
 
     @Override
@@ -47,9 +77,19 @@ public class MainActivity extends FlutterActivity {
         result = "null";
 
       }
+      if(result.contains("user_added"))
+      {
+        Inquiry="added";
+
+      }
+      if(result.contains("cant_add_user"))
+      {
+        Inquiry="failed";
+
+      }
 
 
-      tasks.remove(this);
+
 
     }
   }
