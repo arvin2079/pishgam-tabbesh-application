@@ -4,7 +4,7 @@ abstract class AuthBase {
   static const platform = const MethodChannel('authChannel');
   Stream<User> get onAuthStateChange;
   Future<User> signup();
-  Future<User> signin();
+  Future<User> signin(String email, String password);
   Future<User> currentUser();
   Future<void> signOut();
   Future<bool> validatePhoneNumber(String phoneNumber);
@@ -15,9 +15,9 @@ abstract class AuthBase {
 class Auth extends AuthBase{
 
   @override
-  Future<User> signin() {
-    // TODO: implement signip
-    return null;
+  Future<User> signin(String email, String password) async{
+    String result = await AuthBase.platform.invokeMethod('PHONE_NUMBER_VALIDATION', {'email': email, 'password': password});
+
   }
 
   @override
@@ -64,5 +64,5 @@ class Auth extends AuthBase{
   }
 }
 
-
+// todo : has TOCKEn ID or SESSIOn ID
 class User {}

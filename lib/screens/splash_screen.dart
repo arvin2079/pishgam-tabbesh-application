@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,12 +20,12 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController _controller2;
   Animation<RelativeRect> _animationPishgamMoveToTop;
   Animation<RelativeRect> _animationTetha;
+  Widget _screen;
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    disposAnimation();
+    disposeAnimation();
   }
 
   @override
@@ -31,98 +33,74 @@ class _SplashScreenState extends State<SplashScreen>
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     initAnimation();
 
-    return BlocBuilder<AuthBloc, AuthState>(
-      bloc: authBloc,
-      builder: (context , state) {
-        if(state.state == ApplicationAuthState.landing && state.user == null) {
-          authBloc.add(ApplicationAuthEvent.landing);
-          startAnimation();
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.black,
-            body: SafeArea(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/background.png'),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        PositionedTransition(
-                          rect: _animationPishgamMoveToTop,
-                          child: initalIcon(),
-                        ),
-                        const SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        PositionedTransition(
-                          child: tethaIcon(),
-                          rect: _animationTetha,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        } else if(state.state == ApplicationAuthState.SignedOut && state.user == null) {
-          return SigninPage();
-        } else if(state.state == ApplicationAuthState.signedIn && state.user != null) {
-          disposAnimation();
-          return null;
-        } else {
-          //todo : handle this else part later
-          return null;
+    return BlocConsumer<AuthBloc, BlocState>(
+      listener: (context, state) {
+        if(state.applicationState == ApplicationAuthState.SignedOut) {
+          _screen = SigninPage();
+          disposeAnimation();
         }
+      },
+      builder: (context, state) {
+        if(state.applicationState == ApplicationAuthState.landing) {
+          _screen = _buildLoaderScreen();
+          startAnimation();
+        }
+        authBloc.add(BlocEvent(ApplicationAuthEvent.initialize));
+        return _screen;
+//        if (state.applicationState == ApplicationAuthState.landing) {
+//          authBloc.add(BlocEvent(ApplicationAuthEvent.initialize));
+//          startAnimation();
+//          return _buildLoaderScreen();
+//        } else if (state.applicationState == ApplicationAuthState.SignedOut) {
+//          return SigninPage();
+//        } else if (state.applicationState == ApplicationAuthState.signedIn) {
+//          disposAnimation();
+//          return null;
+//        } else {
+//          //todo : handle this else part later
+//          return null;
+//        }
       },
     );
   }
 
   Scaffold _buildLoaderScreen() {
     return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.black,
-          body: SafeArea(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background.png'),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      PositionedTransition(
-                        rect: _animationPishgamMoveToTop,
-                        child: initalIcon(),
-                      ),
-                      const SpinKitThreeBounce(
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      PositionedTransition(
-                        child: tethaIcon(),
-                        rect: _animationTetha,
-                      ),
-                    ],
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background.png'),
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  PositionedTransition(
+                    rect: _animationPishgamMoveToTop,
+                    child: initalIcon(),
                   ),
-                ),
+                  const SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  PositionedTransition(
+                    child: tethaIcon(),
+                    rect: _animationTetha,
+                  ),
+                ],
               ),
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   Text tethaIcon() {
@@ -207,7 +185,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller2.forward();
   }
 
-  void disposAnimation() {
+  void disposeAnimation() {
     _controller.dispose();
     _controller2.dispose();
   }

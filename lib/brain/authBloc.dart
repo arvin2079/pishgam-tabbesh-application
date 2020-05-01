@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'authClass.dart';
 
+
+
 enum ApplicationAuthEvent {
   initialize,
   signIn,
@@ -10,10 +12,10 @@ enum ApplicationAuthEvent {
 
 class BlocEvent {
   BlocEvent(this.applicationEvent, {this.arguments});
-
   final Map<String, String> arguments;
   final ApplicationAuthEvent applicationEvent;
 }
+
 
 enum ApplicationAuthState {
   landing,
@@ -22,17 +24,19 @@ enum ApplicationAuthState {
 }
 
 class BlocState {
-  BlocState(this.applicationState, {this.arguments});
-
-  final Map<String, String> arguments;
+  BlocState(this.user, this.applicationState);
+  final User user;
   final ApplicationAuthState applicationState;
 }
+
+
+
 
 class AuthBloc extends Bloc<BlocEvent, BlocState> {
   final AuthBase auth = Auth();
 
   @override
-  get initialState => BlocState(ApplicationAuthState.landing);
+  get initialState => BlocState(null, ApplicationAuthState.landing);
 
   @override
   Stream<BlocState> mapEventToState(BlocEvent event) async* {
@@ -45,6 +49,7 @@ class AuthBloc extends Bloc<BlocEvent, BlocState> {
           // FIXME : send user arguments if its needed with the state
 
           yield BlocState(
+            user,
             user == null
                 ? ApplicationAuthState.SignedOut
                 : ApplicationAuthState.signedIn,
