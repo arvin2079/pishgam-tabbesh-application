@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage>
       onPressed: () {},
     ),
     MainMenuSliderCard(
-      icon: Icons.import_contacts,
+      icon: Icons.shopping_basket,
       labelText: 'خرید درس',
       buttonText: 'مشاهده',
       onPressed: () {},
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage>
           decoration: BoxDecoration(
             color: cardBackgroudColor,
             borderRadius:
-                BorderRadius.only(topLeft: _radius, topRight: _radius),
+            BorderRadius.only(topLeft: _radius, topRight: _radius),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -223,19 +223,19 @@ class _HomePageState extends State<HomePage>
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 6.0,
-                          // has the effect of softening the shadow
-                          spreadRadius: 0.0,
-                          // has the effect of extending the shadow
-                          offset: Offset(
-                            0.0, // horizontal, move right 10
-                            3.0, // vertical, move down 10
-                          ),
-                        ),
-                      ],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 6.0,
+                  // has the effect of softening the shadow
+                  spreadRadius: 0.0,
+                  // has the effect of extending the shadow
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    3.0, // vertical, move down 10
+                  ),
+                ),
+              ],
 //              gradient: LinearGradient(
 //                begin: Alignment.topCenter,
 //                end: Alignment.bottomCenter,
@@ -336,6 +336,31 @@ class _HomePageState extends State<HomePage>
                     ),
                     Text(
                       'تنظیمات',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    RoundIconButton(
+                      backgroundColor: Colors.white,
+                      icon: Icons.exit_to_app,
+                      iconColor: Colors.black54,
+                      iconSize: 30,
+                      buttonSize: 55,
+                      elevation: 5,
+                      onPressed: () {},
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'خروج از حساب',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'vazir',
