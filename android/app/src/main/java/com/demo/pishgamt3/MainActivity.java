@@ -1,12 +1,17 @@
 package com.demo.pishgamt3;
 
-import android.os.AsyncTask;
-import android.view.View;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
+import com.zarinpal.ewallets.purchase.OnCallbackVerificationPaymentListener;
+import com.zarinpal.ewallets.purchase.PaymentRequest;
+import com.zarinpal.ewallets.purchase.ZarinPal;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -15,11 +20,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
   private static final String CHANNEL = "";
-  public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
-  String Inquiry="";
-  List<AsyncTask> tasks = new ArrayList<>();
-  MyHttpUtils myHttpUtils;
-
+  Context context;
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -28,23 +29,26 @@ public class MainActivity extends FlutterActivity {
             ((call, result) -> {
               if(call.method.equals(""))
               {
+                  Uri data=getIntent().getData();
+                  payment();
+                  ZarinPal.getPurchase(context).verificationPayment(data, new OnCallbackVerificationPaymentListener() {
+                      @Override
+                      public void onCallbackResultVerificationPayment(boolean isPaymentSuccess, String refID, PaymentRequest paymentRequest) {
+                       if(isPaymentSuccess)
+                       {
 
-                MyHttpUtils.RequestData requestData =
-                        new MyHttpUtils.RequestData(URI_SHOW_PARAMS, "POST");
+                       }
+                       else
+                           {
 
-                requestData.setParameter("firstname", "ali");
-                requestData.setParameter("lastname", "ali");
-                requestData.setParameter("gender", "male");
-                requestData.setParameter("grade", "highschool");
-                requestData.setParameter("city", "london");
-                requestData.setParameter("phonenumber", "123");
-                requestData.setParameter("socialnumber", "7889");
-                requestData.setParameter("address", "london");
-
-                new MyTask().execute(requestData);
+                           }
+                      }
+                  });
 
 
-                result.success(Inquiry);
+
+
+
               }
 
             })
@@ -54,45 +58,30 @@ public class MainActivity extends FlutterActivity {
 
   }
 
+  public void payment()
+  {
+      ZarinPal purchase=ZarinPal.getPurchase(context);
+      PaymentRequest payment=ZarinPal.getPaymentRequest();
 
-  public class MyTask extends AsyncTask<MyHttpUtils.RequestData, Void, String> {
+      payment.setAmount(1000);
+      payment.setDescription("for test");
+      payment.setMerchantID("0c5db223-a20f-4789-8c88-56d78e29ff63");
+      payment.setCallbackURL("return://zarinpalpayment");
 
-
-    @Override
-    protected void onPreExecute() {
-
-
-    }
-
-    @Override
-    protected String doInBackground(MyHttpUtils.RequestData... params) {
-      MyHttpUtils.RequestData reqData = params[0];
-
-      return MyHttpUtils.getDataHttpUrlConnection(reqData);
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-      if(result == null) {
-        result = "null";
-
-      }
-      if(result.contains("user_added"))
-      {
-        Inquiry="added";
-
-      }
-      if(result.contains("cant_add_user"))
-      {
-        Inquiry="failed";
-
-      }
+      purchase.startPayment(payment, new OnCallbackRequestPaymentListener() {
+          @Override
+          public void onCallbackResultPaymentRequest(int status, String authority, Uri paymentGatewayUri, Intent intent) {
+              if(status==1000)
+              {
+                  Toast.makeText(context,"done",Toast.LENGTH_LONG).show();
 
 
+              }
+          }
+      });
 
-
-    }
   }
+
 
 
 
