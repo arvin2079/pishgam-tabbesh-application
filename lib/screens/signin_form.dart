@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
@@ -15,7 +17,6 @@ class _SignInFormState extends State<SignInForm> {
   final TextEditingController _passwordTextController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-
   bool _submitEnabled = true;
 
   void _submit() {
@@ -26,8 +27,14 @@ class _SignInFormState extends State<SignInForm> {
         _submitEnabled = false;
       });
       try {
-        // TODO : handle the authentication
-      } catch (e) {} finally {
+
+        // fixme : handel sign in here
+
+      } catch (e) {
+
+        // fixme : handel errors
+
+      } finally {
         setState(() {
           _submitEnabled = true;
         });
@@ -111,6 +118,7 @@ class _SignInFormState extends State<SignInForm> {
               focusNode: _emailFocusNode,
               controller: _emailTextController,
               onEditingComplete: _onEmailEditingComplete,
+              inputType: TextInputType.emailAddress,
               obsecureText: false,
             ),
             //password
@@ -119,6 +127,7 @@ class _SignInFormState extends State<SignInForm> {
               focusNode: _passwordFocusNode,
               controller: _passwordTextController,
               onEditingComplete: _submit,
+              inputType: TextInputType.visiblePassword,
               obsecureText: true,
             ),
             SizedBox(height: 20),
