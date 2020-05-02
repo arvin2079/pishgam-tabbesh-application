@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
 class ShoppingItemCard extends StatelessWidget {
-  const ShoppingItemCard(
-      {@required this.courseName,
-        @required this.grade,
-        @required this.explanation,
-        @required this.price});
+
+  const ShoppingItemCard({Key key, this.courseName, this.grade, this.explanation, this.price, this.onPressed}) : super(key: key);
 
   final String courseName;
   final String grade;
   final String explanation;
   final String price;
+  final Function onPressed;
+
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5.0,
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
+      margin: EdgeInsets.all(5),
       color: Colors.white,
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -47,7 +46,7 @@ class ShoppingItemCard extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: onPressed,
                   ),
                 ],
               ),
