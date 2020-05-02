@@ -1,0 +1,139 @@
+import 'package:flutter/material.dart';
+
+class ShoppingCart extends StatefulWidget {
+  @override
+  _ShoppingCartState createState() => _ShoppingCartState();
+}
+
+class _ShoppingCartState extends State<ShoppingCart> {
+
+  int totalPrice=0;
+  int count=0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          backgroundColor: Colors.grey[200],
+          appBar: AppBar(
+            backgroundColor: Colors.grey[200],
+            elevation: 0,
+            title: Text(
+              'سبد خرید',
+              style: TextStyle(
+                fontFamily:'vazir' ,
+                fontWeight: FontWeight.w100,
+                fontSize: 30,
+                color: Colors.black87,
+              ),
+            ),
+            actions: <Widget>[
+              IconButton(
+                onPressed: (){},
+                icon: Icon(Icons.close),
+                color: Colors.black87,
+                iconSize: 18,
+              ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'قیمت کل',
+                      style: TextStyle(
+                        fontFamily:'vazir' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      totalPrice.toString(),
+                      style: TextStyle(
+                        fontFamily:'WeblogmaYekan' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'تعداد',
+                      style: TextStyle(
+                        fontFamily:'vazir' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                        count.toString(),
+                      style: TextStyle(
+                        fontFamily:'WeblogmaYekan' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    elevation: 2,
+                    color: Colors.lime[500],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Text(
+                      'پرداخت',
+                      style: TextStyle(
+                        fontFamily:'vazir' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 19,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed:(){} ,
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    elevation: 2,
+                    color: Colors.black45,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Text(
+                        'خالی کردن سبد',
+                      style: TextStyle(
+                        fontFamily:'vazir' ,
+                        fontWeight: FontWeight.w100,
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: (){},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
