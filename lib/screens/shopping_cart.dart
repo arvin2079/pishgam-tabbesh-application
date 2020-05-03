@@ -7,42 +7,51 @@ class ShoppingCart extends StatefulWidget {
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
-  int totalPrice = 0;
-  int count = items.length;
+  int totalPrice;
+  int count;
+  List<ShoppingItemCard> items = List<ShoppingItemCard>();
 
-  static List<Widget> items = [
-    ShoppingItemCard(
+  @override
+  void initState() {
+    super.initState();
+    items.add(ShoppingItemCard(
       courseName: 'شیمی دهم',
       explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
       grade: 'پایه دهم',
-      price: '17,000',
+      price: 17000,
       onPressed: () {},
-    ),
-    ShoppingItemCard(
+    ));
+    items.add(ShoppingItemCard(
       courseName: 'شیمی دهم',
       explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
       grade: 'پایه دهم',
-      price: '19,000',
+      price: 19000,
       onPressed: () {},
-    ),
-    ShoppingItemCard(
+    ));
+    items.add(ShoppingItemCard(
       courseName: 'شیمی دهم',
       explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
       grade: 'پایه دهم',
-      price: '18,000',
+      price: 18000,
       onPressed: () {},
-    ),
-    ShoppingItemCard(
+    ));
+    items.add(ShoppingItemCard(
       courseName: 'شیمی دهم',
       explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
       grade: 'پایه دهم',
-      price: '16,000',
+      price: 16000,
       onPressed: () {},
-    ),
-  ];
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
+    count = items.length;
+    totalPrice = 0;
+    for (int i = 0; i < count; i++) {
+      totalPrice = totalPrice + items[i].price;
+    }
+
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -143,21 +152,24 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   SizedBox(
                     width: double.infinity,
                     child: RaisedButton(
-                      elevation: 2,
-                      color: Colors.black45,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        'خالی کردن سبد',
-                        style: TextStyle(
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 17,
-                          color: Colors.white,
+                        elevation: 2,
+                        color: Colors.black45,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Text(
+                          'خالی کردن سبد',
+                          style: TextStyle(
+                            fontFamily: 'vazir',
+                            fontWeight: FontWeight.w100,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      onPressed:deleteAllItems
-                    ),
+                        onPressed: () {
+                          setState(() {
+                            items.clear();
+                          });
+                        }),
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 10),
@@ -178,12 +190,5 @@ class _ShoppingCartState extends State<ShoppingCart> {
         ),
       ),
     );
-  }
-
-  void deleteAllItems() {
-    return setState(() {
-      items.clear();
-      count = 0;
-    });
   }
 }

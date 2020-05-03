@@ -7,7 +7,7 @@ class ShoppingItemCard extends StatelessWidget {
   final String courseName;
   final String grade;
   final String explanation;
-  final String price;
+  final int price;
   final Function onPressed;
 
 
@@ -90,7 +90,7 @@ class ShoppingItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    price,
+                    price.toString(),
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 22,
