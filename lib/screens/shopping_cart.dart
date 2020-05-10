@@ -1,47 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/components/shoppingCard.dart';
 
-class ShoppingCart extends StatefulWidget {
+class ShoppingBasket extends StatefulWidget {
   @override
-  _ShoppingCartState createState() => _ShoppingCartState();
+  _ShoppingBasketState createState() => _ShoppingBasketState();
 }
 
-class _ShoppingCartState extends State<ShoppingCart> {
+class _ShoppingBasketState extends State<ShoppingBasket> {
   int totalPrice;
   int count;
-  List<ShoppingItemCard> items = List<ShoppingItemCard>();
+  List<BasketItem> items = List<BasketItem>();
+//  List<BasketItem> items = <BasketItem>[
+//    BasketItem(
+//      courseName: 'اولین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//    BasketItem(
+//      courseName: 'دومین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//    BasketItem(
+//      courseName: 'سومین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//    BasketItem(
+//      courseName: 'چهارمین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//    BasketItem(
+//      courseName: 'پنجمین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//    BasketItem(
+//      courseName: 'شیشمین کورس',
+//      grade: 'اول دبیرستان',
+//      explanation: 'توضیحات مربوط به کورس',
+//      price: 18000,
+//    ),
+//  ];
 
-  @override
-  void initState() {
-    super.initState();
-    items.add(ShoppingItemCard(
-      courseName: 'شیمی دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      grade: 'پایه دهم',
-      price: 17000,
-      onPressed: () {},
-    ));
-    items.add(ShoppingItemCard(
-      courseName: 'شیمی دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      grade: 'پایه دهم',
-      price: 19000,
-      onPressed: () {},
-    ));
-    items.add(ShoppingItemCard(
-      courseName: 'شیمی دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      grade: 'پایه دهم',
-      price: 18000,
-      onPressed: () {},
-    ));
-    items.add(ShoppingItemCard(
-      courseName: 'شیمی دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      grade: 'پایه دهم',
-      price: 16000,
-      onPressed: () {},
-    ));
+  Iterable<Widget> get _basketWidgets sync* {
+    for (BasketItem item in items) {
+      yield ShoppingItemCard(
+        item: item,
+        onDelete: () {
+          setState(() {
+            items.removeWhere((value) {
+              if (value == item) return true;
+              return false;
+            });
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -64,7 +85,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
               'سبد خرید',
               style: TextStyle(
                 fontFamily: 'vazir',
-                fontWeight: FontWeight.w100,
+                fontWeight: FontWeight.w500,
                 fontSize: 30,
                 color: Colors.black87,
               ),
@@ -78,113 +99,107 @@ class _ShoppingCartState extends State<ShoppingCart> {
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'قیمت کل',
-                        style: TextStyle(
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20,
-                          color: Colors.black54,
-                        ),
+          body: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'قیمت کل',
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
                       ),
-                      Text(
-                        totalPrice.toString(),
-                        style: TextStyle(
-                          fontFamily: 'WeblogmaYekan',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20,
-                          color: Colors.black54,
-                        ),
+                    ),
+                    Text(
+                      totalPrice.toString(),
+                      style: TextStyle(
+                        fontFamily: 'WeblogmaYekan',
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'تعداد',
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      count.toString(),
+                      style: TextStyle(
+                        fontFamily: 'WeblogmaYekan',
+                        fontWeight: FontWeight.w100,
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    elevation: 2,
+                    color: Colors.lime[500],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      'پرداخت',
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 19,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () {},
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'تعداد',
-                        style: TextStyle(
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      Text(
-                        count.toString(),
-                        style: TextStyle(
-                          fontFamily: 'WeblogmaYekan',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 20,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: RaisedButton(
                       elevation: 2,
-                      color: Colors.lime[500],
+                      color: Colors.black45,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       child: Text(
-                        'پرداخت',
+                        'خالی کردن سبد',
                         style: TextStyle(
                           fontFamily: 'vazir',
-                          fontWeight: FontWeight.w100,
-                          fontSize: 19,
-                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colors.white,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          items.clear();
+                        });
+                      }),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: _basketWidgets.toList(),
                     ),
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                        elevation: 2,
-                        color: Colors.black45,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Text(
-                          'خالی کردن سبد',
-                          style: TextStyle(
-                            fontFamily: 'vazir',
-                            fontWeight: FontWeight.w100,
-                            fontSize: 17,
-                            color: Colors.white,
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            items.clear();
-                          });
-                        }),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    height: 500,
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: items[index],
-                          );
-                        }),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ShoppingItemCard extends StatelessWidget {
-
-  const ShoppingItemCard({Key key, this.courseName, this.grade, this.explanation, this.price, this.onPressed}) : super(key: key);
-
-  final String courseName;
-  final String grade;
-  final String explanation;
-  final int price;
-  final Function onPressed;
+  const ShoppingItemCard({@required this.onDelete, @required this.item});
+  final BasketItem item;
+  final Function onDelete;
 
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5.0,
-      margin: EdgeInsets.all(5),
       color: Colors.white,
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -28,7 +22,7 @@ class ShoppingItemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    courseName,
+                    item.courseName,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 23,
@@ -46,7 +40,7 @@ class ShoppingItemCard extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    onPressed: onPressed,
+                    onPressed: onDelete,
                   ),
                 ],
               ),
@@ -54,7 +48,7 @@ class ShoppingItemCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 15, bottom: 18),
               child: Text(
-                grade,
+                item.grade,
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 14,
@@ -66,7 +60,7 @@ class ShoppingItemCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 15),
               child: Text(
-                explanation,
+                item.explanation,
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 15,
@@ -90,7 +84,7 @@ class ShoppingItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    price.toString(),
+                    item.price.toString(),
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 22,
@@ -107,6 +101,17 @@ class ShoppingItemCard extends StatelessWidget {
     );
   }
 }
+
+class BasketItem {
+  const BasketItem({this.courseName, this.grade, this.explanation, this.price});
+
+  final String courseName;
+  final String grade;
+  final String explanation;
+  final int price;
+}
+
+// fixme : grades must be gotten from database
 
 
 
