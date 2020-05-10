@@ -22,6 +22,8 @@ public class MainActivity extends FlutterActivity {
   private static final String CHANNEL = "";
   Context context;
 
+//  Send the amount payable and the right or wrong will be refunded
+
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
 
@@ -31,11 +33,14 @@ public class MainActivity extends FlutterActivity {
               {
                   Uri data=getIntent().getData();
                   payment();
+
+//                Use of return routing
                   ZarinPal.getPurchase(context).verificationPayment(data, new OnCallbackVerificationPaymentListener() {
                       @Override
                       public void onCallbackResultVerificationPayment(boolean isPaymentSuccess, String refID, PaymentRequest paymentRequest) {
                        if(isPaymentSuccess)
                        {
+
 
                        }
                        else
@@ -60,14 +65,16 @@ public class MainActivity extends FlutterActivity {
 
   public void payment()
   {
+    //main function
       ZarinPal purchase=ZarinPal.getPurchase(context);
       PaymentRequest payment=ZarinPal.getPaymentRequest();
 
+//    Enter the amount of payment and navigate the reciprocating path of the port
       payment.setAmount(1000);
       payment.setDescription("for test");
       payment.setMerchantID("0c5db223-a20f-4789-8c88-56d78e29ff63");
       payment.setCallbackURL("return://zarinpalpayment");
-
+//    Reply from server
       purchase.startPayment(payment, new OnCallbackRequestPaymentListener() {
           @Override
           public void onCallbackResultPaymentRequest(int status, String authority, Uri paymentGatewayUri, Intent intent) {
