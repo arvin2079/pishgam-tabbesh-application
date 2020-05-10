@@ -17,6 +17,7 @@ public class MainActivity extends FlutterActivity {
   private static final String CHANNEL = "";
   public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
   String Inquiry="";
+//  Send a list of registration information
   List<AsyncTask> tasks = new ArrayList<>();
   MyHttpUtils myHttpUtils;
 
@@ -28,7 +29,7 @@ public class MainActivity extends FlutterActivity {
             ((call, result) -> {
               if(call.method.equals(""))
               {
-
+//                The main function is executed here to give and take the parameters
                 MyHttpUtils.RequestData requestData =
                         new MyHttpUtils.RequestData(URI_SHOW_PARAMS, "POST");
 
@@ -53,7 +54,8 @@ public class MainActivity extends FlutterActivity {
     GeneratedPluginRegistrant.registerWith(flutterEngine);
 
   }
-
+//  As an employee, he does the work in MyTask and returns the answer that
+//  is determined for him. Here is the connection with the server.
 
   public class MyTask extends AsyncTask<MyHttpUtils.RequestData, Void, String> {
 
@@ -71,6 +73,8 @@ public class MainActivity extends FlutterActivity {
       return MyHttpUtils.getDataHttpUrlConnection(reqData);
     }
 
+
+//    The answer is clear here
     @Override
     protected void onPostExecute(String result) {
       if(result == null) {
