@@ -4,9 +4,10 @@ abstract class AuthBase {
   Future<User> signin();
   Future<User> currentUser();
   Future<void> signOut();
+  // todo : zarinpal (buying lessons)
 }
 
-// TODO : userToken must define in singleton design pattern
+// TODO : userToken smust define in singleton design pattern
 
 class Auth extends AuthBase{
 
