@@ -64,10 +64,9 @@ flutter:
 
     - family: iranianSans
       fonts:
-        - asset: assets/fonts/Iranian Sans.ttf
+        - asset: assets/fonts/Iranian-Sans.ttf
 
   assets:
-    - assets/images/avatar.jpg
     - assets/images/background.png
     - assets/images/initalIconPishgam.png
     - assets/images/lessons.jpg
