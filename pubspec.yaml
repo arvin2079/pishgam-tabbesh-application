@@ -45,9 +45,6 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   fonts:
-    #    - family: Iranian_Sans
-    #      fonts:
-    #        - asset: assets/fonts/Iranian Sans.ttf
     - family: vazir
       fonts:
         - asset: assets/fonts/Vazir-Bold.ttf
@@ -56,23 +53,15 @@ flutter:
           weight: 500
         - asset: assets/fonts/Vazir-Medium.ttf
           weight: 100
-<<<<<<< HEAD
 
     - family: fredricka
       fonts:
         - asset: assets/fonts/time_tracker_font/FrederickatheGreat_Regular.ttf
-=======
+
     - family: WeblogmaYekan
       fonts:
         - asset: assets/fonts/WeblogmaYekan-Regular.ttf
->>>>>>> purchaseCard
-    #    - family: champagne
-    #      fonts:
-    #        - asset: assets/fonts/Champagne & Limousines.ttf
-    #        - asset: assets/fonts/Champagne & Limousines Bold.ttf
-    #          weight: 900
-    #        - asset: assets/fonts/Champagne & Limousines Bold Italic.ttf
-    #        - asset: assets/fonts/Champagne & Limousines Italic.ttf
+
     - family: iranianSans
       fonts:
         - asset: assets/fonts/Iranian Sans.ttf
