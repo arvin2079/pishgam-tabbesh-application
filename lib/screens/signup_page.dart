@@ -43,7 +43,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    double removeHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
     return Scaffold(
         resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFF424242),
@@ -56,7 +55,6 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height - (removeHeight),
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/background.png'),
@@ -133,11 +131,11 @@ class _SignUpPageState extends State<SignUpPage> {
                           onEditingComplete: _onUserNameEditingComplete,
                         ),
                         SignupTextInput(
-                          labelText: 'رمز عبور',
+                          labelText: 'شماره همراه',
+                          maxLength: 11,
                           focusNode: _passwordFocusNode,
                           controller: _passwordController,
                           textInputType: TextInputType.text,
-                          obscureText: true,
                         ),
                         SizedBox(height: 40),
                         Row(
