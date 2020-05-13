@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
 import 'package:pishgamv2/components/mainMenuSliderCard.dart';
-import 'package:pishgamv2/components/round_icon_avatar.dart';
 import 'package:pishgamv2/components/round_icon_button.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,9 +21,11 @@ class _HomePageState extends State<HomePage>
   Animation<Alignment> _animation;
   AnimationController _controller;
 
+  Image profilePicture = null;
+
   bool expanded = false;
 
-  List<MainMenuSliderCard> _slidingListItems = <MainMenuSliderCard>[
+  List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[
     // FIXME : if my lessons was empty , my lessons card should not be shown
     MainMenuSliderCard(
       icon: Icons.import_contacts,
@@ -142,7 +144,14 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           width: 20,
                         ),
-                        Avatar(),
+                        CircleAvatar(
+                          //fixme
+                          radius: 35,
+                          backgroundColor: Colors.grey[200],
+                          child: profilePicture == null
+                              ? Icon(Icons.person, color: Colors.black45, size: 30)
+                              : profilePicture,
+                        ),
                       ],
                     ),
                   ),
@@ -296,7 +305,7 @@ class _HomePageState extends State<HomePage>
                       Text('منو کاربری'),
                       Expanded(
                         child: CarouselSlider(
-                          items: _slidingListItems,
+                          items: _sliderItems,
                           enableInfiniteScroll: false,
                           autoPlay: false,
                           enlargeCenterPage: false,

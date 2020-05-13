@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+
 abstract class AuthBase {
   Stream<User> get onAuthStateChange;
   Future<User> signup();
   Future<User> signin();
   Future<User> currentUser();
   Future<void> signOut();
+  Future<Image> getUserProfilePicture();
   // todo : zarinpal (buying lessons)
 }
 
@@ -36,6 +39,12 @@ class Auth extends AuthBase{
   @override
   Future<void> signOut() {
     // TODO: implement signOut
+    return null;
+  }
+
+  @override
+  Future<Image> getUserProfilePicture() {
+    // TODO: get image from user if it return null means no picture uploaded
     return null;
   }
 }

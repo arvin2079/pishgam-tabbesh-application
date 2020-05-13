@@ -31,6 +31,8 @@ dependencies:
   flutter_bloc: ^3.2.0
   intl_phone_number_input: ^0.3.0
   slide_countdown_clock: ^1.0.3
+  provider:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
