@@ -14,7 +14,8 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
-  private static final String CHANNEL = "";
+  private static final String SIGN_UP = "signup";
+  private static final String SIGN_IN= "signin";
   public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
   String Inquiry="";
 //  Send a list of registration information
@@ -24,8 +25,15 @@ public class MainActivity extends FlutterActivity {
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
+            .setMethodCallHandler(((call, result) ->
+            {
 
-    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CHANNEL).setMethodCallHandler(
+
+              
+            }));
+
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_UP).setMethodCallHandler(
             ((call, result) -> {
               if(call.method.equals(""))
               {
