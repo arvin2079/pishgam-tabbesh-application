@@ -31,6 +31,8 @@ dependencies:
   flutter_bloc: ^3.2.0
   intl_phone_number_input: ^0.3.0
   slide_countdown_clock: ^1.0.3
+  provider:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
@@ -54,10 +56,16 @@ flutter:
           weight: 500
         - asset: assets/fonts/Vazir-Medium.ttf
           weight: 100
+<<<<<<< HEAD
 
     - family: fredricka
       fonts:
         - asset: assets/fonts/time_tracker_font/FrederickatheGreat_Regular.ttf
+=======
+    - family: WeblogmaYekan
+      fonts:
+        - asset: assets/fonts/WeblogmaYekan-Regular.ttf
+>>>>>>> purchaseCard
     #    - family: champagne
     #      fonts:
     #        - asset: assets/fonts/Champagne & Limousines.ttf
@@ -73,6 +81,7 @@ flutter:
     - assets/images/avatar.jpg
     - assets/images/background.png
     - assets/images/initalIconPishgam.png
+    - assets/images/lessons.jpg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

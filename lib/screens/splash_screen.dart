@@ -33,10 +33,11 @@ class _SplashScreenState extends State<SplashScreen>
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: authBloc,
-      builder: (context , state) {
-        if(state.state == ApplicationAuthState.landing && state.user == null) {
-          authBloc.add(ApplicationAuthEvent.landing);
-          startAnimation();
+      builder: (context, state) {
+        if (state.state == ApplicationAuthState.landing && state.user == null) {
+          startAnimation().then((value) {
+            authBloc.add(ApplicationAuthEvent.landing);
+          });
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.black,
@@ -56,14 +57,50 @@ class _SplashScreenState extends State<SplashScreen>
                       children: <Widget>[
                         PositionedTransition(
                           rect: _animationPishgamMoveToTop,
-                          child: initalIcon(),
+                          child: Center(
+                            child: RichText(
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'پیشـــــــــ',
+                                    style: TextStyle(
+                                      fontFamily: 'vazir',
+                                      fontSize: 41,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'گام',
+                                    style: TextStyle(
+                                      fontFamily: 'vazir',
+                                      fontSize: 41,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.limeAccent[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                         const SpinKitThreeBounce(
                           color: Colors.white,
                           size: 30,
                         ),
                         PositionedTransition(
-                          child: tethaIcon(),
+                          child: Text(
+                            'Tetha',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              shadows: [
+                                Shadow(blurRadius: 10, color: Colors.black54)
+                              ],
+                              height: 2.7,
+                            ),
+                          ),
                           rect: _animationTetha,
                         ),
                       ],
@@ -73,59 +110,16 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           );
-        } else if(state.state == ApplicationAuthState.SignedOut && state.user == null) {
+        } else if (state.state == ApplicationAuthState.SignedOut &&
+            state.user == null) {
           return SigninPage();
-        } else if(state.state == ApplicationAuthState.signedIn && state.user != null) {
+        } else if (state.state == ApplicationAuthState.signedIn &&
+            state.user != null) {
           disposAnimation();
           return null;
-        } else {
-          //todo : handle this else part later
-          return null;
         }
+        return null;
       },
-    );
-  }
-
-  Text tethaIcon() {
-    return Text(
-      'Tetha',
-//      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontWeight: FontWeight.w900,
-        shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
-        height: 2.7,
-      ),
-    );
-  }
-
-  Center initalIcon() {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          children: <TextSpan>[
-            TextSpan(
-              text: 'پیشـــــــــ',
-              style: TextStyle(
-                fontFamily: 'vazir',
-                fontSize: 41,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-              ),
-            ),
-            TextSpan(
-              text: 'گام',
-              style: TextStyle(
-                fontFamily: 'vazir',
-                fontSize: 41,
-                fontWeight: FontWeight.w900,
-                color: Colors.limeAccent[700],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -163,9 +157,10 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  void startAnimation() {
+  Future<void> startAnimation() async {
     _controller.forward();
     _controller2.forward();
+    await Future.delayed(Duration(seconds: 5));
   }
 
   void disposAnimation() {

@@ -1,26 +1,18 @@
+import 'package:flutter/material.dart';
+
 abstract class AuthBase {
   Stream<User> get onAuthStateChange;
-  Future<User> signup();
-  Future<User> signin();
+  Future<User> signup({@required User user});
+  Future<User> signin({@required String username, @required String password});
   Future<User> currentUser();
   Future<void> signOut();
+  Future<Image> getUserProfilePicture();
+  // todo : zarinpal (buying lessons)
 }
 
-// TODO : userToken must define in singleton design pattern
+// TODO : userToken smust define in singleton design pattern
 
 class Auth extends AuthBase{
-
-  @override
-  Future<User> signin() {
-    // TODO: implement signip
-    return null;
-  }
-
-  @override
-  Future<User> signup() {
-    // TODO: implement signup
-    return null;
-  }
 
   @override
   // TODO: implement onAuthStateChange
@@ -37,7 +29,47 @@ class Auth extends AuthBase{
     // TODO: implement signOut
     return null;
   }
+
+  @override
+  Future<Image> getUserProfilePicture() {
+    // TODO: get image from user if it return null means no picture uploaded
+    return null;
+  }
+
+  @override
+  Future<User> signin({String username, String password}) {
+    // TODO: implement signin
+    return null;
+  }
+
+  @override
+  Future<User> signup({User user}) {
+    // TODO: implement signup
+    return null;
+  }
 }
 
 
-class User {}
+class User {
+  User({this.uid, this.username, this.firstname, this.lastname, this.city, this.gender, this.grades, this.phoneNumber, this.nationalCode});
+  final String uid;
+  final String username;
+  final String firstname;
+  final String lastname;
+  final String city;
+  final String gender;
+  final String grades;
+  final String phoneNumber;
+  final String nationalCode;
+}
+
+
+
+
+
+
+
+
+
+
+
