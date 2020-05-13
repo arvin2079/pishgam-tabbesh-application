@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
-import 'package:pishgamv2/screens/shopping_cart.dart';
 import 'package:pishgamv2/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'brain/authBloc.dart';
@@ -26,7 +25,7 @@ class PishgamDemo extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: PTheme,
-          home: ShoppingBasket(),
+          home: SplashScreen(),
         ),
       ),
     );

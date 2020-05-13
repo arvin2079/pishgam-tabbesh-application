@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -110,13 +111,11 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           );
-        } else if (state.state == ApplicationAuthState.SignedOut &&
-            state.user == null) {
+        } else if (state.state == ApplicationAuthState.SignedOut && state.user == null) {
           return SigninPage();
-        } else if (state.state == ApplicationAuthState.signedIn &&
-            state.user != null) {
+        } else if (state.state == ApplicationAuthState.signedIn && state.user != null) {
           disposAnimation();
-          return null;
+          return HomePage();
         }
         return null;
       },
