@@ -22,7 +22,8 @@ class AuthState {
 }
 
 class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
-  final AuthBase auth = Auth();
+  AuthBloc(this.auth);
+  final AuthBase auth;
 
   @override
   get initialState =>
@@ -33,8 +34,6 @@ class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
     switch (event) {
       case ApplicationAuthEvent.landing: {
           User user = await auth.currentUser();
-          if(user == null)
-            await Future.delayed(Duration(seconds: 5));
           yield AuthState(
             user: user,
             state: user == null
