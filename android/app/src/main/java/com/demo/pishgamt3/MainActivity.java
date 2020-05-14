@@ -3,11 +3,13 @@ package com.demo.pishgamt3;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
 import com.zarinpal.ewallets.purchase.OnCallbackVerificationPaymentListener;
@@ -43,6 +45,7 @@ public class MainActivity extends FlutterActivity {
   MyHttpUtils myHttpUtils;
 
 
+  @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
@@ -106,22 +109,14 @@ public class MainActivity extends FlutterActivity {
               if(call.method.equals(""))
               {
 //                The main function is executed here to give and take the parameters
-                MyHttpUtils.RequestData requestData =
-                        new MyHttpUtils.RequestData(URI_SHOW_PARAMS, "POST");
 
-                requestData.setParameter("firstname", "ali");
-                requestData.setParameter("lastname", "ali");
-                requestData.setParameter("gender", "male");
-                requestData.setParameter("grade", "highschool");
-                requestData.setParameter("city", "london");
-                requestData.setParameter("phonenumber", "123");
-                requestData.setParameter("socialnumber", "7889");
-                requestData.setParameter("address", "london");
+                 Exchange_of_information exchange_of_information=new Exchange_of_information(call.argument(""),"");
+                 exchange_of_information.Send_information();
 
-                new MyTask().execute(requestData);
+                 result.success(exchange_of_information.feedback);
 
 
-                result.success(Inquiry);
+
               }
 
             })
