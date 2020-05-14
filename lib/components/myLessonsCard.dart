@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PurchaseLessonCard extends StatefulWidget {
-  PurchaseLessonCard(
+class MyLessonCard extends StatefulWidget {
+  MyLessonCard(
       {@required this.imageURL,
-        @required this.courseName,
-        @required this.grade,
-        @required this.explanation});
+      @required this.courseName,
+      @required this.grade,
+      @required this.explanation});
 
   final String imageURL;
   final String courseName;
@@ -14,25 +13,21 @@ class PurchaseLessonCard extends StatefulWidget {
   final String explanation;
 
   @override
-  _PurchaseLessonCardState createState() => _PurchaseLessonCardState(
+  _MyLessonCardState createState() => _MyLessonCardState(
       courseName: courseName,
       explanation: explanation,
       grade: grade,
       imageURL: imageURL);
 }
 
-class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
-  _PurchaseLessonCardState(
-      {this.imageURL,
-        this.courseName,
-        this.grade,
-        this.explanation});
+class _MyLessonCardState extends State<MyLessonCard> {
+  _MyLessonCardState(
+      {this.imageURL, this.courseName, this.grade, this.explanation});
 
   final String imageURL;
   final String courseName;
   final String grade;
   final String explanation;
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +95,17 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
-                child:Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     RaisedButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       padding: EdgeInsets.fromLTRB(35, 5, 35, 5),
                       child: Text(
                         'دانلود جزوات',
                         style: TextStyle(
-                          fontSize:12 ,
+                          fontSize: 12,
                           fontWeight: FontWeight.w100,
                           fontFamily: 'vazir',
                           color: Colors.white,
@@ -123,12 +118,12 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                       ),
                     ),
                     RaisedButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                       child: Text(
                         'شروع کلاس',
                         style: TextStyle(
-                          fontSize:12 ,
+                          fontSize: 12,
                           fontWeight: FontWeight.w100,
                           fontFamily: 'vazir',
                           color: Colors.white,
@@ -141,7 +136,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                       ),
                     ),
                   ],
-                ) ,
+                ),
               ),
             ],
           ),
