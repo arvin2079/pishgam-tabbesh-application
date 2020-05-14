@@ -1,10 +1,18 @@
 package com.demo.pishgamt3;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
+import com.zarinpal.ewallets.purchase.OnCallbackVerificationPaymentListener;
+import com.zarinpal.ewallets.purchase.PaymentRequest;
+import com.zarinpal.ewallets.purchase.ZarinPal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ import okhttp3.Response;
 public class MainActivity extends FlutterActivity {
   private static final String SIGN_UP = "signup";
   private static final String SIGN_IN= "signin";
+  private static final String ZARIN_PALL = "zarinpall";
+
   public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
   String Inquiry="";
 //  Send a list of registration information
@@ -89,18 +99,10 @@ public class MainActivity extends FlutterActivity {
 
 
             }
-
-
             ));
-
-
-
-
-
-
-
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_UP).setMethodCallHandler(
-            ((call, result) -> {
+            ((call, result) ->
+            {
               if(call.method.equals(""))
               {
 //                The main function is executed here to give and take the parameters
@@ -125,9 +127,55 @@ public class MainActivity extends FlutterActivity {
             })
     );
 
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),ZARIN_PALL)
+            .setMethodCallHandler((call, result) ->
+            {
+              if(call.method.equals(""))
+              {
+                ZarinPal purchase=ZarinPal.getPurchase(getApplicationContext());
+                PaymentRequest payment=ZarinPal.getPaymentRequest();
+                payment.setMerchantID("0c5db223-a20f-4789-8c88-56d78e29ff63");
+                payment.setAmount(call.argument("amount"));
+                payment.setDescription("تست جهت برنامه");
+                payment.setCallbackURL("return://zarinpalpayment");
+
+                purchase.startPayment(payment, new OnCallbackRequestPaymentListener() {
+                  @Override
+                  public void onCallbackResultPaymentRequest(int status, String authority, Uri paymentGatewayUri, Intent intent) {
+                    if(status==100) startActivity(intent);
+                    else Toast.makeText(getApplicationContext(),"پرداخت با موفقیت انجام نشد",Toast.LENGTH_LONG).show();
+                  }
+                });
+              }
+              Uri data=getIntent().getData();
+              ZarinPal.getPurchase(this).verificationPayment(data,new OnCallbackVerificationPaymentListener(){
+
+                @Override
+                public void onCallbackResultVerificationPayment(boolean isPaymentSuccess, String refID, PaymentRequest paymentRequest) {
+                  if(isPaymentSuccess)
+                  {
+                   result.success("done");
+                  }else
+                  {
+                    result.success("failed");
+
+                  }
+                }
+              });
+
+
+
+            });
+
     GeneratedPluginRegistrant.registerWith(flutterEngine);
 
   }
+
+
+
+
+
+
 //  As an employee, he does the work in MyTask and returns the answer that
 //  is determined for him. Here is the connection with the server.
 
