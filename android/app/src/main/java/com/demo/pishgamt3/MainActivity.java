@@ -1,17 +1,27 @@
 package com.demo.pishgamt3;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends FlutterActivity {
   private static final String SIGN_UP = "signup";
@@ -19,7 +29,7 @@ public class MainActivity extends FlutterActivity {
   public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
   String Inquiry="";
 //  Send a list of registration information
-  List<AsyncTask> tasks = new ArrayList<>();
+  HashMap<String,String> Info_for_signin;
   MyHttpUtils myHttpUtils;
 
 
@@ -28,10 +38,66 @@ public class MainActivity extends FlutterActivity {
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
             .setMethodCallHandler(((call, result) ->
             {
+              if(call.method.equals(""))
+              {
+                OkHttpClient client=new OkHttpClient();
+                String url="https://tabeshma.000webhostapp.com/mysites/showparams.php";
+                RequestBody formBody = new FormBody.Builder()
+                        .add("email", "eve.holt@reqres.in")
+                        .add("password","pistol")
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(formBody)
+                        .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                  @Override
+                  public void onFailure(Call call, IOException e) {
+                    Log.i("failed in sign_in",e.getMessage());
+                  }
+
+                  @Override
+                  public void onResponse(Call call, Response response) throws IOException
+                  {
+                    if(response.isSuccessful())
+                    {
+                      final String myresponse=response.body().string();
+                      MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                          try {
+                            String json=      JWTUtils.decoded(myresponse);
+
+                            Info_for_signin= JsonParser.pareJson(json);
+                          } catch (Exception e) {
+                            e.printStackTrace();
+                          }
 
 
-              
-            }));
+                        }
+                      });
+                    }
+
+                  }
+                });
+
+                result.success(Info_for_signin);
+
+              }
+
+
+            }
+
+
+            ));
+
+
+
+
+
+
 
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_UP).setMethodCallHandler(
             ((call, result) -> {
