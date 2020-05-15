@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/components/lessonsList.dart';
+import 'package:pishgamv2/components/myLessonsCard.dart';
 
 class MyLessons extends StatefulWidget {
   @override
@@ -29,9 +30,63 @@ class _MyLessonsState extends State<MyLessons> {
             IconButton(
               color: Colors.black,
               icon: Icon(Icons.close),
-              onPressed: (){},
+              onPressed: () {},
             ),
           ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              LessonList(
+                title: 'ریاضی',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      MyLessonCard(
+                        grade: 'پایه دهم',
+                        explanation:
+                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+                        courseName: 'شیمی دهم',
+                        imageURL: 'assets/images/lessons.jpg',
+                      ),
+                      MyLessonCard(
+                        grade: 'پایه دهم',
+                        explanation:
+                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+                        courseName: 'شیمی دهم',
+                        imageURL: 'assets/images/lessons.jpg',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              LessonList(
+                title: 'فیزیک',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      MyLessonCard(
+                        grade: 'پایه دهم',
+                        explanation:
+                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+                        courseName: 'شیمی دهم',
+                        imageURL: 'assets/images/lessons.jpg',
+                      ),
+                      MyLessonCard(
+                        grade: 'پایه دهم',
+                        explanation:
+                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+                        courseName: 'شیمی دهم',
+                        imageURL: 'assets/images/lessons.jpg',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
