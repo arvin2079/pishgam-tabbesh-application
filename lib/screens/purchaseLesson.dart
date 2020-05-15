@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/components/badgeIcon.dart';
 import 'package:pishgamv2/components/lessonsList.dart';
 import 'package:pishgamv2/components/purchaseLessonsCard.dart';
 
@@ -8,7 +10,50 @@ class PurchaseLesson extends StatefulWidget {
 }
 
 class _PurchaseLessonState extends State<PurchaseLesson> {
-  int counter = 4;
+  StreamController<int> _countController = StreamController<int>();
+  int _count = 0;
+  //bool isAdded=false;
+  List<PurchaseItem> items = <PurchaseItem>[
+    PurchaseItem(
+      courseName: 'شیمی دهم',
+      grade: 'پایه دهم',
+      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+      imageURL: 'assets/images/lessons.jpg',
+    ),
+    PurchaseItem(
+      courseName: 'شیمی دهم',
+      grade: 'پایه دهم',
+      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+      imageURL: 'assets/images/lessons.jpg',
+    ),
+    PurchaseItem(
+      courseName: 'شیمی دهم',
+      grade: 'پایه دهم',
+      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+      imageURL: 'assets/images/lessons.jpg',
+    )
+  ];
+
+  @override
+  void dispose() {
+    _countController.close();
+    super.dispose();
+  }
+
+  Iterable<Widget> get _lessonWidgets sync* {
+    for (PurchaseItem item in items) {
+      yield PurchaseLessonCard(
+        purchaseItem: item,
+        onAdd: () {
+          //isAdded = true;
+          PurchaseLessonCard.isAdded = true;
+          _count = _count + 1;
+          _countController.sink.add(_count);
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -28,37 +73,18 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             ),
           ),
           actions: <Widget>[
-            Stack(
-              children: <Widget>[
-                IconButton(
+            StreamBuilder(
+              initialData: _count,
+              stream: _countController.stream,
+              builder: (_, snapshot) => BadgeIcon(
+                icon: IconButton(
                   iconSize: 25,
                   onPressed: () {},
                   icon: Icon(Icons.shopping_cart),
                   color: Colors.black,
                 ),
-                Positioned(
-                  left: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(30)),
-                    constraints: BoxConstraints(
-                      minWidth: 17,
-                      minHeight: 15,
-                    ),
-                    child: Text(
-                      counter.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w100,
-                        fontFamily: 'vazir',
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              ],
+                badgeCount: snapshot.data,
+              ),
             ),
             IconButton(
               iconSize: 25,
@@ -72,33 +98,11 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
           child: Column(
             children: <Widget>[
               LessonList(
-                title: 'رياضی',
+                title: 'ریاضی',
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: <Widget>[
-                      PurchaseLessonCard(
-                        courseName: 'شیمی دهم',
-                        grade: 'پایه دهم',
-                        explanation:
-                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-                        imageURL: 'assets/images/lessons.jpg',
-                      ),
-                      PurchaseLessonCard(
-                        courseName: 'شیمی دهم',
-                        grade: 'پایه دهم',
-                        explanation:
-                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-                        imageURL: 'assets/images/lessons.jpg',
-                      ),
-                      PurchaseLessonCard(
-                        courseName: 'شیمی دهم',
-                        grade: 'پایه دهم',
-                        explanation:
-                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-                        imageURL: 'assets/images/lessons.jpg',
-                      ),
-                    ],
+                    children: _lessonWidgets.toList(),
                   ),
                 ),
               ),
@@ -107,22 +111,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: <Widget>[
-                      PurchaseLessonCard(
-                        courseName: 'شیمی دهم',
-                        grade: 'پایه دهم',
-                        explanation:
-                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-                        imageURL: 'assets/images/lessons.jpg',
-                      ),
-                      PurchaseLessonCard(
-                        courseName: 'شیمی دهم',
-                        grade: 'پایه دهم',
-                        explanation:
-                            'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-                        imageURL: 'assets/images/lessons.jpg',
-                      ),
-                    ],
+                    children: _lessonWidgets.toList(),
                   ),
                 ),
               ),
