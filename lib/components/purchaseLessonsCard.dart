@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 
-class PurchaseLesson extends StatefulWidget {
-  PurchaseLesson(
-      {@required this.imageURL,
-        @required this.courseName,
-        @required this.grade,
-        @required this.explanation});
-
+class PurchaseLessonCard extends StatefulWidget {
   final String imageURL;
+
   final String courseName;
   final String grade;
   final String explanation;
+  PurchaseLessonCard(
+      {this.imageURL,
+      @required this.courseName,
+      @required this.grade,
+      @required this.explanation});
 
   @override
-  _PurchaseLessonState createState() => _PurchaseLessonState(
+  _PurchaseLessonCardState createState() => _PurchaseLessonCardState(
       courseName: courseName,
       explanation: explanation,
       grade: grade,
       imageURL: imageURL);
 }
 
-class _PurchaseLessonState extends State<PurchaseLesson> {
-  _PurchaseLessonState(
-      {@required this.imageURL,
-        @required this.courseName,
-        @required this.grade,
-        @required this.explanation});
-
+class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
   final String imageURL;
   final String courseName;
   final String grade;
   final String explanation;
   bool _isAdded = false;
+  _PurchaseLessonCardState(
+      {this.imageURL, this.courseName, this.grade, this.explanation});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +94,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 15),
                 child: SizedBox(
                   width: double.infinity,
                   child: FlatButton(
@@ -110,23 +106,23 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                     color: _isAdded ? Colors.grey[350] : Colors.lime[500],
                     child: _isAdded
                         ? Text(
-                      'به سبد اضافه شد',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w100,
-                        fontFamily: 'vazir',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    )
+                            'به سبد اضافه شد',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                              fontFamily: 'vazir',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          )
                         : Text(
-                      'افزودن به سبد خرید',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w100,
-                        fontFamily: 'vazir',
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
+                            'افزودن به سبد خرید',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w100,
+                              fontFamily: 'vazir',
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
