@@ -32,7 +32,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: 270,
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -94,14 +94,14 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     RaisedButton(
                       onPressed: () {},
-                      padding: EdgeInsets.fromLTRB(35, 5, 35, 5),
+                      padding: EdgeInsets.fromLTRB(30, 5, 30, 5),
                       child: Text(
                         'دانلود جزوات',
                         style: TextStyle(
