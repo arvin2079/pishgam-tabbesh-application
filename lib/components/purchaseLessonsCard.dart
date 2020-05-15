@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
 
 class PurchaseLessonCard extends StatefulWidget {
-  final String imageURL;
+  final Function onAdd;
+  final PurchaseItem purchaseItem;
+  static bool isAdded = false;
 
-  final String courseName;
-  final String grade;
-  final String explanation;
-  PurchaseLessonCard(
-      {this.imageURL,
-      @required this.courseName,
-      @required this.grade,
-      @required this.explanation});
+  const PurchaseLessonCard({Key key, this.onAdd, this.purchaseItem})
+      : super(key: key);
 
   @override
-  _PurchaseLessonCardState createState() => _PurchaseLessonCardState(
-      courseName: courseName,
-      explanation: explanation,
-      grade: grade,
-      imageURL: imageURL);
+  _PurchaseLessonCardState createState() =>
+      _PurchaseLessonCardState(onAdd: onAdd, purchaseItem: purchaseItem);
 }
 
 class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
-  final String imageURL;
-  final String courseName;
-  final String grade;
-  final String explanation;
-  bool _isAdded = false;
-  _PurchaseLessonCardState(
-      {this.imageURL, this.courseName, this.grade, this.explanation});
+  final Function onAdd;
+  final PurchaseItem purchaseItem;
+  bool isAdded = PurchaseLessonCard.isAdded;
+
+  _PurchaseLessonCardState({this.onAdd, this.purchaseItem});
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +44,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   borderRadius: BorderRadius.circular(20),
                   child: Image(
                     fit: BoxFit.fitWidth,
-                    image: AssetImage(imageURL),
+                    image: AssetImage(purchaseItem.imageURL),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15, right: 5),
                 child: Text(
-                  courseName,
+                  purchaseItem.courseName,
                   style: TextStyle(
                     fontSize: 23,
                     fontFamily: 'WeblogmaYekan',
@@ -72,7 +63,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: Text(
-                  grade,
+                  purchaseItem.grade,
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'WeblogmaYekan',
@@ -84,7 +75,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: 20, top: 10, bottom: 25),
                 child: Text(
-                  explanation,
+                  purchaseItem.explanation,
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'WeblogmaYekan',
@@ -98,13 +89,9 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 child: SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        _isAdded = true;
-                      });
-                    },
-                    color: _isAdded ? Colors.grey[350] : Colors.lime[500],
-                    child: _isAdded
+                    onPressed: onAdd,
+                    color: isAdded ? Colors.grey[350] : Colors.lime[500],
+                    child: isAdded
                         ? Text(
                             'به سبد اضافه شد',
                             style: TextStyle(
@@ -132,4 +119,13 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
       ),
     );
   }
+}
+
+class PurchaseItem {
+  final String imageURL;
+  final String courseName;
+  final String grade;
+  final String explanation;
+
+  PurchaseItem({this.imageURL, this.courseName, this.grade, this.explanation});
 }
