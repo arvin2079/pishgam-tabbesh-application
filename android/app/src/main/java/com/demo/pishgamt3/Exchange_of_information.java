@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 
 import java.security.Key;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Exchange_of_information {
     String url="";
@@ -21,7 +22,9 @@ public class Exchange_of_information {
     {
         MyHttpUtils.RequestData requestData =
                 new MyHttpUtils.RequestData(url, "POST");
-              data.forEach((key,value)->requestData.setParameter(key,value));
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            requestData.setParameter(entry.getKey(),entry.getValue());
+        }
         new MyTask().execute(requestData);
 
     }
