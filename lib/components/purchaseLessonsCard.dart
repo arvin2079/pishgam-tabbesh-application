@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
 
-class PurchaseLessonCard extends StatefulWidget {
+class PurchaseLessonCard extends StatelessWidget {
   final Function onAdd;
   final PurchaseItem purchaseItem;
-  static bool isAdded = false;
+  final Color color;
+  final Widget child;
 
-  const PurchaseLessonCard({Key key, this.onAdd, this.purchaseItem})
-      : super(key: key);
-
-  @override
-  _PurchaseLessonCardState createState() =>
-      _PurchaseLessonCardState(onAdd: onAdd, purchaseItem: purchaseItem);
-}
-
-class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
-  final Function onAdd;
-  final PurchaseItem purchaseItem;
-  bool isAdded = PurchaseLessonCard.isAdded;
-
-  _PurchaseLessonCardState({this.onAdd, this.purchaseItem});
+  PurchaseLessonCard({this.onAdd, this.purchaseItem, this.color, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -90,26 +78,8 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   width: double.infinity,
                   child: FlatButton(
                     onPressed: onAdd,
-                    color: isAdded ? Colors.grey[350] : Colors.lime[500],
-                    child: isAdded
-                        ? Text(
-                            'به سبد اضافه شد',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontFamily: 'vazir',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            'افزودن به سبد خرید',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontFamily: 'vazir',
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
+                    color: color,
+                    child: child,
                   ),
                 ),
               ),
