@@ -125,195 +125,187 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFF424242),
-      appBar: AppBar(
-        elevation: 0,
-        title: Text('Page Title'),
-        leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/background.png'),
-            fit: BoxFit.fill,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xFF424242),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background.png'),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Container(
-            color: Colors.white12.withOpacity(0.1),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30, top: 15),
-                    child: RichText(
-                      textDirection: TextDirection.rtl,
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'پیشگامی ',
-                            style: TextStyle(
-                              fontFamily: 'vazir',
-                              fontSize: 27,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            child: Container(
+              color: Colors.white12.withOpacity(0.1),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30, top: 25),
+                      child: RichText(
+                        textDirection: TextDirection.rtl,
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'پیشگامی ',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontSize: 27,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: 'شو',
-                            style: TextStyle(
-                              fontFamily: 'vazir',
-                              fontSize: 27,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.limeAccent[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      shape: BoxShape.rectangle,
-                      color: Colors.black26,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, right: 20),
-                          child: Text(
-                            'رمز عبور به شماره همراه شما فرستاده خواهد شد.',
-                            textDirection: TextDirection.rtl,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'vazir',
-                              fontWeight: FontWeight.w100,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        SignupTextInput(
-                          labelText: 'نام',
-                          errorText: _submited &&
-                                  !widget.firstnameValidator
-                                      .isValid(_nameController.text)
-                              ? widget.inValidFirstnameErrorMassage
-                              : null,
-                          focusNode: _nameFocusNode,
-                          controller: _nameController,
-                          textInputType: TextInputType.text,
-                          onEditingComplete: _onNameEditingComplete,
-                        ),
-                        SignupTextInput(
-                          labelText: 'نام خانوادگی',
-                          errorText: _submited &&
-                                  !widget.lastnameValidator
-                                      .isValid(_familyNameController.text)
-                              ? widget.inValidLastnameErrorMassage
-                              : null,
-                          focusNode: _familyNameFocusNode,
-                          controller: _familyNameController,
-                          textInputType: TextInputType.text,
-                          onEditingComplete: _onFamilyNameEditingComplete,
-                        ),
-                        SignupTextInput(
-                          labelText: 'نام کاربری',
-                          errorText: _submited &&
-                                  !widget.usernameValidator
-                                      .isValid(_userNameController.text)
-                              ? widget.inValidUsernameErrorMassage
-                              : null,
-                          focusNode: _userNameFocusNode,
-                          controller: _userNameController,
-                          textInputType: TextInputType.text,
-                          onEditingComplete: _onUserNameEditingComplete,
-                        ),
-                        SignupTextInput(
-                          labelText: 'شماره همراه',
-                          errorText: _submited &&
-                                  !widget.phoneNumberValidator
-                                      .isValid(_phoneNumberController.text)
-                              ? widget.inValidPhoneNumberErrorMassage
-                              : null,
-                          maxLength: 11,
-                          focusNode: _passwordFocusNode,
-                          controller: _phoneNumberController,
-                          onEditingComplete: _onPhoneNumberEditingComplete,
-                          textInputType: TextInputType.text,
-                        ),
-                        SignupTextInput(
-                          labelText: 'کد ملی',
-                          errorText: _submited &&
-                                  !widget.nationalCodeValidator
-                                      .isValid(_nationalCodeController.text)
-                              ? widget.invalidNationalCodeErrorMassage
-                              : null,
-                          focusNode: _nationalCodeFocusNode,
-                          controller: _nationalCodeController,
-                          textInputType: TextInputType.text,
-                          maxLength: 10,
-                        ),
-                        SizedBox(height: 40),
-                        Row(
-                          textDirection: TextDirection.rtl,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            CustomDropDownButton(
-                              hint: 'مقطع',
-                              items: grades,
-                              controller: _gradeDropDownController,
-                            ),
-                            CustomDropDownButton(
-                              hint: 'شهر',
-                              items: locations,
-                              controller: _cityDropDownController,
+                            TextSpan(
+                              text: 'شو',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontSize: 27,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.limeAccent[700],
+                              ),
                             ),
                           ],
                         ),
-                        RadioButton(
-                          txt: 'جنسيت',
-                          valueFirst: 1,
-                          valueSecond: 2,
-                          first: 'پسر',
-                          second: 'دختر',
-                          controller: _radioGroupController,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FlatButton(
-                            color: Colors.yellowAccent[700],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        shape: BoxShape.rectangle,
+                        color: Colors.black26,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(top: 10, right: 20),
                             child: Text(
-                              'ثبت',
+                              'رمز عبور به شماره همراه شما فرستاده خواهد شد.',
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
                               style: TextStyle(
+                                color: Colors.white,
                                 fontFamily: 'vazir',
-                                fontWeight: FontWeight.w900,
-                                fontSize: 17,
-                                color: Colors.black87,
+                                fontWeight: FontWeight.w100,
+                                fontSize: 12,
                               ),
                             ),
-                            onPressed: _submit,
                           ),
-                        ),
-                        SizedBox(height: 35),
-                      ],
+                          SignupTextInput(
+                            labelText: 'نام',
+                            errorText: _submited &&
+                                    !widget.firstnameValidator
+                                        .isValid(_nameController.text)
+                                ? widget.inValidFirstnameErrorMassage
+                                : null,
+                            focusNode: _nameFocusNode,
+                            controller: _nameController,
+                            textInputType: TextInputType.text,
+                            onEditingComplete: _onNameEditingComplete,
+                          ),
+                          SignupTextInput(
+                            labelText: 'نام خانوادگی',
+                            errorText: _submited &&
+                                    !widget.lastnameValidator
+                                        .isValid(_familyNameController.text)
+                                ? widget.inValidLastnameErrorMassage
+                                : null,
+                            focusNode: _familyNameFocusNode,
+                            controller: _familyNameController,
+                            textInputType: TextInputType.text,
+                            onEditingComplete: _onFamilyNameEditingComplete,
+                          ),
+                          SignupTextInput(
+                            labelText: 'نام کاربری',
+                            errorText: _submited &&
+                                    !widget.usernameValidator
+                                        .isValid(_userNameController.text)
+                                ? widget.inValidUsernameErrorMassage
+                                : null,
+                            focusNode: _userNameFocusNode,
+                            controller: _userNameController,
+                            textInputType: TextInputType.text,
+                            onEditingComplete: _onUserNameEditingComplete,
+                          ),
+                          SignupTextInput(
+                            labelText: 'شماره همراه',
+                            errorText: _submited &&
+                                    !widget.phoneNumberValidator
+                                        .isValid(_phoneNumberController.text)
+                                ? widget.inValidPhoneNumberErrorMassage
+                                : null,
+                            maxLength: 11,
+                            focusNode: _passwordFocusNode,
+                            controller: _phoneNumberController,
+                            onEditingComplete: _onPhoneNumberEditingComplete,
+                            textInputType: TextInputType.text,
+                          ),
+                          SignupTextInput(
+                            labelText: 'کد ملی',
+                            errorText: _submited &&
+                                    !widget.nationalCodeValidator
+                                        .isValid(_nationalCodeController.text)
+                                ? widget.invalidNationalCodeErrorMassage
+                                : null,
+                            focusNode: _nationalCodeFocusNode,
+                            controller: _nationalCodeController,
+                            textInputType: TextInputType.text,
+                            maxLength: 10,
+                          ),
+                          SizedBox(height: 40),
+                          Row(
+                            textDirection: TextDirection.rtl,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              CustomDropDownButton(
+                                hint: 'مقطع',
+                                items: grades,
+                                controller: _gradeDropDownController,
+                              ),
+                              CustomDropDownButton(
+                                hint: 'شهر',
+                                items: locations,
+                                controller: _cityDropDownController,
+                              ),
+                            ],
+                          ),
+                          RadioButton(
+                            txt: 'جنسيت',
+                            valueFirst: 1,
+                            valueSecond: 2,
+                            first: 'پسر',
+                            second: 'دختر',
+                            controller: _radioGroupController,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: FlatButton(
+                              color: Colors.yellowAccent[700],
+                              child: Text(
+                                'ثبت',
+                                style: TextStyle(
+                                  fontFamily: 'vazir',
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 17,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              onPressed: _submit,
+                            ),
+                          ),
+                          SizedBox(height: 35),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
