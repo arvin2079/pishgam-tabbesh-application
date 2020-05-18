@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 class PurchaseLessonCard extends StatelessWidget {
   final Function onAdd;
   final PurchaseItem purchaseItem;
-  final Color color;
-  final Widget child;
 
-  PurchaseLessonCard({this.onAdd, this.purchaseItem, this.color, this.child});
+  PurchaseLessonCard({this.onAdd, this.purchaseItem});
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +76,8 @@ class PurchaseLessonCard extends StatelessWidget {
                   width: double.infinity,
                   child: FlatButton(
                     onPressed: onAdd,
-                    color: color,
-                    child: child,
+                    color: purchaseItem.color,
+                    child: purchaseItem.child,
                   ),
                 ),
               ),
@@ -96,6 +94,18 @@ class PurchaseItem {
   final String courseName;
   final String grade;
   final String explanation;
+  Color color;
+  Widget child;
+  static const btnColor = Color(0xFFCDDC39);
+  static const btnChild= Text(
+    'افزودن به سبد خرید',
+    style: TextStyle(
+      fontWeight: FontWeight.w100,
+      fontFamily: 'vazir',
+      fontSize: 12,
+      color: Colors.white,
+    ),
+  );
 
-  PurchaseItem({this.imageURL, this.courseName, this.grade, this.explanation});
+  PurchaseItem({this.imageURL, this.courseName, this.grade, this.explanation,this.color= btnColor, this.child = btnChild});
 }
