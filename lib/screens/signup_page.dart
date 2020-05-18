@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
+import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
@@ -13,7 +16,9 @@ class SignUpPage extends StatefulWidget with SignupFieldValidator {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  List<String> location = ['اول', 'دهم', 'دوازدهم'];
+  //fixme : grades and location lists
+  List<String> locations = ['اول', 'دهم', 'دوازدهم'];
+  List<String> grades = ['اول', 'دهم', 'دوازدهم'];
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _familyNameFocusNode = FocusNode();
   final FocusNode _userNameFocusNode = FocusNode();
@@ -24,11 +29,16 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _nationalCodeController = TextEditingController();
+  final RadioGroupController _radioGroupController = RadioGroupController();
+  final DropDownController _gradeDropDownController = DropDownController();
+  final DropDownController _cityDropDownController = DropDownController();
+
   String city;
   String grade;
   String gender;
 
   bool _isLoading = false;
+  bool _submited = false;
 
   @override
   void dispose() {
@@ -40,55 +50,77 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _onNameEditingComplete() {
-    if (widget.firstnameValidator.isValid(_nameController.text))
-      FocusScope.of(context).requestFocus(_familyNameFocusNode);
+    FocusScope.of(context).requestFocus(_familyNameFocusNode);
   }
 
   void _onFamilyNameEditingComplete() {
-    if (widget.lastnameValidator.isValid(_nameController.text))
-      FocusScope.of(context).requestFocus(_userNameFocusNode);
+    FocusScope.of(context).requestFocus(_userNameFocusNode);
   }
 
   void _onUserNameEditingComplete() {
-    if (widget.usernameValidator.isValid(_userNameController.text))
-      FocusScope.of(context).requestFocus(_passwordFocusNode);
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
   }
 
   void _onPhoneNumberEditingComplete() {
-    if(widget.nationalCodeValidator.isValid(_nationalCodeController.text))
-      FocusScope.of(context).requestFocus(_nationalCodeFocusNode);
+    FocusScope.of(context).requestFocus(_nationalCodeFocusNode);
   }
 
   void _submit() async {
     setState(() {
       _isLoading = true;
+      _submited = true;
     });
-        //fixme : check radio button and dropdowns value
-    if (!widget.usernameValidator.isValid(_userNameController.text) ||
-        !widget.firstnameValidator.isValid(_nameController.text) ||
-        !widget.lastnameValidator.isValid(_familyNameController.text) ||
-        !widget.phoneNumberValidator.isValid(_phoneNumberController.text) ||
-        !widget.nationalCodeValidator.isValid(_nationalCodeController.text))
-        return;
-      try {
-        final auth = Provider.of<AuthBase>(context);
-        auth.signup(
-            user: User(
-          firstname: _nameController.text,
-          lastname: _familyNameController.text,
-          username: _userNameController.text,
-          gender: gender,
-          city: city,
-          grades: grade,
-          phoneNumber: _phoneNumberController.text,
-        ));
-      } catch (e) {
-        print(e);
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+
+    try {
+      if (!widget.usernameValidator.isValid(_userNameController.text) ||
+          !widget.firstnameValidator.isValid(_nameController.text) ||
+          !widget.lastnameValidator.isValid(_familyNameController.text) ||
+          !widget.phoneNumberValidator.isValid(_phoneNumberController.text) ||
+          !widget.nationalCodeValidator.isValid(_nationalCodeController.text) ||
+          _radioGroupController.getValue == 0 ||
+          _cityDropDownController.getValue == null ||
+          _gradeDropDownController.getValue == null) throw Exception;
+
+      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+
+      authBloc.add(
+        AuthEvent(
+          event: ApplicationAuthEvent.signUp,
+          user: User(
+            firstname: _nameController.text,
+            lastname: _familyNameController.text,
+            username: _userNameController.text,
+            gender: gender,
+            city: city,
+            grades: grade,
+            phoneNumber: _phoneNumberController.text,
+          ),
+        ),
+      );
+
+      //fixme with provider and change notifier
+      authBloc.listen((state) {
+        if (state.state == ApplicationAuthState.signedUp) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleAlertDialog(
+                  title: 'ثبت نام با موفقیت انجام شد',
+                  content: 'رمز عبور شما به شماره همراه شما فرستاده شد میتوانید بعد از ورود به برنامه رمز عبور خود را تغییر دهید',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                );
+              });
+        }
+      });
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -133,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: TextStyle(
                               fontFamily: 'vazir',
                               fontSize: 27,
-                              fontWeight: FontWeight.w100,
+                              fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
                           ),
@@ -142,7 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: TextStyle(
                               fontFamily: 'vazir',
                               fontSize: 27,
-                              fontWeight: FontWeight.w100,
+                              fontWeight: FontWeight.w500,
                               color: Colors.limeAccent[700],
                             ),
                           ),
@@ -159,10 +191,29 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 10, right: 20),
+                          child: Text(
+                            'رمز عبور به شماره همراه شما فرستاده خواهد شد.',
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'vazir',
+                              fontWeight: FontWeight.w100,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
                         SignupTextInput(
                           labelText: 'نام',
+                          errorText: _submited &&
+                                  !widget.firstnameValidator
+                                      .isValid(_nameController.text)
+                              ? widget.inValidFirstnameErrorMassage
+                              : null,
                           focusNode: _nameFocusNode,
                           controller: _nameController,
                           textInputType: TextInputType.text,
@@ -170,6 +221,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         SignupTextInput(
                           labelText: 'نام خانوادگی',
+                          errorText: _submited &&
+                                  !widget.lastnameValidator
+                                      .isValid(_familyNameController.text)
+                              ? widget.inValidLastnameErrorMassage
+                              : null,
                           focusNode: _familyNameFocusNode,
                           controller: _familyNameController,
                           textInputType: TextInputType.text,
@@ -177,6 +233,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         SignupTextInput(
                           labelText: 'نام کاربری',
+                          errorText: _submited &&
+                                  !widget.usernameValidator
+                                      .isValid(_userNameController.text)
+                              ? widget.inValidUsernameErrorMassage
+                              : null,
                           focusNode: _userNameFocusNode,
                           controller: _userNameController,
                           textInputType: TextInputType.text,
@@ -184,6 +245,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         SignupTextInput(
                           labelText: 'شماره همراه',
+                          errorText: _submited &&
+                                  !widget.phoneNumberValidator
+                                      .isValid(_phoneNumberController.text)
+                              ? widget.inValidPhoneNumberErrorMassage
+                              : null,
                           maxLength: 11,
                           focusNode: _passwordFocusNode,
                           controller: _phoneNumberController,
@@ -192,6 +258,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         SignupTextInput(
                           labelText: 'کد ملی',
+                          errorText: _submited &&
+                                  !widget.nationalCodeValidator
+                                      .isValid(_nationalCodeController.text)
+                              ? widget.invalidNationalCodeErrorMassage
+                              : null,
                           focusNode: _nationalCodeFocusNode,
                           controller: _nationalCodeController,
                           textInputType: TextInputType.text,
@@ -204,11 +275,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           children: <Widget>[
                             CustomDropDownButton(
                               hint: 'مقطع',
-                              items: location,
+                              items: grades,
+                              controller: _gradeDropDownController,
                             ),
                             CustomDropDownButton(
                               hint: 'شهر',
-                              items: location,
+                              items: locations,
+                              controller: _cityDropDownController,
                             ),
                           ],
                         ),
@@ -218,6 +291,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           valueSecond: 2,
                           first: 'پسر',
                           second: 'دختر',
+                          controller: _radioGroupController,
                         ),
                         SizedBox(
                           width: double.infinity,

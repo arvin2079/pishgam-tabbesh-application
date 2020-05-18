@@ -37,7 +37,9 @@ class _SplashScreenState extends State<SplashScreen>
       builder: (context, state) {
         if (state.state == ApplicationAuthState.landing && state.user == null) {
           startAnimation().then((value) {
-            authBloc.add(ApplicationAuthEvent.landing);
+            authBloc.add(AuthEvent(
+              event: ApplicationAuthEvent.landing,
+            ));
           });
           return Scaffold(
             resizeToAvoidBottomInset: false,
@@ -111,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           );
-        } else if (state.state == ApplicationAuthState.SignedOut && state.user == null) {
+        } else if (state.state == ApplicationAuthState.signedOut && state.user == null) {
           return SigninPage();
         } else if (state.state == ApplicationAuthState.signedIn && state.user != null) {
           disposAnimation();

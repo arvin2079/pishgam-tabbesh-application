@@ -3,6 +3,7 @@ import 'authClass.dart';
 
 enum ApplicationAuthEvent {
   landing,
+  signUp,
   signIn,
   signOut,
 }
@@ -11,7 +12,15 @@ enum ApplicationAuthEvent {
 enum ApplicationAuthState {
   landing,
   signedIn,
-  SignedOut,
+  signedOut,
+  signedUp,
+}
+
+class AuthEvent {
+  AuthEvent({this.user, this.event});
+
+  final User user;
+  final ApplicationAuthEvent event;
 }
 
 class AuthState {
@@ -21,8 +30,9 @@ class AuthState {
   final ApplicationAuthState state;
 }
 
-class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.auth);
+
   final AuthBase auth;
 
   @override
@@ -30,14 +40,15 @@ class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
       AuthState(user: null, state: ApplicationAuthState.landing);
 
   @override
-  Stream<AuthState> mapEventToState(ApplicationAuthEvent event) async* {
-    switch (event) {
-      case ApplicationAuthEvent.landing: {
+  Stream<AuthState> mapEventToState(AuthEvent event) async* {
+    switch (event.event) {
+      case ApplicationAuthEvent.landing:
+        {
           User user = await auth.currentUser();
           yield AuthState(
             user: user,
             state: user == null
-                ? ApplicationAuthState.SignedOut
+                ? ApplicationAuthState.signedOut
                 : ApplicationAuthState.signedIn,
           );
         }
@@ -46,6 +57,9 @@ class AuthBloc extends Bloc<ApplicationAuthEvent, AuthState> {
         // TODO: Handle this case.
         break;
       case ApplicationAuthEvent.signOut:
+        // TODO: Handle this case.
+        break;
+      case ApplicationAuthEvent.signUp:
         // TODO: Handle this case.
         break;
     }

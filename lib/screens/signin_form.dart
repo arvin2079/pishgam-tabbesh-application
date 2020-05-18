@@ -42,7 +42,10 @@ class _SignInFormState extends State<SignInForm> {
       showDialog(
         context: context,
         builder: (context) {
-          return CredentialError();
+          return SimpleAlertDialog(
+            title: 'ایمیل یا رمز عبور نامعتبر',
+            content: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
+          );
         },
       );
     }

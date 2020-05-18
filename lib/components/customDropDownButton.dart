@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomDropDownButton extends StatefulWidget {
-  CustomDropDownButton({@required this.hint, @required this.items});
+  CustomDropDownButton({@required this.hint, @required this.items, this.controller});
   final String hint;
   final List<String> items;
+  final DropDownController controller;
 
   @override
   _CustomDropDownButtonState createState() =>
@@ -68,6 +69,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
             value: selectedItem,
             onChanged: (newValue) {
               setState(() {
+                widget.controller.value = newValue;
                 selectedItem = newValue;
               });
             },
@@ -81,5 +83,15 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
         ),
       ),
     );
+  }
+}
+
+class DropDownController {
+  String _value;
+
+  String get getValue => _value;
+
+  set value(String value) {
+    _value = value;
   }
 }

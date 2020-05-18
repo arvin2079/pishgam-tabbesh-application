@@ -30,8 +30,8 @@ class CredentioalStringValidator {
 class PhoneNumberStringValidator implements StringValidator {
   @override
   bool isValid(String value) {
-    RegExp regExp = RegExp(r'9\d{9}');
-    return regExp.hasMatch(value) && value.length == 10;
+    RegExp regExp = RegExp(r'09\d{9}');
+    return regExp.hasMatch(value) && value.length == 11;
   }
 }
 
@@ -52,7 +52,7 @@ class SignupFieldValidator {
   final String inValidLastnameErrorMassage = 'نام خوانوادگی صحیح خود را وارد کنید';
   final String inValidUsernameErrorMassage = 'نام کاربری صحیح خود را وارد کنید';
   final String inValidPhoneNumberErrorMassage = 'شماره همراه صحیح خود را وارد کنید';
-  final String nationalCodeErrorMassage = 'کد ملی خود را وارد کنید';
+  final String invalidNationalCodeErrorMassage = 'کد ملی خود را وارد کنید';
 }
 
 // fixme : phone number maxlenght for dialog box is must be 10

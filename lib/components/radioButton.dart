@@ -4,6 +4,7 @@ class RadioButton extends StatefulWidget {
   RadioButton(
       {@required this.valueFirst,
       @required this.valueSecond,
+        @required this.controller,
       @required this.first,
       @required this.second,
       @required this.txt});
@@ -11,6 +12,7 @@ class RadioButton extends StatefulWidget {
   final int valueSecond;
   final String first;
   final String second;
+  final RadioGroupController controller;
   final String txt;
   @override
   _RadioButtonState createState() => _RadioButtonState(
@@ -35,6 +37,8 @@ class _RadioButtonState extends State<RadioButton> {
   final String first;
   final String second;
   final String txt;
+
+  int get value => groupValue;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +93,18 @@ class _RadioButtonState extends State<RadioButton> {
 
   void radioButtonChecked(int value) {
     setState(() {
+      widget.controller.value = value;
       groupValue = value;
     });
   }
+}
+
+class RadioGroupController {
+  int _value = 0;
+
+  set value(int value) {
+    _value = value;
+  }
+
+  int get getValue => _value;
 }
