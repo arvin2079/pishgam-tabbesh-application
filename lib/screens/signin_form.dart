@@ -6,6 +6,7 @@ import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
+import 'package:pishgamv2/screens/signup_page.dart';
 
 class SignInForm extends StatefulWidget with CredentioalStringValidator {
   @override
@@ -27,11 +28,9 @@ class _SignInFormState extends State<SignInForm> {
         _submitEnabled = false;
       });
       try {
-
         // fixme : handel sign in here
 
       } catch (e) {
-
         // fixme : handel errors
 
       } finally {
@@ -166,14 +165,20 @@ class _SignInFormState extends State<SignInForm> {
                   GestureDetector(
                     onTap: _submitEnabled
                         ? () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return PhoneNumGetterDialog();
-                                }).then((val) {
-                              // TODO : handel situation that when first dialog confirm or dismiss
-                              FocusScope.of(context).requestFocus(FocusNode());
-                            });
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return PhoneNumGetterDialog();
+                            //     }).then((val) {
+                            //   // TODO : handel situation that when first dialog confirm or dismiss
+                            //   FocusScope.of(context).requestFocus(FocusNode());
+                            // });
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void> (
+                                fullscreenDialog: true,
+                                builder: (context) => SignUpPage(),
+                              )
+                            );
                           }
                         : null,
                     child: Text(

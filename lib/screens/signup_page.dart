@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/brain/authClass.dart';
+import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
+import 'package:provider/provider.dart';
 
-class SignUpPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget with SignupFieldValidator {
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -15,43 +18,92 @@ class _SignUpPageState extends State<SignUpPage> {
   final FocusNode _familyNameFocusNode = FocusNode();
   final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _nationalCodeFocusNode = FocusNode();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _familyNameController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _nationalCodeController = TextEditingController();
+  String city;
+  String grade;
+  String gender;
+
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _familyNameController.dispose();
     _userNameController.dispose();
-    _passwordController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
   void _onNameEditingComplete() {
-    FocusScope.of(context).requestFocus(_familyNameFocusNode);
+    if (widget.firstnameValidator.isValid(_nameController.text))
+      FocusScope.of(context).requestFocus(_familyNameFocusNode);
   }
 
   void _onFamilyNameEditingComplete() {
-    FocusScope.of(context).requestFocus(_userNameFocusNode);
+    if (widget.lastnameValidator.isValid(_nameController.text))
+      FocusScope.of(context).requestFocus(_userNameFocusNode);
   }
 
   void _onUserNameEditingComplete() {
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+    if (widget.usernameValidator.isValid(_userNameController.text))
+      FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
+  void _onPhoneNumberEditingComplete() {
+    if(widget.nationalCodeValidator.isValid(_nationalCodeController.text))
+      FocusScope.of(context).requestFocus(_nationalCodeFocusNode);
+  }
+
+  void _submit() async {
+    setState(() {
+      _isLoading = true;
+    });
+        //fixme : check radio button and dropdowns value
+    if (!widget.usernameValidator.isValid(_userNameController.text) ||
+        !widget.firstnameValidator.isValid(_nameController.text) ||
+        !widget.lastnameValidator.isValid(_familyNameController.text) ||
+        !widget.phoneNumberValidator.isValid(_phoneNumberController.text) ||
+        !widget.nationalCodeValidator.isValid(_nationalCodeController.text))
+        return;
+      try {
+        final auth = Provider.of<AuthBase>(context);
+        auth.signup(
+            user: User(
+          firstname: _nameController.text,
+          lastname: _familyNameController.text,
+          username: _userNameController.text,
+          gender: gender,
+          city: city,
+          grades: grade,
+          phoneNumber: _phoneNumberController.text,
+        ));
+      } catch (e) {
+        print(e);
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFF424242),
       appBar: AppBar(
         elevation: 0,
         title: Text('Page Title'),
         leading: IconButton(
           icon: Icon(Icons.close),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Container(
@@ -134,8 +186,16 @@ class _SignUpPageState extends State<SignUpPage> {
                           labelText: 'شماره همراه',
                           maxLength: 11,
                           focusNode: _passwordFocusNode,
-                          controller: _passwordController,
+                          controller: _phoneNumberController,
+                          onEditingComplete: _onPhoneNumberEditingComplete,
                           textInputType: TextInputType.text,
+                        ),
+                        SignupTextInput(
+                          labelText: 'کد ملی',
+                          focusNode: _nationalCodeFocusNode,
+                          controller: _nationalCodeController,
+                          textInputType: TextInputType.text,
+                          maxLength: 10,
                         ),
                         SizedBox(height: 40),
                         Row(
@@ -172,7 +232,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 color: Colors.black87,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: _submit,
                           ),
                         ),
                         SizedBox(height: 35),
@@ -188,3 +248,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+
+// todo : getting value of radio button and dropdown menu
+// todo : completing fields and submit method

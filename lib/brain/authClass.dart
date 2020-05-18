@@ -56,11 +56,11 @@ class User {
   final String username;
   final String firstname;
   final String lastname;
+  final String nationalCode;
   final String city;
   final String gender;
   final String grades;
   final String phoneNumber;
-  final String nationalCode;
 }
 
 

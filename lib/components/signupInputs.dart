@@ -9,6 +9,7 @@ class SignupTextInput extends StatelessWidget {
       this.obscureText = false,
       this.labelText,
       this.errorText,
+      this.enabled,
       this.maxLength,
       this.onEditingComplete})
       : super(key: key);
@@ -17,6 +18,7 @@ class SignupTextInput extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType textInputType;
   final bool obscureText;
+  final bool enabled;
   final String labelText;
   final String errorText;
   final int maxLength;
@@ -35,10 +37,14 @@ class SignupTextInput extends StatelessWidget {
           maxLength: maxLength,
           keyboardType: textInputType,
           obscureText: obscureText,
+          enabled: enabled,
           onEditingComplete: onEditingComplete,
           decoration: InputDecoration(
             errorText: errorText,
             labelText: labelText,
+            counterStyle: TextStyle(
+              color: Colors.white,
+            ),
             labelStyle: TextStyle(
               fontFamily: 'vazir',
               fontWeight: FontWeight.w100,
