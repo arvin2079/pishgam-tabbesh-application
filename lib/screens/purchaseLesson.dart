@@ -12,7 +12,6 @@ class PurchaseLesson extends StatefulWidget {
 class _PurchaseLessonState extends State<PurchaseLesson> {
   StreamController<int> _countController = StreamController<int>();
   int _count = 0;
-  //bool isAdded=false;
   List<PurchaseItem> items = <PurchaseItem>[
     PurchaseItem(
       courseName: 'شیمی دهم',
@@ -45,10 +44,24 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
       yield PurchaseLessonCard(
         purchaseItem: item,
         onAdd: () {
-          //isAdded = true;
-         // PurchaseLessonCard.isAdded = true;
-          _count = _count + 1;
-          _countController.sink.add(_count);
+          setState(() {
+            _count = _count + 1;
+            _countController.sink.add(_count);
+            int idx = items.indexWhere((value) {
+              if (value == item) return true;
+              return false;
+            });
+            items[idx].color = Colors.grey[350];
+            items[idx].child = Text(
+              'به سبد اضافه شد',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                fontFamily: 'vazir',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            );
+          });
         },
       );
     }
