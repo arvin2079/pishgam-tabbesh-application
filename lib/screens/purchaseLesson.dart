@@ -46,7 +46,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
         purchaseItem: item,
         onAdd: () {
           //isAdded = true;
-          PurchaseLessonCard.isAdded = true;
+         // PurchaseLessonCard.isAdded = true;
           _count = _count + 1;
           _countController.sink.add(_count);
         },
