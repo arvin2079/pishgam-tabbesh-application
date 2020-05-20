@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -42,6 +43,8 @@ public class MainActivity extends FlutterActivity {
   String Inquiry="";
 //  Send a list of registration information
   HashMap<String,String> Info_for_signin;
+  HashMap<String,String> Info_for_signup;
+
   MyHttpUtils myHttpUtils;
 
 
@@ -109,11 +112,26 @@ public class MainActivity extends FlutterActivity {
               if(call.method.equals(""))
               {
 //                The main function is executed here to give and take the parameters
+                Info_for_signup.put("firstname",call.argument("firstname"));
+                Info_for_signup.put("lastname",call.argument("lastname"));
+                Info_for_signup.put("socialnumber",call.argument("socialnumber"));
+                Info_for_signup.put("phonenumber",call.argument("phonenumber"));
+                Info_for_signup.put("grade",call.argument("grade"));
+                Info_for_signup.put("city",call.argument("city"));
+                Info_for_signup.put("gender",call.argument("gender"));
+                Info_for_signup.put("address",call.argument("address"));
+             //create hashmap for send to server by connecting to flutter and send it to exchange
 
-                 Exchange_of_information exchange_of_information=new Exchange_of_information(call.argument(""),"");
-                 exchange_of_information.Send_information();
+                MyHttpUtils.RequestData requestData =
+                        new MyHttpUtils.RequestData("", "POST");
+                for (Map.Entry<String, String> entry : Info_for_signup.entrySet()) {
+                  requestData.setParameter(entry.getKey(),entry.getValue());
+                }
+                new MyTask().execute(requestData);
 
-                 result.success(exchange_of_information.feedback);
+                 result.success(Inquiry);
+
+
 
 
 
