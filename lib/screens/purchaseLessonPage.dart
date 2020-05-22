@@ -51,7 +51,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
               if (value == item) return true;
               return false;
             });
-            items[idx].color = Colors.grey[350];
+            items[idx].isAdded=true;
             items[idx].child = Text(
               'به سبد اضافه شد',
               style: TextStyle(
