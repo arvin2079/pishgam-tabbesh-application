@@ -76,7 +76,7 @@ class PurchaseLessonCard extends StatelessWidget {
                   width: double.infinity,
                   child: FlatButton(
                     disabledColor: Colors.grey[350],
-                    onPressed: onAdd,
+                    onPressed: purchaseItem.isAdded ? null :  onAdd,
                     color: purchaseItem.color,
                     child: purchaseItem.child,
                   ),
@@ -97,6 +97,7 @@ class PurchaseItem {
   final String explanation;
   Color color;
   Widget child;
+  bool isAdded;
   static const btnColor = Color(0xFFCDDC39);
   static const btnChild = Text(
     'افزودن به سبد خرید',
@@ -114,5 +115,6 @@ class PurchaseItem {
       this.grade,
       this.explanation,
       this.color = btnColor,
-      this.child = btnChild});
+      this.child = btnChild,
+      this.isAdded=false});
 }
