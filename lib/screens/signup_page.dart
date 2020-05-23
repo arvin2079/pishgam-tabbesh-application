@@ -83,7 +83,8 @@ class _SignUpPageState extends State<SignUpPage> {
           _cityDropDownController.getValue == null ||
           _gradeDropDownController.getValue == null) throw Exception;
 
-      authBloc.add(DoSignUp(
+      authBloc.add(
+        DoSignUp(
           user: User(
             firstname: _nameController.text,
             lastname: _familyNameController.text,
