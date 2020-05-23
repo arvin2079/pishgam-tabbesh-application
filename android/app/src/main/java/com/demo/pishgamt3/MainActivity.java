@@ -59,8 +59,8 @@ public class MainActivity extends FlutterActivity {
                 OkHttpClient client=new OkHttpClient();
                 String url="https://tabeshma.000webhostapp.com/mysites/showparams.php";
                 RequestBody formBody = new FormBody.Builder()
-                        .add("email", "eve.holt@reqres.in")
-                        .add("password","pistol")
+                        .add("username", call.argument("username"))
+                        .add("password",call.argument("password"))
                         .build();
 
                 Request request = new Request.Builder()
