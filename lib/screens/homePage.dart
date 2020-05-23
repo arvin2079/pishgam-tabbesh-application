@@ -34,8 +34,14 @@ class _HomePageState extends State<HomePage>
       onPressed: () {},
     ),
     MainMenuSliderCard(
-      icon: Icons.import_contacts,
+      icon: Icons.shopping_basket,
       labelText: 'خرید درس',
+      buttonText: 'مشاهده',
+      onPressed: () {},
+    ),
+    MainMenuSliderCard(
+      icon: Icons.alarm,
+      labelText: 'اعلان ها',
       buttonText: 'مشاهده',
       onPressed: () {},
     ),
@@ -144,13 +150,11 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           width: 20,
                         ),
+                        //fixme : showing image
                         CircleAvatar(
-                          //fixme
-                          radius: 35,
+                          child: Icon(Icons.person, color: Colors.black45, size: 30),
                           backgroundColor: Colors.grey[200],
-                          child: profilePicture == null
-                              ? Icon(Icons.person, color: Colors.black45, size: 30)
-                              : profilePicture,
+                          radius: 35,
                         ),
                       ],
                     ),
@@ -162,27 +166,19 @@ class _HomePageState extends State<HomePage>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-//                      boxShadow: [
-//                        BoxShadow(
-//                          color: Colors.black26,
-//                          blurRadius: 6.0,
-//                          // has the effect of softening the shadow
-//                          spreadRadius: 0.0,
-//                          // has the effect of extending the shadow
-//                          offset: Offset(
-//                            0.0, // horizontal, move right 10
-//                            3.0, // vertical, move down 10
-//                          ),
-//                        ),
-//                      ],
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                          Colors.white,
-                          scaffoldDefaultBackgroundColor,
-                        ],
-                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6.0,
+                          // has the effect of softening the shadow
+                          spreadRadius: 0.0,
+                          // has the effect of extending the shadow
+                          offset: Offset(
+                            0.0, // horizontal, move right 10
+                            3.0, // vertical, move down 10
+                          ),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,12 +188,13 @@ class _HomePageState extends State<HomePage>
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'vazir',
-                            color: Colors.black.withOpacity(0.6),
-                            fontWeight: FontWeight.w900,
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.w100,
                             fontSize: 30,
                           ),
                         ),
                         Text(
+                          //fixme : name
                           'نام کلاس',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -220,8 +217,8 @@ class _HomePageState extends State<HomePage>
                           ),
                           textStyle: TextStyle(
                             fontSize: 40,
-                            color: Colors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w100,
                           ),
                         ),
                       ],
@@ -286,6 +283,7 @@ class _HomePageState extends State<HomePage>
                   width: size.width,
                   height: size.height - 100,
                   decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[400]),
                     color: cardBackgroudColor,
                     borderRadius:
                         BorderRadius.only(topLeft: _radius, topRight: _radius),

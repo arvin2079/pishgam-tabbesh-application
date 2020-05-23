@@ -2,11 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
 import 'package:pishgamv2/screens/signup_page.dart';
+import 'package:provider/provider.dart';
 
 class SignInForm extends StatefulWidget with CredentioalStringValidator {
   @override
@@ -22,32 +24,34 @@ class _SignInFormState extends State<SignInForm> {
 
   void _submit() {
     // TODO : set _submitEnabled to false when futer of authenticatio is in progress
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     if (widget.emailValidator.isValid(_emailTextController.text) &&
         widget.passwordValidator.isValid(_passwordTextController.text)) {
       setState(() {
         _submitEnabled = false;
       });
-      try {
-        // fixme : handel sign in here
 
+      try {
+        authBloc.add(DoSignIn(
+          username: _emailTextController.text,
+          password: _passwordTextController.text,
+        ));
       } catch (e) {
         // fixme : handel errors
-
+        authBloc.add(CatchError(
+          message: 'اشکال در ارتباط با سرور',
+          detail: 'sign in',
+        ));
       } finally {
         setState(() {
           _submitEnabled = true;
         });
       }
     } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleAlertDialog(
-            title: 'ایمیل یا رمز عبور نامعتبر',
-            content: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
-          );
-        },
-      );
+      authBloc.add(CatchError(
+        message: 'ایمیل یا رمز عبور نامعتبر',
+        detail: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
+      ));
     }
   }
 
@@ -176,12 +180,10 @@ class _SignInFormState extends State<SignInForm> {
                             //   // TODO : handel situation that when first dialog confirm or dismiss
                             //   FocusScope.of(context).requestFocus(FocusNode());
                             // });
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void> (
-                                fullscreenDialog: true,
-                                builder: (context) => SignUpPage(),
-                              )
-                            );
+                            Navigator.of(context).push(MaterialPageRoute<void>(
+                              fullscreenDialog: true,
+                              builder: (context) => SignUpPage(),
+                            ));
                           }
                         : null,
                     child: Text(

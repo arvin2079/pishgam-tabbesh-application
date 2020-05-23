@@ -65,12 +65,14 @@ class _SignUpPageState extends State<SignUpPage> {
     FocusScope.of(context).requestFocus(_nationalCodeFocusNode);
   }
 
-  void _submit() async {
+  void _submit() {
     setState(() {
       _isLoading = true;
       _submited = true;
     });
 
+    //fixme : warning
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     try {
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
           !widget.firstnameValidator.isValid(_nameController.text) ||
@@ -81,43 +83,19 @@ class _SignUpPageState extends State<SignUpPage> {
           _cityDropDownController.getValue == null ||
           _gradeDropDownController.getValue == null) throw Exception;
 
-      //fixme : warning
-      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-
-//      authBloc.add(
-//        AuthEvent(
-//          event: ApplicationAuthEvent.signUp,
-//          user: User(
-//            firstname: _nameController.text,
-//            lastname: _familyNameController.text,
-//            username: _userNameController.text,
-//            gender: gender,
-//            city: city,
-//            grades: grade,
-//            phoneNumber: _phoneNumberController.text,
-//          ),
-//        ),
-//      );
-
-      //fixme with provider and change notifier
-//      authBloc.listen((state) {
-//        if (state.state == ApplicationAuthState.signedUp) {
-//          showDialog(
-//              context: context,
-//              builder: (context) {
-//                return SimpleAlertDialog(
-//                  title: 'ثبت نام با موفقیت انجام شد',
-//                  content: 'رمز عبور شما به شماره همراه شما فرستاده شد میتوانید بعد از ورود به برنامه رمز عبور خود را تغییر دهید',
-//                  onPressed: () {
-//                    Navigator.pop(context);
-//                  },
-//                );
-//              });
-//        }
-//      });
-    } catch (e) {
-      print(e);
-    } finally {
+      authBloc.add(DoSignUp(
+          user: User(
+            firstname: _nameController.text,
+            lastname: _familyNameController.text,
+            username: _userNameController.text,
+            gender: gender,
+            city: city,
+            grades: grade,
+            phoneNumber: _phoneNumberController.text,
+          ),
+        ),
+      );
+    } catch (_) {} finally {
       setState(() {
         _isLoading = false;
       });

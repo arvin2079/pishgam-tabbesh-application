@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
 
@@ -41,16 +42,26 @@ class _LanidngPageState extends State<LanidngPage>
     return BlocConsumer<AuthBloc, AuthState>(
         bloc: authBloc,
         listener: (context, state) {
-          if (state is StartAnimation)
+          if (state is StartAnimation) {
             startAnimation().then((_) {
               authBloc.add(GoAuthenticationPage());
             });
+          } else if (state is AuthenticationError) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleAlertDialog(
+                  title: state.message,
+                  content: state.details,
+                );
+              },
+            );
+          }
         },
         buildWhen: (lastState, thisState) {
-          if (thisState is StartAnimation)
+          if (thisState is StartAnimation || thisState is AuthenticationError)
             return false;
-          else
-            return true;
+          return true;
         },
         // ignore: missing_return
         builder: (context, state) {

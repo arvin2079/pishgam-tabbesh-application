@@ -33,12 +33,22 @@ class GoAuthenticationPage extends AuthEvent {
 
 class DoSignUp extends AuthEvent {
   const DoSignUp({@required this.user});
-
   final User user;
 
   @override
   // TODO: implement props
   List<Object> get props => [user];
+}
+
+class CatchError extends AuthEvent {
+  CatchError({this.message, this.detail});
+  final String message;
+  final String detail;
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+
 }
 
 
@@ -72,8 +82,9 @@ class SignIn extends AuthState {
 }
 
 class AuthenticationError extends AuthState {
-  AuthenticationError(this.message);
+  AuthenticationError({this.message, this.details});
   final String message;
+  final String details;
 
   @override
   // TODO: implement props
@@ -97,12 +108,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield user == null ? StartAnimation() : Home();
     } else if(event is DoSignIn) {
       User user = await auth.signin(username: event.username, password: event.password);
-      yield user == null ? AuthenticationError("signin_error") : Home();
+      yield user == null ? AuthenticationError(message : "اشکال در ارتباط با سرور") : Home();
     } else if (event is DoSignUp) {
       User user = await auth.signup(user: event.user);
-      yield user == null ? AuthenticationError("signup_error") : SignIn();
+      yield user == null ? AuthenticationError(message : "اشکال در ارتباط با سرور") : SignIn();
     } else if (event is GoAuthenticationPage) {
       yield SignIn();
+    } else if (event is CatchError) {
+      yield AuthenticationError(
+        message: event.message,
+        details: event.detail,
+      );
     }
   }
 }

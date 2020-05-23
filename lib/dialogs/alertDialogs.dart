@@ -20,7 +20,7 @@ class SimpleAlertDialog extends StatelessWidget {
         ),
       ),
       content: Text(
-        content,
+        content != null ? content : '',
         textDirection: TextDirection.rtl,
         style: TextStyle(
           fontFamily: 'vazir',
