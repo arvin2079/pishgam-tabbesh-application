@@ -1,19 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 abstract class AuthBase {
   Stream<User> get onAuthStateChange;
+
   Future<User> signup({@required User user});
+
   Future<User> signin({@required String username, @required String password});
+
   Future<User> currentUser();
+
   Future<void> signOut();
+
   Future<Image> getUserProfilePicture();
-  // todo : zarinpal (buying lessons)
+// todo : zarinpal (buying lessons)
 }
 
 // TODO : userToken smust define in singleton design pattern
 
-class Auth extends AuthBase{
-
+class Auth extends AuthBase {
   @override
   // TODO: implement onAuthStateChange
   Stream<User> get onAuthStateChange => null;
@@ -49,9 +54,18 @@ class Auth extends AuthBase{
   }
 }
 
+class User extends Equatable {
+  User(
+      {this.uid,
+      this.username,
+      this.firstname,
+      this.lastname,
+      this.city,
+      this.gender,
+      this.grades,
+      this.phoneNumber,
+      this.nationalCode});
 
-class User {
-  User({this.uid, this.username, this.firstname, this.lastname, this.city, this.gender, this.grades, this.phoneNumber, this.nationalCode});
   final String uid;
   final String username;
   final String firstname;
@@ -61,15 +75,18 @@ class User {
   final String gender;
   final String grades;
   final String phoneNumber;
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [
+        uid,
+        username,
+        firstname,
+        lastname,
+        nationalCode,
+        city,
+        gender,
+        grades,
+        phoneNumber
+      ];
 }
-
-
-
-
-
-
-
-
-
-
-

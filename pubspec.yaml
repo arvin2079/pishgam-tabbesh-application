@@ -26,13 +26,12 @@ dependencies:
   carousel_slider: ^1.4.1
   flutter_spinkit: ^4.1.2+1
   loading_animations: ^2.1.0
-  http: ^0.12.0+4
   bloc: ^3.0.0
   flutter_bloc: ^3.2.0
-  intl_phone_number_input: ^0.3.0
   slide_countdown_clock: ^1.0.3
   provider:
   image_picker:
+  equatable: ^1.1.1
 
 dev_dependencies:
   flutter_test:

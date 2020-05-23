@@ -8,12 +8,12 @@ import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
 
-class SplashScreen extends StatefulWidget {
+class LanidngPage extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _LanidngPageState createState() => _LanidngPageState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _LanidngPageState extends State<LanidngPage>
     with TickerProviderStateMixin {
   AnimationController _controller;
   AnimationController _controller2;
@@ -22,105 +22,122 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     disposAnimation();
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //fixme : warning
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     initAnimation();
+    startAnimation();
+    return BlocConsumer<AuthBloc, AuthState>(
+        bloc: authBloc,
+        listener: (context, state) {
+          if (state is StartAnimation)
+            startAnimation().then((_) {
+              authBloc.add(GoAuthenticationPage());
+            });
+        },
+        buildWhen: (lastState, thisState) {
+          if (thisState is StartAnimation)
+            return false;
+          else
+            return true;
+        },
+        // ignore: missing_return
+        builder: (context, state) {
+          if (state is InitialState) {
+            authBloc.add(CheckIfSignedInBefor());
+            return _buildSplashScreen();
+          } else if (state is SignIn) {
+            return SigninPage();
+          } else if (state is Home) {
+            disposAnimation();
+            return HomePage();
+          }
+        });
+  }
 
-    return BlocBuilder<AuthBloc, AuthState>(
-      bloc: authBloc,
-      builder: (context, state) {
-        if (state.state == ApplicationAuthState.landing && state.user == null) {
-          startAnimation().then((value) {
-            authBloc.add(AuthEvent(
-              event: ApplicationAuthEvent.landing,
-            ));
-          });
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.black,
-            body: SafeArea(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/background.png'),
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        PositionedTransition(
-                          rect: _animationPishgamMoveToTop,
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'پیشـــــــــ',
-                                    style: TextStyle(
-                                      fontFamily: 'vazir',
-                                      fontSize: 41,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'گام',
-                                    style: TextStyle(
-                                      fontFamily: 'vazir',
-                                      fontSize: 41,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.limeAccent[700],
-                                    ),
-                                  ),
-                                ],
+  Scaffold _buildSplashScreen() {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background.png'),
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  PositionedTransition(
+                    rect: _animationPishgamMoveToTop,
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'پیشـــــــــ',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontSize: 41,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
                               ),
                             ),
-                          ),
-                        ),
-                        const SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        PositionedTransition(
-                          child: Text(
-                            'Tetha',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              shadows: [
-                                Shadow(blurRadius: 10, color: Colors.black54)
-                              ],
-                              height: 2.7,
+                            TextSpan(
+                              text: 'گام',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontSize: 41,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.limeAccent[700],
+                              ),
                             ),
-                          ),
-                          rect: _animationTetha,
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  const SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  PositionedTransition(
+                    child: Text(
+                      'Tetha',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        shadows: [
+                          Shadow(blurRadius: 10, color: Colors.black54)
+                        ],
+                        height: 2.7,
+                      ),
+                    ),
+                    rect: _animationTetha,
+                  ),
+                ],
               ),
             ),
-          );
-        } else if (state.state == ApplicationAuthState.signedOut && state.user == null) {
-          return SigninPage();
-        } else if (state.state == ApplicationAuthState.signedIn && state.user != null) {
-          disposAnimation();
-          return HomePage();
-        }
-        return null;
-      },
+          ),
+        ),
+      ),
     );
   }
 

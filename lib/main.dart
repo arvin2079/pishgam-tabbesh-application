@@ -13,7 +13,6 @@ void main() {
 }
 
 class PishgamDemo extends StatelessWidget {
-  final Auth auth = Auth();
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +20,12 @@ class PishgamDemo extends StatelessWidget {
       create: (context) {
         return Auth();
       },
-      child: BlocProvider(
-        create: (context) => AuthBloc(auth),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: PTheme,
-          home: SplashScreen(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: PTheme,
+        home: BlocProvider(
+          create: (context) => AuthBloc(Auth()),
+            child: LanidngPage(),
         ),
       ),
     );

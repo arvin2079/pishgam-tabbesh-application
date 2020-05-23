@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 
+//work with this package : intl_phone_number_input: ^0.3.0
+
 class PhoneNumGetterDialog extends StatefulWidget with PhoneNumberStringValidator {
   @override
   _PhoneNumGetterDialogState createState() => _PhoneNumGetterDialogState();
