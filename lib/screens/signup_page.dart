@@ -91,7 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
             username: _userNameController.text,
             gender: gender,
             city: city,
-            grades: grade,
+            grade: grade,
             phoneNumber: _phoneNumberController.text,
           ),
         ),

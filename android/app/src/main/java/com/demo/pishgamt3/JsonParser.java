@@ -20,6 +20,8 @@ public class JsonParser {
         hashMap.put("phone_number",jsonObject.getString("phone_number"));
         hashMap.put("grades",jsonObject.getString("grades"));
 
+        //fixme : city , socialNumber? password!
+
 
        return  hashMap;
     }

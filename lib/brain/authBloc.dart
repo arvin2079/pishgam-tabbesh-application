@@ -108,10 +108,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield user == null ? StartAnimation() : Home();
     } else if(event is DoSignIn) {
       User user = await auth.signin(username: event.username, password: event.password);
-      yield user == null ? AuthenticationError(message : "اشکال در ارتباط با سرور") : Home();
+      yield user == null ? AuthenticationError(message : "ناموفق", details: "عملیات ورود با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : Home();
     } else if (event is DoSignUp) {
-      User user = await auth.signup(user: event.user);
-      yield user == null ? AuthenticationError(message : "اشکال در ارتباط با سرور") : SignIn();
+      bool result = await auth.signup(user: event.user);
+      yield result == null ? AuthenticationError(message : "ناموفق", details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : SignIn();
     } else if (event is GoAuthenticationPage) {
       yield SignIn();
     } else if (event is CatchError) {

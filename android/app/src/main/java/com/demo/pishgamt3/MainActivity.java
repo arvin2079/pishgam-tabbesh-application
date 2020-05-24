@@ -54,7 +54,7 @@ public class MainActivity extends FlutterActivity {
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
             .setMethodCallHandler(((call, result) ->
             {
-              if(call.method.equals(""))
+              if(call.method.equals("signin"))
               {
                 OkHttpClient client=new OkHttpClient();
                 String url="https://tabeshma.000webhostapp.com/mysites/showparams.php";
@@ -71,6 +71,8 @@ public class MainActivity extends FlutterActivity {
                 client.newCall(request).enqueue(new Callback() {
                   @Override
                   public void onFailure(Call call, IOException e) {
+                    // todo : onFaillure return null
+                    Info_for_signin = null;
                     Log.i("failed in sign_in",e.getMessage());
                   }
 
@@ -109,7 +111,7 @@ public class MainActivity extends FlutterActivity {
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_UP).setMethodCallHandler(
             ((call, result) ->
             {
-              if(call.method.equals(""))
+              if(call.method.equals("signup"))
               {
 //                The main function is executed here to give and take the parameters
                 Info_for_signup.put("firstname",call.argument("firstname"));
@@ -119,6 +121,7 @@ public class MainActivity extends FlutterActivity {
                 Info_for_signup.put("grade",call.argument("grade"));
                 Info_for_signup.put("city",call.argument("city"));
                 Info_for_signup.put("gender",call.argument("gender"));
+                //fixme : address!!
                 Info_for_signup.put("address",call.argument("address"));
              //create hashmap for send to server by connecting to flutter and send it to exchange
 
@@ -143,7 +146,7 @@ public class MainActivity extends FlutterActivity {
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),ZARIN_PALL)
             .setMethodCallHandler((call, result) ->
             {
-              if(call.method.equals(""))
+              if(call.method.equals("zarinpall"))
               {
                 ZarinPal purchase=ZarinPal.getPurchase(getApplicationContext());
                 PaymentRequest payment=ZarinPal.getPaymentRequest();
