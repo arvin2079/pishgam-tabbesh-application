@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 class PurchaseLessonCard extends StatelessWidget {
   final Function onAdd;
   final PurchaseItem purchaseItem;
+  final Function onDelete;
 
-  PurchaseLessonCard({this.onAdd, this.purchaseItem});
+  PurchaseLessonCard({this.onAdd, this.purchaseItem, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: 270,
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -47,7 +48,7 @@ class PurchaseLessonCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(right: 6),
                 child: Text(
                   purchaseItem.grade,
                   style: TextStyle(
@@ -59,7 +60,7 @@ class PurchaseLessonCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20, top: 10, bottom: 25),
+                padding: const EdgeInsets.only(right: 6, top: 10, bottom: 20),
                 child: Text(
                   purchaseItem.explanation,
                   style: TextStyle(
@@ -71,12 +72,11 @@ class PurchaseLessonCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: SizedBox(
                   width: double.infinity,
                   child: FlatButton(
-                    disabledColor: Colors.grey[350],
-                    onPressed: purchaseItem.isAdded ? null :  onAdd,
+                    onPressed: purchaseItem.isAdded ? onDelete : onAdd,
                     color: purchaseItem.color,
                     child: purchaseItem.child,
                   ),
@@ -104,7 +104,7 @@ class PurchaseItem {
     style: TextStyle(
       fontWeight: FontWeight.w100,
       fontFamily: 'vazir',
-      fontSize: 12,
+      fontSize: 14,
       color: Colors.white,
     ),
   );
@@ -116,5 +116,5 @@ class PurchaseItem {
       this.explanation,
       this.color = btnColor,
       this.child = btnChild,
-      this.isAdded=false});
+      this.isAdded = false});
 }
