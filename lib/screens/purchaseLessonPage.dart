@@ -25,12 +25,6 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
       explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
       imageURL: 'assets/images/lessons.jpg',
     ),
-    PurchaseItem(
-      courseName: 'شیمی دهم',
-      grade: 'پایه دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      imageURL: 'assets/images/lessons.jpg',
-    )
   ];
 
   @override
@@ -43,6 +37,27 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     for (PurchaseItem item in items) {
       yield PurchaseLessonCard(
         purchaseItem: item,
+        onDelete: () {
+          setState(() {
+            _count = _count - 1;
+            _countController.sink.add(_count);
+            int idx = items.indexWhere((value) {
+              if (value == item) return true;
+              return false;
+            });
+            items[idx].isAdded = false;
+            items[idx].color = Color(0xFFCDDC39);
+            items[idx].child = Text(
+              'افزودن به سبد خرید',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                fontFamily: 'vazir',
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            );
+          });
+        },
         onAdd: () {
           setState(() {
             _count = _count + 1;
@@ -51,9 +66,10 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
               if (value == item) return true;
               return false;
             });
-            items[idx].isAdded=true;
+            items[idx].isAdded = true;
+            items[idx].color = Colors.grey[350];
             items[idx].child = Text(
-              'به سبد اضافه شد',
+              'حذف از سبد خرید',
               style: TextStyle(
                 fontWeight: FontWeight.w100,
                 fontFamily: 'vazir',
