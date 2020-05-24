@@ -33,21 +33,21 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     super.dispose();
   }
 
-  Iterable<Widget> get _lessonWidgets sync* {
-    for (PurchaseItem item in items) {
+  Iterable<Widget> getItemsList(List<PurchaseItem> itemsList) sync* {
+    for (PurchaseItem item in itemsList) {
       yield PurchaseLessonCard(
         purchaseItem: item,
         onDelete: () {
           setState(() {
             _count = _count - 1;
             _countController.sink.add(_count);
-            int idx = items.indexWhere((value) {
+            int idx = itemsList.indexWhere((value) {
               if (value == item) return true;
               return false;
             });
-            items[idx].isAdded = false;
-            items[idx].color = Color(0xFFCDDC39);
-            items[idx].child = Text(
+            itemsList[idx].isAdded = false;
+            itemsList[idx].color = Color(0xFFCDDC39);
+            itemsList[idx].child = Text(
               'افزودن به سبد خرید',
               style: TextStyle(
                 fontWeight: FontWeight.w100,
@@ -62,13 +62,13 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
           setState(() {
             _count = _count + 1;
             _countController.sink.add(_count);
-            int idx = items.indexWhere((value) {
+            int idx = itemsList.indexWhere((value) {
               if (value == item) return true;
               return false;
             });
-            items[idx].isAdded = true;
-            items[idx].color = Colors.grey[350];
-            items[idx].child = Text(
+            itemsList[idx].isAdded = true;
+            itemsList[idx].color = Colors.grey[350];
+            itemsList[idx].child = Text(
               'حذف از سبد خرید',
               style: TextStyle(
                 fontWeight: FontWeight.w100,
@@ -131,7 +131,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: _lessonWidgets.toList(),
+                    children: getItemsList(items).toList(),
                   ),
                 ),
               ),
@@ -140,7 +140,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: _lessonWidgets.toList(),
+                    children: getItemsList(items).toList(),
                   ),
                 ),
               ),
