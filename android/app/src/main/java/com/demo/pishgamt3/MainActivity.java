@@ -51,6 +51,7 @@ public class MainActivity extends FlutterActivity {
   @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
             .setMethodCallHandler(((call, result) ->
             {
@@ -160,6 +161,7 @@ public class MainActivity extends FlutterActivity {
                   }
                 });
               }
+
               Uri data=getIntent().getData();
               ZarinPal.getPurchase(this).verificationPayment(data,new OnCallbackVerificationPaymentListener(){
 
