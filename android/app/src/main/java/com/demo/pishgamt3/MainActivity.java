@@ -39,8 +39,8 @@ public class MainActivity extends FlutterActivity {
   private static final String SIGN_IN= "signin";
   private static final String ZARIN_PALL = "zarinpall";
 
-  public static final String URI_SHOW_PARAMS = "https://tabeshma.000webhostapp.com/mysites/add-user.php";
-  String Inquiry="";
+  public static final String url="http://tabbesh.ir:83/signup/";
+  int Inquiry=-1;
 //  Send a list of registration information
   HashMap<String,String> Info_for_signin;
   HashMap<String,String> Info_for_signup;
@@ -124,7 +124,7 @@ public class MainActivity extends FlutterActivity {
              //create hashmap for send to server by connecting to flutter and send it to exchange
 
                 MyHttpUtils.RequestData requestData =
-                        new MyHttpUtils.RequestData("", "POST");
+                        new MyHttpUtils.RequestData(url, "POST");
                 for (Map.Entry<String, String> entry : Info_for_signup.entrySet()) {
                   requestData.setParameter(entry.getKey(),entry.getValue());
                 }
@@ -218,16 +218,12 @@ public class MainActivity extends FlutterActivity {
         result = "null";
 
       }
-      if(result.contains("user_added"))
-      {
-        Inquiry="added";
-
+      if(result.contains("ثبت نام با موفقیت انجام شد")) Inquiry=0;
+      if(result.contains("شماره وارد شده نامعتبر است")) Inquiry=1;
+      if(result.contains("کاربر با این نام کاربری از قبل موجود است")) {
+       Inquiry=2;
       }
-      if(result.contains("cant_add_user"))
-      {
-        Inquiry="failed";
-
-      }
+      if(result.contains("خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید")) Inquiry=3;
 
 
 
