@@ -61,6 +61,7 @@ public class MyHttpUtils {
 
 
             con.setRequestMethod(requestData.getMethod());
+            con.setRequestProperty("Accept","application/json");
             if("POST".equals(requestData.getMethod()) && !requestData.getParams().isEmpty()){
                 con.setDoOutput(true);
                 OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
