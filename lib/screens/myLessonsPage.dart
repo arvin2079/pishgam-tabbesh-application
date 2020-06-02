@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pishgamv2/components/lessonsList.dart';
+import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/myLessonsCard.dart';
 
 class MyLessons extends StatefulWidget {
