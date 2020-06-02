@@ -113,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/background.png'),
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
             ),
           ),
           child: BackdropFilter(
