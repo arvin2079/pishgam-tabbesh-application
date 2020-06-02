@@ -164,18 +164,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
+                          //fixme : getting profile pic and upload to server
                           Padding(
-                            padding: EdgeInsets.only(top: 10, right: 20),
-                            child: Text(
-                              'رمز عبور به شماره همراه شما فرستاده خواهد شد.',
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'vazir',
-                                fontWeight: FontWeight.w100,
-                                fontSize: 12,
-                              ),
+                            padding: EdgeInsets.all(15),
+                            child: CircleAvatar(
+                              child: Icon(Icons.person, color: Colors.black45, size: 30),
+                              backgroundColor: Colors.grey[200],
+                              radius: 35,
                             ),
                           ),
                           SignupTextInput(
@@ -263,6 +258,34 @@ class _SignUpPageState extends State<SignUpPage> {
                             first: 'پسر',
                             second: 'دختر',
                             controller: _radioGroupController,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'رمز عبور به شماره همراه شما فرستاده خواهد شد.',
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'vazir',
+                                fontWeight: FontWeight.w100,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: Text(
+                              'دقت داشته باشید که شماره تلفن خود را بدون صفر و به فرم 9123456789 وارد نمایید.',
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'vazir',
+                                fontWeight: FontWeight.w100,
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
                           SizedBox(
                             width: double.infinity,
