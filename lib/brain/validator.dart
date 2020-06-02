@@ -55,4 +55,3 @@ class SignupFieldValidator {
   final String invalidNationalCodeErrorMassage = 'کد ملی خود را وارد کنید';
 }
 
-// fixme : phone number maxlenght for dialog box is must be 10

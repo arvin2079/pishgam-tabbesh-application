@@ -16,7 +16,6 @@ class SignUpPage extends StatefulWidget with SignupFieldValidator {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  //fixme : grades and location lists
   List<String> locations = ['اول', 'دهم', 'دوازدهم'];
   List<String> grades = ['اول', 'دهم', 'دوازدهم'];
   final FocusNode _nameFocusNode = FocusNode();
@@ -71,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
       _submited = true;
     });
 
-    //fixme : warning
+    //fixme : handelin this warning in bloc state management warning
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     try {
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
@@ -164,7 +163,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          //fixme : getting profile pic and upload to server
                           Padding(
                             padding: EdgeInsets.all(15),
                             child: CircleAvatar(
@@ -317,6 +315,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-
-// todo : getting value of radio button and dropdown menu
-// todo : completing fields and submit method

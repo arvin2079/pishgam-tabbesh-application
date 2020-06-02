@@ -172,14 +172,6 @@ class _SignInFormState extends State<SignInForm> {
                   GestureDetector(
                     onTap: _submitEnabled
                         ? () {
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return PhoneNumGetterDialog();
-                            //     }).then((val) {
-                            //   // TODO : handel situation that when first dialog confirm or dismiss
-                            //   FocusScope.of(context).requestFocus(FocusNode());
-                            // });
                             Navigator.of(context).push(MaterialPageRoute<void>(
                               fullscreenDialog: true,
                               builder: (context) => SignUpPage(),
@@ -205,27 +197,6 @@ class _SignInFormState extends State<SignInForm> {
           ],
         ),
       ),
-      //FIXME : sign in ananymous page fix
-//      GestureDetector(
-//        onTap: () {
-//          Navigator.push(context, MaterialPageRoute(builder: (context) {
-//            return AnonymousEntry();
-//          }));
-//        },
-//        child: Center(
-//          child: Text(
-//            'ورود بدون ثبت نام',
-//            textDirection: TextDirection.rtl,
-//            style: TextStyle(
-//              fontFamily: 'vazir',
-//              color: Colors.white,
-//              shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
-//              fontSize: 18,
-//              fontWeight: FontWeight.w900,
-//            ),
-//          ),
-//        ),
-//      ),
       Align(
         alignment: Alignment.bottomLeft,
         child: Padding(

@@ -28,12 +28,6 @@ class _LanidngPageState extends State<LanidngPage>
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     //fixme : warning
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);

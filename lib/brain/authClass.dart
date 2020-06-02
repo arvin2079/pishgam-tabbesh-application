@@ -18,6 +18,30 @@ abstract class AuthBase {
   Future<bool> payWithZarinpall(@required int amount);
 }
 
+// fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
+// fixme : phone number validation (10 digit).
+// fixme : remove useless class from testable demo version.
+// fixme : if my lessons was empty , my lessons card should not be shown.
+// fixme : handeling sign in in progress and sign up in progress with authbloc.
+
+// fixme : sending code of city or grade to the server not String.
+// fixme : remove address and socialnumber.
+// fixme : sending profile pic in sign up.
+// fixme : name and user properties for home page and other parts of app.
+// fixme : adding lesson that is purchased to user lessons.
+// todo : getting list of grades and city from server.
+// todo : change profile pic in setting.
+// todo : getting error messages from server and use theme in ui state management when error occured.
+// todo : method channel for download lesson files.
+// todo : method channel for remaining time to class.
+// todo : method channel for myLessons.
+// todo : method channel for lessons to purchase.
+// todo(optional or in future versoins) : messages for internet low speed or disconnection.
+// todo(optional or in future versoins) : refresh option for my lessons and purchase lessons pages.
+// todo(optional or in future versoins) : theme (dark and light)
+// todo(optional or in future versoins) : language.
+// todo(optional or in future versoins) : Azmoon online.
+
 class Auth extends AuthBase {
   static final String _signInChannelName = 'signin';
   static final String _signUpChannelName = 'signup';
@@ -26,10 +50,6 @@ class Auth extends AuthBase {
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
   static final _zarinpallChannel = MethodChannel(_zarinpallChannelName);
-
-//  @override
-//  // TODO: implement onAuthStateChange
-//  Stream<User> get onAuthStateChange => null;
 
   @override
   Future<User> currentUser() {
@@ -60,10 +80,8 @@ class Auth extends AuthBase {
     try {
       final Map result = await _signInChannel.invokeMethod(
           _methodName, {"username": username, "password": password});
-      // todo : check if errors are handeled with bloc or not!
       if (result != null) {
         return User(
-          // fixme : city , socialNumber? password!
           firstname: result[0],
           lastname: result[1],
           username: result[2],

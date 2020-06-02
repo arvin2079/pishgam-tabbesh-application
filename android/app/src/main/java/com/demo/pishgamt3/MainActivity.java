@@ -114,6 +114,7 @@ public class MainActivity extends FlutterActivity {
             {
               if(call.method.equals("signup"))
               {
+                // fixme : remove address and socialnumber
 //                The main function is executed here to give and take the parameters
                 Info_for_signup.put("firstname",call.argument("firstname"));
                 Info_for_signup.put("lastname",call.argument("lastname"));
@@ -122,7 +123,6 @@ public class MainActivity extends FlutterActivity {
                 Info_for_signup.put("grade",call.argument("grade"));
                 Info_for_signup.put("city",call.argument("city"));
                 Info_for_signup.put("gender",call.argument("gender"));
-                //fixme : address!!
                 Info_for_signup.put("address",call.argument("address"));
              //create hashmap for send to server by connecting to flutter and send it to exchange
 

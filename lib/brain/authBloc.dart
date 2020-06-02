@@ -11,7 +11,6 @@ abstract class AuthEvent extends Equatable {
 
 class CheckIfSignedInBefor extends AuthEvent {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -21,13 +20,11 @@ class DoSignIn extends AuthEvent {
   final String password;
 
   @override
-  // TODO: implement props
   List<Object> get props => [username, password];
 }
 
 class GoAuthenticationPage extends AuthEvent {
   @override
-  // TODO: implement props
   List<Object> get props => null;
 }
 
@@ -36,7 +33,6 @@ class DoSignUp extends AuthEvent {
   final User user;
 
   @override
-  // TODO: implement props
   List<Object> get props => [user];
 }
 
@@ -46,7 +42,6 @@ class CatchError extends AuthEvent {
   final String detail;
 
   @override
-  // TODO: implement props
   List<Object> get props => null;
 
 }
@@ -59,25 +54,21 @@ abstract class AuthState extends Equatable {
 
 class InitialState extends AuthState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
 class StartAnimation extends AuthState {
   @override
-  // TODO: implement props
   List<Object> get props => null;
 }
 
 class Home extends AuthState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
 class SignIn extends AuthState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
@@ -87,7 +78,6 @@ class AuthenticationError extends AuthState {
   final String details;
 
   @override
-  // TODO: implement props
   List<Object> get props => [message];
 }
 

@@ -26,7 +26,6 @@ class _HomePageState extends State<HomePage>
   bool expanded = false;
 
   List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[
-    // FIXME : if my lessons was empty , my lessons card should not be shown
     MainMenuSliderCard(
       icon: Icons.import_contacts,
       labelText: 'درس های من',
@@ -150,7 +149,6 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           width: 20,
                         ),
-                        //fixme : showing image
                         CircleAvatar(
                           child: Icon(Icons.person, color: Colors.black45, size: 30),
                           backgroundColor: Colors.grey[200],
@@ -194,7 +192,6 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                         Text(
-                          //fixme : name
                           'نام کلاس',
                           textAlign: TextAlign.center,
                           style: TextStyle(
