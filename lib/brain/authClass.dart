@@ -50,6 +50,8 @@ class Auth extends AuthBase {
 
   Map citiesMap= Map();
   Map gradesMap= Map();
+  User _currentUser = new User();
+
 
   List<String> get citiesList{
     List<String> citiesList =List<String>();
@@ -68,17 +70,38 @@ class Auth extends AuthBase {
   static final String _zarinpallChannelName = 'zarinpall';
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
+  static final String _currentUserChannelName = 'currentUser';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
   static final _zarinpallChannel = MethodChannel(_zarinpallChannelName);
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
+  static final _currentUserChannel= MethodChannel(_currentUserChannelName);
+
 
   @override
-  Future<User> currentUser() {
-    // TODO: implement currentUser
-    return null;
+  Future<User> currentUser() async {
+    final String _methodName= 'currentUser';
+    final Map result = await _currentUserChannel.invokeMethod(_methodName);
+    if( result != null){
+      if (result.isEmpty)
+        return null;
+      else{
+        _currentUser = User(
+          firstname: result[0],
+          lastname: result[1],
+          username: result[2],
+          password: result[3],
+          gender: result[4],
+          phoneNumber: result[5],
+          grade: result[6],
+          city: result[7],
+        );
+        return _currentUser;
+      }
+    } else
+      throw Exception('خطا در ارتباط با سرور');
   }
 
   @override
