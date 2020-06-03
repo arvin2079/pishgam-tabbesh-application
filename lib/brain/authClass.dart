@@ -16,6 +16,10 @@ abstract class AuthBase {
   Future<Image> getUserProfilePicture();
 
   Future<bool> payWithZarinpall(@required int amount);
+
+  Future<void> initCitiesMap();
+
+  Future<void> initGradesMap();
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -43,13 +47,33 @@ abstract class AuthBase {
 // todo(optional or in future versoins) : Azmoon online.
 
 class Auth extends AuthBase {
+
+  Map citiesMap= Map();
+  Map gradesMap= Map();
+
+  List<String> get citiesList{
+    List<String> citiesList =List<String>();
+    citiesMap.forEach((key, value) => citiesList.add(value));
+    return citiesList;
+  }
+
+  List<String> get gradesList{
+    List<String> gradesList = List<String>();
+    gradesMap.forEach((key, value) => gradesList.add(value));
+    return gradesList;
+  }
+
   static final String _signInChannelName = 'signin';
   static final String _signUpChannelName = 'signup';
   static final String _zarinpallChannelName = 'zarinpall';
+  static final String _citiesChannelName = 'cities';
+  static final String _gradesChannelName = 'grades';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
   static final _zarinpallChannel = MethodChannel(_zarinpallChannelName);
+  static final _citiesChannel = MethodChannel(_citiesChannelName);
+  static final _gradesChannel = MethodChannel(_gradesChannelName);
 
   @override
   Future<User> currentUser() {
@@ -91,7 +115,7 @@ class Auth extends AuthBase {
           grade: result[6],
         );
       } else
-        return null;
+        throw Exception('خطا در ارتباط با سرور');
     } catch(_) {
       return null;
     }
@@ -104,17 +128,20 @@ class Auth extends AuthBase {
       final String result = await _signUpChannel.invokeMethod(_methodName, {
         'firstname' : user.firstname,
         'lastname' : user.lastname,
-        'socialnumber' : user.socialnumber,
         'phonenumber' : user.phoneNumber,
-        'grade' : user.grade,
-        'city' : user.city,
+        'grade' : gradesList.indexOf(user.grade),
+        'city' : citiesMap.keys.firstWhere((element) => citiesMap[element]==user.city , orElse: () => null),
         'gender' : user.gender,
         //fixme: address!!
       });
-      if(result == 'added')
-        return true;
-      else if (result == 'failed')
-        return false;
+      if(result != null){
+        if(result == 'added')
+          return true;
+        else if (result == 'failed')
+          return false;
+      }
+      else
+        throw Exception('خطا در ارتباط با سرور');
       return null;
     } catch (_) {
       return null;
@@ -124,12 +151,46 @@ class Auth extends AuthBase {
   @override
   Future<bool> payWithZarinpall(int amount) async{
     final String _methodName = "zarinpall";
-    final String result = await _zarinpallChannel.invokeMethod(_methodName, {'amount' : amount});
-    if(result == 'done')
-      return true;
-    else if(result == 'failed')
-      return false;
-    throw Exception('payment process failed');
+    try{
+      final String result = await _zarinpallChannel.invokeMethod(_methodName, {'amount' : amount});
+      if(result != null){
+        if(result == 'done')
+          return true;
+        else if(result == 'failed')
+          return false;
+      }
+      else
+        throw Exception('خطا در ارتباط با سرور');
+      return null;
+    } catch(_){
+      return null;
+    }
+    // throw Exception('payment process failed');
+  }
+
+  @override
+  Future<void> initCitiesMap() async {
+    try{
+      final String _methodName= "cities";
+      citiesMap= await _citiesChannel.invokeMethod(_methodName);
+      if(citiesMap == null)
+        throw Exception('خطا در ارتباط با سرور');
+    } catch(_){
+      return null;
+    }
+
+  }
+
+  @override
+  Future<void> initGradesMap() async{
+    try{
+      final String _methodName= "grades";
+      gradesMap= await _gradesChannel.invokeMethod(_methodName);
+      if(gradesMap == null)
+        throw Exception('خطا در ارتباط با سرور');
+    } catch(_){
+      return null;
+    }
   }
 }
 
