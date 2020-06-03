@@ -76,6 +76,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   List<Widget> BodyColumn(BuildContext context) {
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return <Widget>[
       Padding(
         padding: const EdgeInsets.only(top: 60),
@@ -174,7 +175,10 @@ class _SignInFormState extends State<SignInForm> {
                         ? () {
                             Navigator.of(context).push(MaterialPageRoute<void>(
                               fullscreenDialog: true,
-                              builder: (context) => SignUpPage(),
+                              builder: (context) => BlocProvider(
+                                create: (context) => authBloc,
+                                child: SignUpPage(),
+                              ),
                             ));
                           }
                         : null,

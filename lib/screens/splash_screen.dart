@@ -50,11 +50,19 @@ class _LanidngPageState extends State<LanidngPage>
                 );
               },
             );
+          } else if (state is SignInIsLoadingSta) {
+            showDialog(context: context, builder: (context) {
+              return WaiterDialog();
+            });
+          } else if (state is SignInLoadingFinished) {
+            Navigator.pop(context);
           }
         },
         buildWhen: (lastState, thisState) {
-          if (thisState is StartAnimation || thisState is AuthenticationError)
-            return false;
+          if (thisState is StartAnimation ||
+              thisState is AuthenticationError ||
+              thisState is SignInIsLoadingSta ||
+              thisState is SignInLoadingFinished) return false;
           return true;
         },
         // ignore: missing_return

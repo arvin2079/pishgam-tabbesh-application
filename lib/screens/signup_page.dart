@@ -27,7 +27,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _familyNameController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _nationalCodeController = TextEditingController();
   final RadioGroupController _radioGroupController = RadioGroupController();
   final DropDownController _gradeDropDownController = DropDownController();
   final DropDownController _cityDropDownController = DropDownController();
@@ -36,7 +35,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String grade;
   String gender;
 
-  bool _isLoading = false;
   bool _submited = false;
 
   @override
@@ -66,7 +64,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void _submit() {
     setState(() {
-      _isLoading = true;
       _submited = true;
     });
 
@@ -77,7 +74,6 @@ class _SignUpPageState extends State<SignUpPage> {
           !widget.firstnameValidator.isValid(_nameController.text) ||
           !widget.lastnameValidator.isValid(_familyNameController.text) ||
           !widget.phoneNumberValidator.isValid(_phoneNumberController.text) ||
-          !widget.nationalCodeValidator.isValid(_nationalCodeController.text) ||
           _radioGroupController.getValue == 0 ||
           _cityDropDownController.getValue == null ||
           _gradeDropDownController.getValue == null) throw Exception;
@@ -95,15 +91,28 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       );
-    } catch (_) {} finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is SignUpLoadingFinished)
+          Navigator.pop(context);
+        else if (state is SignUpIsLoadingSta)
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return WaiterDialog();
+              });
+      },
+      child: _buildSignupForm(),
+    );
+  }
+
+  SafeArea _buildSignupForm() {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -166,7 +175,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           Padding(
                             padding: EdgeInsets.all(15),
                             child: CircleAvatar(
-                              child: Icon(Icons.person, color: Colors.black45, size: 30),
+                              child: Icon(Icons.person,
+                                  color: Colors.black45, size: 30),
                               backgroundColor: Colors.grey[200],
                               radius: 35,
                             ),
@@ -220,18 +230,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             onEditingComplete: _onPhoneNumberEditingComplete,
                             textInputType: TextInputType.text,
                           ),
-                          SignupTextInput(
-                            labelText: 'کد ملی',
-                            errorText: _submited &&
-                                    !widget.nationalCodeValidator
-                                        .isValid(_nationalCodeController.text)
-                                ? widget.invalidNationalCodeErrorMassage
-                                : null,
-                            focusNode: _nationalCodeFocusNode,
-                            controller: _nationalCodeController,
-                            textInputType: TextInputType.text,
-                            maxLength: 10,
-                          ),
                           SizedBox(height: 40),
                           Row(
                             textDirection: TextDirection.rtl,
@@ -272,7 +270,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             child: Text(
                               'دقت داشته باشید که شماره تلفن خود را بدون صفر و به فرم 9123456789 وارد نمایید.',
                               textDirection: TextDirection.rtl,

@@ -52,6 +52,16 @@ abstract class AuthState extends Equatable {
   const AuthState();
 }
 
+class SignUpIsLoadingSta extends AuthState {
+  @override
+  List<Object> get props => null;
+}
+
+class SignInIsLoadingSta extends AuthState {
+  @override
+  List<Object> get props => null;
+}
+
 class InitialState extends AuthState {
   @override
   List<Object> get props => [];
@@ -70,6 +80,18 @@ class Home extends AuthState {
 class SignIn extends AuthState {
   @override
   List<Object> get props => [];
+}
+
+class SignUpLoadingFinished extends AuthState {
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
+class SignInLoadingFinished extends AuthState {
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
 }
 
 class AuthenticationError extends AuthState {
@@ -97,10 +119,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       User user = await auth.currentUser();
       yield user == null ? StartAnimation() : Home();
     } else if(event is DoSignIn) {
+      yield SignInIsLoadingSta();
       User user = await auth.signin(username: event.username, password: event.password);
-      yield user == null ? AuthenticationError(message : "ناموفق", details: "عملیات ورود با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : Home();
+      yield SignInLoadingFinished();
+      yield user == null ? AuthenticationError(message : "ناموفق", details: "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.") : Home();
+      if(user != null)
+        await this.close();
     } else if (event is DoSignUp) {
+      yield SignUpIsLoadingSta();
       bool result = await auth.signup(user: event.user);
+      yield SignUpLoadingFinished();
+      await Future.delayed(Duration(seconds: 2));
       yield result == null ? AuthenticationError(message : "ناموفق", details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : SignIn();
     } else if (event is GoAuthenticationPage) {
       yield SignIn();

@@ -25,7 +25,7 @@ class PishgamDemo extends StatelessWidget {
         theme: PTheme,
         home: BlocProvider(
           create: (context) => AuthBloc(Auth()),
-            child: SignUpPage(),
+            child: LanidngPage(),
         ),
       ),
     );
