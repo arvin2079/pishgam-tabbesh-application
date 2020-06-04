@@ -83,7 +83,7 @@ class Auth extends AuthBase {
   @override
   Future<User> currentUser() async {
     final String _methodName= 'currentUser';
-    final Map result = await _currentUserChannel.invokeMethod(_methodName);
+    final Map<String ,String> result = await _currentUserChannel.invokeMethod(_methodName);
       if (result.isEmpty)
         return null;
       else{
