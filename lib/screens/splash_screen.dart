@@ -35,7 +35,6 @@ class _LanidngPageState extends State<LanidngPage>
     initAnimation();
     startAnimation();
     return BlocConsumer<AuthBloc, AuthState>(
-        bloc: authBloc,
         listener: (context, state) {
           if (state is StartAnimation) {
             startAnimation().then((_) {

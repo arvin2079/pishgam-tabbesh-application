@@ -36,7 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String city;
   String grade;
   String gender;
-  File _image;
+  Image _image;
 
   bool _submited = false;
 
@@ -179,8 +179,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             padding: EdgeInsets.all(15),
                             child: GestureDetector(
                               child: CircleAvatar(
-                                child: Icon(Icons.photo_camera,
-                                    color: Colors.black45, size: 30),
+                                child: _image == null
+                                    ? Icon(Icons.photo_camera, color: Colors.black45, size: 30)
+                                    : _image,
                                 backgroundColor: Colors.grey[200],
                                 radius: 35,
                               ),
@@ -320,20 +321,23 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future<void> _getImage(ImageSource source) async{
+  Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: source);
-    setState(() {
-      _image = File(pickedFile.path);
-    });
+    _image = Image.file(File(pickedFile.path),
+        filterQuality: FilterQuality.low, width: 100, height: 100 ,fit: BoxFit.cover);
+
+    setState(() {});
   }
 
   void _pickImage() {
-    showDialog(context: context , builder: (context) {
-      return ImageSourceDialog(
-        onCamera: () => _getImage(ImageSource.camera),
-        onGallery: () => _getImage(ImageSource.gallery),
-      );
-    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          return ImageSourceDialog(
+            onCamera: () => _getImage(ImageSource.camera),
+            onGallery: () => _getImage(ImageSource.gallery),
+          );
+        });
   }
 }
