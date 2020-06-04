@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -100,7 +102,7 @@ class AuthenticationError extends AuthState {
   final String details;
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [Random().nextInt(1000)];
 }
 
 
@@ -116,7 +118,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
     if(event is CheckIfSignedInBefor) {
-      User user = await auth.currentUser();
+      User user;
+      try {
+        user = await auth.currentUser();
+      } catch(e) {
+        this.add(CatchError(
+          message: 'خطا',
+          detail: e.toString(),
+        ));
+      }
       yield user == null ? StartAnimation() : Home();
     }
     else if(event is DoSignIn) {
@@ -124,6 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       User user;
       try {
         user = await auth.signin(username: event.username, password: event.password);
+        await Future.delayed(Duration(seconds: 2));
       } catch (e) {
         this.add(CatchError(
           message: 'خطا',

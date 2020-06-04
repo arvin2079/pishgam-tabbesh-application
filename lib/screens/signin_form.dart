@@ -5,30 +5,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
+import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
 import 'package:pishgamv2/screens/signup_page.dart';
 import 'package:provider/provider.dart';
 
-class SignInForm extends StatelessWidget with CredentioalStringValidator {
+class SignInForm extends StatefulWidget with CredentioalStringValidator {
+  @override
+  _SignInFormState createState() => _SignInFormState();
+}
 
+class _SignInFormState extends State<SignInForm> {
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
-  void _submit(BuildContext context) {
-
-    // fixme : warning
+  void _submit() {
+    // ignore: close_sinks
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-    if (emailValidator.isValid(_emailTextController.text) &&
-        passwordValidator.isValid(_passwordTextController.text)) {
+    if (widget.emailValidator.isValid(_emailTextController.text) &&
+        widget.passwordValidator.isValid(_passwordTextController.text)) {
       authBloc.add(DoSignIn(
         username: _emailTextController.text,
         password: _passwordTextController.text,
       ));
     } else {
-      print('not valid authentication username and password!');
       authBloc.add(CatchError(
         message: 'ایمیل یا رمز عبور نامعتبر',
         detail: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
@@ -36,7 +39,7 @@ class SignInForm extends StatelessWidget with CredentioalStringValidator {
     }
   }
 
-  void _onEmailEditingComplete(BuildContext context) {
+  void _onEmailEditingComplete() {
     FocusScope.of(context).requestFocus(_passwordFocusNode);
   }
 
@@ -57,6 +60,7 @@ class SignInForm extends StatelessWidget with CredentioalStringValidator {
   }
 
   List<Widget> BodyColumn(BuildContext context) {
+    // fixme : fix the warning
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return <Widget>[
       Padding(
@@ -105,8 +109,8 @@ class SignInForm extends StatelessWidget with CredentioalStringValidator {
             SigninTextInput(
               focusNode: _emailFocusNode,
               controller: _emailTextController,
-              onEditingComplete: () => _onEmailEditingComplete(context),
-              inputType: TextInputType.emailAddress,
+              onEditingComplete: () => _onEmailEditingComplete(),
+              inputType: TextInputType.text,
               obsecureText: false,
             ),
             //password
@@ -114,7 +118,7 @@ class SignInForm extends StatelessWidget with CredentioalStringValidator {
             SigninTextInput(
               focusNode: _passwordFocusNode,
               controller: _passwordTextController,
-              onEditingComplete: () => _submit(context),
+              onEditingComplete: () => _submit(),
               inputType: TextInputType.visiblePassword,
               obsecureText: true,
             ),
@@ -133,7 +137,7 @@ class SignInForm extends StatelessWidget with CredentioalStringValidator {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                onPressed: () => _submit(context),
+                onPressed: () => _submit(),
               ),
             ),
             Padding(

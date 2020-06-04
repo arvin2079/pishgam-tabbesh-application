@@ -69,8 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       _submited = true;
     });
-
-    //fixme : handelin this warning in bloc state management warning
+    // ignore: close_sinks
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     try {
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
@@ -235,7 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             focusNode: _passwordFocusNode,
                             controller: _phoneNumberController,
                             onEditingComplete: _onPhoneNumberEditingComplete,
-                            textInputType: TextInputType.text,
+                            textInputType: TextInputType.phone,
                           ),
                           SizedBox(height: 40),
                           Row(
