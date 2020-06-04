@@ -10,44 +10,25 @@ import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
 import 'package:pishgamv2/screens/signup_page.dart';
 import 'package:provider/provider.dart';
 
-class SignInForm extends StatefulWidget with CredentioalStringValidator {
-  @override
-  _SignInFormState createState() => _SignInFormState();
-}
+class SignInForm extends StatelessWidget with CredentioalStringValidator {
 
-class _SignInFormState extends State<SignInForm> {
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  bool _submitEnabled = true;
 
-  void _submit() {
-    // TODO : set _submitEnabled to false when futer of authenticatio is in progress
+  void _submit(BuildContext context) {
+
+    // fixme : warning
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-    if (widget.emailValidator.isValid(_emailTextController.text) &&
-        widget.passwordValidator.isValid(_passwordTextController.text)) {
-      setState(() {
-        _submitEnabled = false;
-      });
-
-      try {
-        authBloc.add(DoSignIn(
-          username: _emailTextController.text,
-          password: _passwordTextController.text,
-        ));
-      } catch (e) {
-        // fixme : handel errors
-        authBloc.add(CatchError(
-          message: 'اشکال در ارتباط با سرور',
-          detail: 'sign in',
-        ));
-      } finally {
-        setState(() {
-          _submitEnabled = true;
-        });
-      }
+    if (emailValidator.isValid(_emailTextController.text) &&
+        passwordValidator.isValid(_passwordTextController.text)) {
+      authBloc.add(DoSignIn(
+        username: _emailTextController.text,
+        password: _passwordTextController.text,
+      ));
     } else {
+      print('not valid authentication username and password!');
       authBloc.add(CatchError(
         message: 'ایمیل یا رمز عبور نامعتبر',
         detail: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
@@ -55,7 +36,7 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
-  void _onEmailEditingComplete() {
+  void _onEmailEditingComplete(BuildContext context) {
     FocusScope.of(context).requestFocus(_passwordFocusNode);
   }
 
@@ -124,7 +105,7 @@ class _SignInFormState extends State<SignInForm> {
             SigninTextInput(
               focusNode: _emailFocusNode,
               controller: _emailTextController,
-              onEditingComplete: _onEmailEditingComplete,
+              onEditingComplete: () => _onEmailEditingComplete(context),
               inputType: TextInputType.emailAddress,
               obsecureText: false,
             ),
@@ -133,7 +114,7 @@ class _SignInFormState extends State<SignInForm> {
             SigninTextInput(
               focusNode: _passwordFocusNode,
               controller: _passwordTextController,
-              onEditingComplete: _submit,
+              onEditingComplete: () => _submit(context),
               inputType: TextInputType.visiblePassword,
               obsecureText: true,
             ),
@@ -152,7 +133,7 @@ class _SignInFormState extends State<SignInForm> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                onPressed: _submitEnabled ? _submit : null,
+                onPressed: () => _submit(context),
               ),
             ),
             Padding(
@@ -171,24 +152,20 @@ class _SignInFormState extends State<SignInForm> {
                   ),
                   SizedBox(width: 5),
                   GestureDetector(
-                    onTap: _submitEnabled
-                        ? () {
-                            Navigator.of(context).push(MaterialPageRoute<void>(
-                              fullscreenDialog: true,
-                              builder: (context) => BlocProvider(
-                                create: (context) => authBloc,
-                                child: SignUpPage(),
-                              ),
-                            ));
-                          }
-                        : null,
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute<void>(
+                        fullscreenDialog: true,
+                        builder: (context) => BlocProvider(
+                          create: (context) => authBloc,
+                          child: SignUpPage(),
+                        ),
+                      ));
+                    },
                     child: Text(
                       'ثبت نام کنید',
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
-                        color: _submitEnabled
-                            ? Colors.yellowAccent[700]
-                            : Colors.black45,
+                        color: Colors.yellowAccent[700],
                         fontFamily: 'vazir',
                         fontWeight: FontWeight.w500,
                         fontSize: 15,

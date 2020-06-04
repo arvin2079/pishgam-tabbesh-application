@@ -118,22 +118,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if(event is CheckIfSignedInBefor) {
       User user = await auth.currentUser();
       yield user == null ? StartAnimation() : Home();
-    } else if(event is DoSignIn) {
+    }
+    else if(event is DoSignIn) {
       yield SignInIsLoadingSta();
-      User user = await auth.signin(username: event.username, password: event.password);
+      User user;
+      try {
+        user = await auth.signin(username: event.username, password: event.password);
+      } catch (e) {
+        this.add(CatchError(
+          message: 'خطا',
+          detail: e.toString(),
+        ));
+      }
       yield SignInLoadingFinished();
       yield user == null ? AuthenticationError(message : "ناموفق", details: "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.") : Home();
       if(user != null)
         await this.close();
-    } else if (event is DoSignUp) {
+    }
+    else if (event is DoSignUp) {
       yield SignUpIsLoadingSta();
-      bool result = await auth.signup(user: event.user);
+      bool result;
+      try {
+        result = await auth.signup(user: event.user);
+      } catch(e) {
+        this.add(CatchError(
+            message: 'خطا',
+            detail: e.toString(),
+        ));
+      }
       yield SignUpLoadingFinished();
-      await Future.delayed(Duration(seconds: 2));
       yield result == null ? AuthenticationError(message : "ناموفق", details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : SignIn();
-    } else if (event is GoAuthenticationPage) {
+    }
+    else if (event is GoAuthenticationPage) {
       yield SignIn();
-    } else if (event is CatchError) {
+    }
+    else if (event is CatchError) {
       yield AuthenticationError(
         message: event.message,
         details: event.detail,
