@@ -34,6 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String city;
   String grade;
   String gender;
+  Image _image;
 
   bool _submited = false;
 
@@ -174,11 +175,14 @@ class _SignUpPageState extends State<SignUpPage> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.all(15),
-                            child: CircleAvatar(
-                              child: Icon(Icons.person,
-                                  color: Colors.black45, size: 30),
-                              backgroundColor: Colors.grey[200],
-                              radius: 35,
+                            child: GestureDetector(
+                              child: CircleAvatar(
+                                child: Icon(Icons.person,
+                                    color: Colors.black45, size: 30),
+                                backgroundColor: Colors.grey[200],
+                                radius: 35,
+                              ),
+                              onTap: _getImage(),
                             ),
                           ),
                           SignupTextInput(
@@ -312,5 +316,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _getImage() async{
+
   }
 }
