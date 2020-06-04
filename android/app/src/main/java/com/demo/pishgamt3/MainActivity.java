@@ -1,25 +1,30 @@
 package com.demo.pishgamt3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.demo.pishgamt3.Json_parser.JsonParser;
+import com.demo.pishgamt3.Method_channels_Strings.ChannelsStrings;
+import com.demo.pishgamt3.Requesr_for_server.RequestforServer;
+
+import com.demo.pishgamt3.Shareprefences.SharePref;
 import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
 import com.zarinpal.ewallets.purchase.OnCallbackVerificationPaymentListener;
 import com.zarinpal.ewallets.purchase.PaymentRequest;
 import com.zarinpal.ewallets.purchase.ZarinPal;
 
+import org.json.JSONException;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.flutter.embedding.android.FlutterActivity;
@@ -35,155 +40,239 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends FlutterActivity {
-  private static final String SIGN_UP = "signup";
-  private static final String SIGN_IN= "signin";
-  private static final String ZARIN_PALL = "zarinpall";
-
-  public static final String url="http://tabbesh.ir:83/signup/";
-  int Inquiry=-1;
-//  Send a list of registration information
-  HashMap<String,String> Info_for_signin;
-  HashMap<String,String> Info_for_signup;
-
-  MyHttpUtils myHttpUtils;
-
 
   @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
 
-    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_IN)
-            .setMethodCallHandler(((call, result) ->
-            {
-              if(call.method.equals("signin"))
-              {
-                OkHttpClient client=new OkHttpClient();
-                String url="https://tabeshma.000webhostapp.com/mysites/showparams.php";
-                RequestBody formBody = new FormBody.Builder()
-                        .add("username", call.argument("username"))
-                        .add("password",call.argument("password"))
-                        .build();
+      //every channels need a string to indentify so we use an class to handle it
+      ChannelsStrings SignIn=new ChannelsStrings("signin");
+      ChannelsStrings SignUp=new ChannelsStrings("signup");
+      ChannelsStrings ZaringPal=new ChannelsStrings("zarinpal");
+      ChannelsStrings GetSignup=new ChannelsStrings("getsignup");
 
-                Request request = new Request.Builder()
-                        .url(url)
-                        .post(formBody)
-                        .build();
+              //signin
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignIn.getChannelsString())
+                         .setMethodCallHandler(((call, result) ->
+                         {
+                        if(call.method.equals("signin"))
+                        {
+                          // prepare construcors params
+                          HashMap<String,String> info=new HashMap<>();
+                          String path="http://tabbesh.ir:8000/api/token/";
+                          OkHttpClient client=new OkHttpClient();
 
-                client.newCall(request).enqueue(new Callback() {
-                  @Override
-                  public void onFailure(Call call, IOException e) {
-                    // todo : onFaillure return null
-                    Info_for_signin = null;
-                    Log.i("failed in sign_in",e.getMessage());
-                  }
+                          //set params to hashmap
+                          info.put("username",call.argument("username"));
+                          info.put("password",call.argument("password"));
+                          //Each request requires a header, the key and value of which must be
+                          // defined in the hash map with the following strings.
+                          info.put("nameOfheader","Accept");
+                          info.put("valueOfheader","application/json");
 
-                  @Override
-                  public void onResponse(Call call, Response response) throws IOException
-                  {
-                    if(response.isSuccessful())
-                    {
-                      final String myresponse=response.body().string();
-                      MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                          try {
-                            String json=      JWTUtils.decoded(myresponse);
+                          //send request
+                          RequestforServer requestforServer=new RequestforServer(client,path,info);
 
-                            Info_for_signin= JsonParser.pareJson(json);
-                          } catch (Exception e) {
-                            e.printStackTrace();
-                          }
+                            try {
+                              //get feedback from server
+                              client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
+                                //failed response
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                  result.error("failed in sign in",e.getMessage(),null);
+                                }
+                                //request recieved to server so now we can get require feedback
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                  if(response.isSuccessful())
+                                      {
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                            //convert response to string
+                                            String token= null;
+                                            try {
+                                              token = response.body().string();
+                                            } catch (IOException e) {
+                                              result.error("failed in sign in",e.getMessage(),null);
+                                            }
+                                            //parse json
+                                            JsonParser jsonParser=new JsonParser();
+                                            try {
+                                              //save token
+                                              SharePref pref=new SharePref(getApplicationContext());
+                                              pref.save("token",jsonParser.token(token));
+                                            } catch (JSONException e) {
+                                              result.error("failed in sign in",e.getMessage(),null);
+                                            }
+                                            //return feedback
+                                            result.success(0);
+                                          }
+                                        });
+
+                                      }
+                                  if(response.code()==401)
+                                  {
+                                    MainActivity.this.runOnUiThread(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                        result.success(1);
+                                      }
+                                    });
+                                  }
+
+                                  else {result.success(null);}
+
+                                }
+                              });
+                            } catch (IOException e) {
+                              result.error("failed in sign in",e.getMessage(),null);
+                            }
+
 
 
                         }
-                      });
-                    }
-
-                  }
-                });
-
-                result.success(Info_for_signin);
-
-              }
 
 
-            }
-            ));
-    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SIGN_UP).setMethodCallHandler(
-            ((call, result) ->
-            {
-              if(call.method.equals("signup"))
-              {
-                // fixme : remove address and socialnumber
-//                The main function is executed here to give and take the parameters
-                Info_for_signup.put("firstname",call.argument("firstname"));
-                Info_for_signup.put("lastname",call.argument("lastname"));
-                Info_for_signup.put("socialnumber",call.argument("socialnumber"));
-                Info_for_signup.put("phonenumber",call.argument("phonenumber"));
-                Info_for_signup.put("grade",call.argument("grade"));
-                Info_for_signup.put("city",call.argument("city"));
-                Info_for_signup.put("gender",call.argument("gender"));
-                Info_for_signup.put("address",call.argument("address"));
-             //create hashmap for send to server by connecting to flutter and send it to exchange
-
-                MyHttpUtils.RequestData requestData =
-                        new MyHttpUtils.RequestData(url, "POST");
-                for (Map.Entry<String, String> entry : Info_for_signup.entrySet()) {
-                  requestData.setParameter(entry.getKey(),entry.getValue());
-                }
-                new MyTask().execute(requestData);
-
-                 result.success(Inquiry);
+                      }
+               ));
 
 
+              //GET for list of cities and grades
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),GetSignup.getChannelsString())
+                          .setMethodCallHandler(((call, result) ->
+                          {
+                            if(call.method.equals("getsignup"))
+                            {
+                              //use get method to get list of cities and grades
+                              String path="http://tabbesh.ir:8000/api/token/";
+                              HashMap<String,String> header =new HashMap<>();
+                              header.put("nameOfheader","Accept");
+                              header.put("valueOfheader","application/json");
 
 
+                              OkHttpClient client=new OkHttpClient();
+                              RequestforServer requestforServer=new RequestforServer(client,path,header);
 
-              }
+                              try {
+                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                  @Override
+                                  public void onFailure(Call call, IOException e) {
+                                    result.error("failed in get method",e.getMessage(),null);
 
-            })
-    );
+                                  }
 
-    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),ZARIN_PALL)
-            .setMethodCallHandler((call, result) ->
-            {
-              if(call.method.equals("zarinpall"))
-              {
-                ZarinPal purchase=ZarinPal.getPurchase(getApplicationContext());
-                PaymentRequest payment=ZarinPal.getPaymentRequest();
-                payment.setMerchantID("0c5db223-a20f-4789-8c88-56d78e29ff63");
-                payment.setAmount(call.argument("amount"));
-                payment.setDescription("تست جهت برنامه");
-                payment.setCallbackURL("return://zarinpalpayment");
+                                  @Override
+                                  public void onResponse(Call call, Response response) throws IOException
+                                  {
+                                    if(response.isSuccessful())
+                                    {
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                            try {
+                                              //get json
+                                              String maplist=response.body().string();
+                                              //parse json
+                                              JsonParser jsonParser=new JsonParser();
+                                              //send hashmap
+                                              result.success(jsonParser.getsignup(maplist));
+                                            } catch (IOException | JSONException e) {
+                                              result.error("failed in get method",e.getMessage(),null);
+                                            }
+                                          }
+                                        });
+                                    }
+                                   
 
-                purchase.startPayment(payment, new OnCallbackRequestPaymentListener() {
-                  @Override
-                  public void onCallbackResultPaymentRequest(int status, String authority, Uri paymentGatewayUri, Intent intent) {
-                    if(status==100) startActivity(intent);
-                    else Toast.makeText(getApplicationContext(),"پرداخت با موفقیت انجام نشد",Toast.LENGTH_LONG).show();
-                  }
-                });
-              }
+                                  }
+                                });
+                              } catch (IOException e) {
+                                result.error("failed in get method",e.getMessage(),null);
+                              }
 
-              Uri data=getIntent().getData();
-              ZarinPal.getPurchase(this).verificationPayment(data,new OnCallbackVerificationPaymentListener(){
 
-                @Override
-                public void onCallbackResultVerificationPayment(boolean isPaymentSuccess, String refID, PaymentRequest paymentRequest) {
-                  if(isPaymentSuccess)
-                  {
-                   result.success("done");
-                  }else
-                  {
-                    result.success("failed");
+                            }
 
-                  }
-                }
-              });
+                          }));
 
 
 
-            });
+              //signup
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignUp.getChannelsString())
+                          .setMethodCallHandler(
+                          ((call, result) ->
+                          {
+                            if(call.method.equals("signup"))
+                            {
+                              //create require params for constructor
+                              HashMap<String,String> info=new HashMap<>();
+                              String path="http://tabbesh.ir:8000/signup/";
+                              OkHttpClient client=new OkHttpClient();
+
+                              //set params to hashmap
+                              info.put("firstname",call.argument("username"));
+                              info.put("lastname",call.argument("lastname"));
+                              info.put("gender",call.argument("gender"));
+                              info.put("phonenuber",call.argument("phonenumber"));
+                              info.put("grade",call.argument("grade"));
+                              info.put("city",call.argument("city"));
+                              //Each request requires a header, the key and value of which must be
+                              // defined in the hash map with the following strings.
+                              info.put("nameOfheader","Accept");
+                              info.put("valueOfheader","application/json");
+
+
+                              //send request
+                              RequestforServer requestforServer=new RequestforServer(client,path,info);
+
+                              try {
+                                client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
+                                  @Override
+                                  public void onFailure(Call call, IOException e) {
+                                    result.error("failed in sign up",e.getMessage(),null);
+                                  }
+
+                                  @Override
+                                  public void onResponse(Call call, Response response) throws IOException {
+                                    if(response.isSuccessful())
+                                    {
+                                      switch (response.body().string())
+                                      {
+                                        case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
+                                          result.success(0);
+                                          break;
+                                        case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
+                                          result.success(1);
+                                          break;
+                                        case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
+                                          result.success(2);
+                                          break;
+                                        case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
+                                          result.success(3);
+                                          break;
+                                        default:
+                                          result.success(null);
+                                      }
+                                    }
+                                    if(response.code()==401)result.success(null);
+                                    else {result.success(null);}
+
+
+                                  }
+                                });
+                              } catch (IOException e) {
+                                result.error("failed in sign up",e.getMessage(),null);
+                              }
+
+                            }
+
+                          })
+              );
+
+
+
+
 
     GeneratedPluginRegistrant.registerWith(flutterEngine);
 
@@ -191,48 +280,6 @@ public class MainActivity extends FlutterActivity {
 
 
 
-
-
-
-//  As an employee, he does the work in MyTask and returns the answer that
-//  is determined for him. Here is the connection with the server.
-
-  public class MyTask extends AsyncTask<MyHttpUtils.RequestData, Void, String> {
-
-
-    @Override
-    protected void onPreExecute() {
-
-
-    }
-
-    @Override
-    protected String doInBackground(MyHttpUtils.RequestData... params) {
-      MyHttpUtils.RequestData reqData = params[0];
-
-      return MyHttpUtils.getDataHttpUrlConnection(reqData);
-    }
-
-
-//    The answer is clear here
-    @Override
-    protected void onPostExecute(String result) {
-      if(result == null) {
-        result = "null";
-
-      }
-      if(result.contains("ثبت نام با موفقیت انجام شد")) Inquiry=0;
-      if(result.contains("شماره وارد شده نامعتبر است")) Inquiry=1;
-      if(result.contains("کاربر با این نام کاربری از قبل موجود است")) {
-       Inquiry=2;
-      }
-      if(result.contains("خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید")) Inquiry=3;
-
-
-
-
-    }
-  }
 
 
 

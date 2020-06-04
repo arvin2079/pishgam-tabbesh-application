@@ -61,6 +61,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.zarinpal:purchase:0.0.10'
+    compile "org.apache.httpcomponents:httpcore:4.4.1"
+    compile "org.apache.httpcomponents:httpmime:4.3.6"
 
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
