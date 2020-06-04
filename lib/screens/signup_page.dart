@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/validator.dart';
@@ -8,7 +10,7 @@ import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
-import 'package:provider/provider.dart';
+import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
   @override
@@ -34,7 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String city;
   String grade;
   String gender;
-  Image _image;
+  File _image;
 
   bool _submited = false;
 
@@ -177,12 +179,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             padding: EdgeInsets.all(15),
                             child: GestureDetector(
                               child: CircleAvatar(
-                                child: Icon(Icons.person,
+                                child: Icon(Icons.photo_camera,
                                     color: Colors.black45, size: 30),
                                 backgroundColor: Colors.grey[200],
                                 radius: 35,
                               ),
-                              onTap: _getImage(),
+                              onTap: () => _pickImage(),
                             ),
                           ),
                           SignupTextInput(
@@ -318,7 +320,20 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future<void> _getImage() async{
+  Future<void> _getImage(ImageSource source) async{
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: source);
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
 
+  void _pickImage() {
+    showDialog(context: context , builder: (context) {
+      return ImageSourceDialog(
+        onCamera: () => _getImage(ImageSource.camera),
+        onGallery: () => _getImage(ImageSource.gallery),
+      );
+    });
   }
 }
