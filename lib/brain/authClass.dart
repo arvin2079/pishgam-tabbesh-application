@@ -84,24 +84,20 @@ class Auth extends AuthBase {
   Future<User> currentUser() async {
     final String _methodName= 'currentUser';
     final Map result = await _currentUserChannel.invokeMethod(_methodName);
-    if( result != null){
       if (result.isEmpty)
         return null;
       else{
         _currentUser = User(
-          firstname: result[0],
-          lastname: result[1],
-          username: result[2],
-          password: result[3],
-          gender: result[4],
-          phoneNumber: result[5],
-          grade: result[6],
-          city: result[7],
+          firstname: result["first_name"],
+          lastname: result["last_name"],
+          username: result["user_name"],
+          password: result["password"],
+          gender: result["gender"],
+          phoneNumber: result["phone_number"],
+          grade: result["grades"],
         );
         return _currentUser;
       }
-    } else
-      throw Exception('خطا در ارتباط با سرور');
   }
 
   @override
@@ -125,20 +121,19 @@ class Auth extends AuthBase {
   Future<User> signin({String username, String password}) async {
     final String _methodName = 'signin';
     try {
-      final Map result = await _signInChannel.invokeMethod(
+      final Map<String, String> result = await _signInChannel.invokeMethod(
           _methodName, {"username": username, "password": password});
       if (result != null) {
         return User(
-          firstname: result[0],
-          lastname: result[1],
-          username: result[2],
-          password: result[3],
-          gender: result[4],
-          phoneNumber: result[5],
-          grade: result[6],
+          firstname: result["first_name"],
+          lastname: result["last_name"],
+          username: result["user_name"],
+          password: result["password"],
+          gender: result["gender"],
+          phoneNumber: result["phone_number"],
+          grade: result["grades"],
         );
-      } else
-        throw Exception('خطا در ارتباط با سرور');
+      }
     } catch(_) {
       return null;
     }
@@ -157,14 +152,10 @@ class Auth extends AuthBase {
         'gender' : user.gender,
         //fixme: address!!
       });
-      if(result != null){
         if(result == 'added')
           return true;
         else if (result == 'failed')
           return false;
-      }
-      else
-        throw Exception('خطا در ارتباط با سرور');
       return null;
     } catch (_) {
       return null;
@@ -176,44 +167,26 @@ class Auth extends AuthBase {
     final String _methodName = "zarinpall";
     try{
       final String result = await _zarinpallChannel.invokeMethod(_methodName, {'amount' : amount});
-      if(result != null){
         if(result == 'done')
           return true;
         else if(result == 'failed')
           return false;
-      }
-      else
-        throw Exception('خطا در ارتباط با سرور');
       return null;
     } catch(_){
-      return null;
+       throw Exception('payment process failed');
     }
-    // throw Exception('payment process failed');
   }
 
   @override
   Future<void> initCitiesMap() async {
-    try{
       final String _methodName= "cities";
       citiesMap= await _citiesChannel.invokeMethod(_methodName);
-      if(citiesMap == null)
-        throw Exception('خطا در ارتباط با سرور');
-    } catch(_){
-      return null;
-    }
-
   }
 
   @override
   Future<void> initGradesMap() async{
-    try{
       final String _methodName= "grades";
       gradesMap= await _gradesChannel.invokeMethod(_methodName);
-      if(gradesMap == null)
-        throw Exception('خطا در ارتباط با سرور');
-    } catch(_){
-      return null;
-    }
   }
 }
 
