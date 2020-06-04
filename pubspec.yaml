@@ -29,8 +29,7 @@ dependencies:
   bloc: ^3.0.0
   flutter_bloc: ^3.2.0
   slide_countdown_clock: ^1.0.3
-  provider:
-  image_picker:
+  image_picker: ^0.6.7
   equatable: ^1.1.1
 
 dev_dependencies:
