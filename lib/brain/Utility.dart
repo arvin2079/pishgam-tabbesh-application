@@ -3,19 +3,22 @@ import 'dart:io';
 
 
 class Utility {
+  static final int _quality = 65;
+  static final int _minWidth = 200;
+  static final int _minHeight = 200;
 
   static Future<File> compressAndGetFile(File file) async {
     List<String> arr = file.path.split('/');
     arr.last = arr.last.split('.').first + '_modified.' + arr.last.split('.').last;
-    String targetPath = '';
-    for(String s in arr) {
-      targetPath += s;
+    String targetPath = arr.first;
+    for(int i=1 ; i<arr.length ; i++) {
+      targetPath += '/'+arr[i];
     }
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path, targetPath,
-      quality: 80,
-      minWidth: 200,
-      minHeight: 200
+      quality: _quality,
+      minWidth: _minWidth,
+      minHeight: _minHeight,
     );
     return result;
   }
@@ -23,10 +26,9 @@ class Utility {
   static Future<List<int>> compressAssetAndGetList(String assetName) async {
     var list = await FlutterImageCompress.compressAssetImage(
       assetName,
-      minHeight: 200,
-      minWidth: 200,
-      quality: 10,
-      rotate: 180,
+      quality: _quality,
+      minWidth: _minWidth,
+      minHeight: _minHeight,
     );
     return list;
   }
