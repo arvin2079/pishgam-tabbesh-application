@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 
 import com.demo.pishgamt3.Json_parser.JsonParser;
 import com.demo.pishgamt3.Method_channels_Strings.ChannelsStrings;
+import com.demo.pishgamt3.Method_channels_Strings.Header;
 import com.demo.pishgamt3.Requesr_for_server.RequestforServer;
 
 import com.demo.pishgamt3.Shareprefences.SharePref;
@@ -67,8 +68,8 @@ public class MainActivity extends FlutterActivity {
                           info.put("password",call.argument("password"));
                           //Each request requires a header, the key and value of which must be
                           // defined in the hash map with the following strings.
-                          info.put("nameOfheader","Accept");
-                          info.put("valueOfheader","application/json");
+                          info.put(new Header().getKayheader(),new Header().getValueheader());
+                          info.put(new Header().getKeyvalue(),new Header().getValueval());
 
                           //send request
                           RequestforServer requestforServer=new RequestforServer(client,path,info);
@@ -147,8 +148,8 @@ public class MainActivity extends FlutterActivity {
                               //use get method to get list of cities and grades
                               String path="http://tabbesh.ir:8000/api/token/";
                               HashMap<String,String> header =new HashMap<>();
-                              header.put("nameOfheader","Accept");
-                              header.put("valueOfheader","application/json");
+                              header.put(new Header().getKayheader(),new Header().getValueheader());
+                              header.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
                               OkHttpClient client=new OkHttpClient();
@@ -183,7 +184,7 @@ public class MainActivity extends FlutterActivity {
                                           }
                                         });
                                     }
-                                   
+
 
                                   }
                                 });
@@ -219,8 +220,8 @@ public class MainActivity extends FlutterActivity {
                               info.put("city",call.argument("city"));
                               //Each request requires a header, the key and value of which must be
                               // defined in the hash map with the following strings.
-                              info.put("nameOfheader","Accept");
-                              info.put("valueOfheader","application/json");
+                              info.put(new Header().getKayheader(),new Header().getValueheader());
+                              info.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
                               //send request
