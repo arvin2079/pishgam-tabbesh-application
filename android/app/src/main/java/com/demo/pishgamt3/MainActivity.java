@@ -42,9 +42,11 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings SignIn=new ChannelsStrings("signin");
       ChannelsStrings SignUp=new ChannelsStrings("signup");
       ChannelsStrings ZaringPal=new ChannelsStrings("zarinpal");
-      ChannelsStrings GetSignup=new ChannelsStrings("getsignup");
+      ChannelsStrings Getcities=new ChannelsStrings("cities");
+      ChannelsStrings Getgrades=new ChannelsStrings("grades");
 
-              //signin
+
+    //signin
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignIn.getChannelsString())
                          .setMethodCallHandler(((call, result) ->
                          {
@@ -132,10 +134,10 @@ public class MainActivity extends FlutterActivity {
 
 
               //GET for list of cities and grades
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),GetSignup.getChannelsString())
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Getcities.getChannelsString())
                           .setMethodCallHandler(((call, result) ->
                           {
-                            if(call.method.equals("getsignup"))
+                            if(call.method.equals("cities"))
                             {
                               //use get method to get list of cities and grades
                               String path="http://tabbesh.ir:8000/api/token/";
@@ -169,7 +171,7 @@ public class MainActivity extends FlutterActivity {
                                               //parse json
                                               JsonParser jsonParser=new JsonParser();
                                               //send hashmap
-                                              result.success(jsonParser.getsignup(maplist));
+                                              result.success(jsonParser.getcities(maplist));
                                             } catch (IOException | JSONException e) {
                                               result.error("failed in get method",e.getMessage(),null);
                                             }
@@ -188,6 +190,65 @@ public class MainActivity extends FlutterActivity {
                             }
 
                           }));
+
+
+              //GET for list of cities and grades
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Getgrades.getChannelsString())
+                      .setMethodCallHandler(((call, result) ->
+                      {
+                        if(call.method.equals("grades"))
+                        {
+                          //use get method to get list of cities and grades
+                          String path="http://tabbesh.ir:8000/api/token/";
+                          HashMap<String,String> header =new HashMap<>();
+                          header.put(new Header().getKayheader(),new Header().getValueheader());
+                          header.put(new Header().getKeyvalue(),new Header().getValueval());
+
+
+                          OkHttpClient client=new OkHttpClient();
+                          RequestforServer requestforServer=new RequestforServer(client,path,header);
+
+                          try {
+                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                              @Override
+                              public void onFailure(Call call, IOException e) {
+                                result.error("failed in get method",e.getMessage(),null);
+
+                              }
+
+                              @Override
+                              public void onResponse(Call call, Response response) throws IOException
+                              {
+                                if(response.isSuccessful())
+                                {
+                                  MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                      try {
+                                        //get json
+                                        String maplist=response.body().string();
+                                        //parse json
+                                        JsonParser jsonParser=new JsonParser();
+                                        //send hashmap
+                                        result.success(jsonParser.getgrades(maplist));
+                                      } catch (IOException | JSONException e) {
+                                        result.error("failed in get method",e.getMessage(),null);
+                                      }
+                                    }
+                                  });
+                                }
+
+
+                              }
+                            });
+                          } catch (IOException e) {
+                            result.error("failed in get method",e.getMessage(),null);
+                          }
+
+
+                        }
+
+                      }));
 
 
 

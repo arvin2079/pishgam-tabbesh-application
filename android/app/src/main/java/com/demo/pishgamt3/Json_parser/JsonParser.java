@@ -23,7 +23,7 @@ public class JsonParser {
                     }
 
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    public HashMap<String,String> getsignup(String json) throws JSONException
+                    public HashMap<String,String> getcities(String json) throws JSONException
                     {
                         HashMap<String,String> hashMap=new HashMap<>();
 
@@ -40,8 +40,19 @@ public class JsonParser {
 
                         }
 
+
+                     return hashMap;
+                    }
+
+
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    public HashMap<String,String> getgrades(String json) throws JSONException
+                    {
+                        HashMap<String,String> hashMap=new HashMap<>();
+
+                        JSONObject jsonObject=new JSONObject(json);
                         JSONArray  grades=new JSONArray(jsonObject.getJSONArray("grades"));
-                        for(int i=0;i<cities.length();i++)
+                        for(int i=0;i<grades.length();i++)
                         {
                             JSONObject grade=grades.getJSONObject(i);
                             //get title and code
@@ -52,7 +63,7 @@ public class JsonParser {
 
                         }
 
-                     return hashMap;
+                        return hashMap;
                     }
 
 
