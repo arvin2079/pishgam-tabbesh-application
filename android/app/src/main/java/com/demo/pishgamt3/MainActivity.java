@@ -1,12 +1,7 @@
 package com.demo.pishgamt3;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -17,10 +12,7 @@ import com.demo.pishgamt3.Method_channels_Strings.Header;
 import com.demo.pishgamt3.Requesr_for_server.RequestforServer;
 
 import com.demo.pishgamt3.Shareprefences.SharePref;
-import com.zarinpal.ewallets.purchase.OnCallbackRequestPaymentListener;
-import com.zarinpal.ewallets.purchase.OnCallbackVerificationPaymentListener;
-import com.zarinpal.ewallets.purchase.PaymentRequest;
-import com.zarinpal.ewallets.purchase.ZarinPal;
+
 
 import org.json.JSONException;
 
