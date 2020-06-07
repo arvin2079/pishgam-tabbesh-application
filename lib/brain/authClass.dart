@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io' as Io;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +22,8 @@ abstract class AuthBase {
   Future<void> initCitiesMap();
 
   Future<void> initGradesMap();
+
+  Future<void> setUserProfilePicture(String path);
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -71,6 +75,8 @@ class Auth extends AuthBase {
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
   static final String _currentUserChannelName = 'currentUser';
+  static final String _setUserProfileChannelName = 'setUserprofile';
+
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -78,6 +84,7 @@ class Auth extends AuthBase {
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
   static final _currentUserChannel= MethodChannel(_currentUserChannelName);
+  static final _setUserProfileChannel = MethodChannel(_setUserProfileChannelName);
 
 
   @override
@@ -187,6 +194,14 @@ class Auth extends AuthBase {
   Future<void> initGradesMap() async{
       final String _methodName= "grades";
       gradesMap= await _gradesChannel.invokeMethod(_methodName);
+  }
+
+  @override
+  Future<void> setUserProfilePicture(String path) async {
+    final bytes = await Io.File(path).readAsBytes();
+    String encodedImage = base64Encode(bytes);
+    String _methodName = "setUserProfile";
+    final String result = await _setUserProfileChannel.invokeMethod(_methodName , {'encodedImage' : encodedImage});
   }
 }
 
