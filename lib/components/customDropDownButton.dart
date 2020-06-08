@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 
 class CustomDropDownButton extends StatefulWidget {
-  CustomDropDownButton({@required this.hint, @required this.items, this.controller});
+  CustomDropDownButton(
+      {@required this.hint,
+      @required this.items,
+      this.controller,
+      this.color = Colors.white});
   final String hint;
   final List<String> items;
   final DropDownController controller;
+  Color color;
 
   @override
   _CustomDropDownButtonState createState() =>
-      _CustomDropDownButtonState(hint: hint, items: items);
+      _CustomDropDownButtonState(hint: hint, items: items, color: color);
 }
 
 class _CustomDropDownButtonState extends State<CustomDropDownButton> {
-  _CustomDropDownButtonState({this.hint, this.items});
+  _CustomDropDownButtonState({this.hint, this.items, this.color});
 
   String hint;
   List<String> items;
   String selectedItem;
+  Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +31,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
       margin: const EdgeInsets.fromLTRB(30, 0, 15, 0),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-              width: 1.0, style: BorderStyle.solid, color: Colors.white),
+          side: BorderSide(width: 1.0, style: BorderStyle.solid, color: color),
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
       ),
@@ -39,7 +44,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
               padding: EdgeInsets.all(5),
               child: Icon(
                 Icons.expand_more,
-                color: Colors.white,
+                color: color,
               ),
             ),
             hint: Padding(
@@ -51,7 +56,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
                   fontSize: 13,
                   fontFamily: 'vazir',
                   fontWeight: FontWeight.w100,
-                  color: Colors.white,
+                  color: color,
                 ),
               ),
             ),
@@ -62,8 +67,9 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
                       fontSize: 13,
                       fontFamily: 'vazir',
                       fontWeight: FontWeight.w100,
-                      color: Colors.white,
-                    ));
+                      color: color,
+                    ),
+                );
               }).toList();
             },
             value: selectedItem,

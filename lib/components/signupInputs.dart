@@ -11,8 +11,15 @@ class SignupTextInput extends StatelessWidget {
       this.errorText,
       this.enabled,
       this.maxLength,
-      this.onEditingComplete})
+      this.onEditingComplete,
+      this.labelColor = lblColor,
+      this.inputColor = Colors.white,
+      this.borderColor = brColor,
+      this.counterColor = Colors.white})
       : super(key: key);
+
+  static const lblColor = Color(0xFFE0E0E0);
+  static const brColor = Color(0xFFF5F5F5);
 
   final FocusNode focusNode;
   final TextEditingController controller;
@@ -23,6 +30,10 @@ class SignupTextInput extends StatelessWidget {
   final String errorText;
   final int maxLength;
   final Function onEditingComplete;
+  final Color labelColor;
+  final Color borderColor;
+  final Color inputColor;
+  final Color counterColor;
 
   @override
   Widget build(BuildContext context) {
@@ -43,27 +54,27 @@ class SignupTextInput extends StatelessWidget {
             errorText: errorText,
             labelText: labelText,
             counterStyle: TextStyle(
-              color: Colors.white,
+              color: counterColor,
             ),
             labelStyle: TextStyle(
               fontFamily: 'vazir',
               fontWeight: FontWeight.w100,
               fontSize: 16,
-              color: Colors.grey[300],
+              color: labelColor,
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide:
                   BorderSide(color: Colors.yellowAccent[700], width: 2.0),
             ),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[100], width: 1.3),
+              borderSide: BorderSide(color: borderColor, width: 1.3),
             ),
           ),
           style: TextStyle(
             fontFamily: 'vazir',
             fontWeight: FontWeight.w100,
             fontSize: 14,
-            color: Colors.white,
+            color: inputColor,
           ),
         ),
       ),
