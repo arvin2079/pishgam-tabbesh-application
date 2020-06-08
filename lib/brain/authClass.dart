@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io' as Io;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +22,8 @@ abstract class AuthBase {
   Future<void> initCitiesMap();
 
   Future<void> initGradesMap();
+
+  Future<void> setUserProfilePicture(String path);
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -71,6 +75,8 @@ class Auth extends AuthBase {
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
   static final String _currentUserChannelName = 'currentUser';
+  static final String _setUserProfileChannelName = 'setUserprofile';
+
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -78,27 +84,27 @@ class Auth extends AuthBase {
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
   static final _currentUserChannel= MethodChannel(_currentUserChannelName);
+  static final _setUserProfileChannel = MethodChannel(_setUserProfileChannelName);
 
 
   @override
   Future<User> currentUser() async {
-    return null;
     final String _methodName= 'currentUser';
     final Map<String ,String> result = await _currentUserChannel.invokeMethod(_methodName);
-      if (result.isEmpty)
-        return null;
-      else{
-        _currentUser = User(
-          firstname: result["first_name"],
-          lastname: result["last_name"],
-          username: result["user_name"],
-          password: result["password"],
-          gender: result["gender"],
-          phoneNumber: result["phone_number"],
-          grade: result["grades"],
-        );
-        return _currentUser;
-      }
+    if (result.isEmpty)
+      return null;
+    else{
+      _currentUser = User(
+        firstname: result["first_name"],
+        lastname: result["last_name"],
+        username: result["user_name"],
+        password: result["password"],
+        gender: result["gender"],
+        phoneNumber: result["phone_number"],
+        grade: result["grades"],
+      );
+      return _currentUser;
+    }
   }
 
   @override
@@ -153,10 +159,10 @@ class Auth extends AuthBase {
         'gender' : user.gender,
         //fixme: address!!
       });
-        if(result == 'added')
-          return true;
-        else if (result == 'failed')
-          return false;
+      if(result == 'added')
+        return true;
+      else if (result == 'failed')
+        return false;
       return null;
     } catch (_) {
       return null;
@@ -168,40 +174,48 @@ class Auth extends AuthBase {
     final String _methodName = "zarinpall";
     try{
       final String result = await _zarinpallChannel.invokeMethod(_methodName, {'amount' : amount});
-        if(result == 'done')
-          return true;
-        else if(result == 'failed')
-          return false;
+      if(result == 'done')
+        return true;
+      else if(result == 'failed')
+        return false;
       return null;
     } catch(_){
-       throw Exception('payment process failed');
+      throw Exception('payment process failed');
     }
   }
 
   @override
   Future<void> initCitiesMap() async {
-      final String _methodName= "cities";
-      citiesMap= await _citiesChannel.invokeMethod(_methodName);
+    final String _methodName= "cities";
+    citiesMap= await _citiesChannel.invokeMethod(_methodName);
   }
 
   @override
   Future<void> initGradesMap() async{
-      final String _methodName= "grades";
-      gradesMap= await _gradesChannel.invokeMethod(_methodName);
+    final String _methodName= "grades";
+    gradesMap= await _gradesChannel.invokeMethod(_methodName);
+  }
+
+  @override
+  Future<void> setUserProfilePicture(String path) async {
+    final bytes = await Io.File(path).readAsBytes();
+    String encodedImage = base64Encode(bytes);
+    String _methodName = "setUserProfile";
+    final String result = await _setUserProfileChannel.invokeMethod(_methodName , {'encodedImage' : encodedImage});
   }
 }
 
 class User extends Equatable {
   //fixme: address!!
   User({this.username,
-      this.firstname,
-      this.lastname,
-      this.city,
-      this.gender,
-      this.grade,
-      this.password,
-      this.phoneNumber,
-      this.socialnumber});
+    this.firstname,
+    this.lastname,
+    this.city,
+    this.gender,
+    this.grade,
+    this.password,
+    this.phoneNumber,
+    this.socialnumber});
 
   final String username;
   final String firstname;
@@ -216,16 +230,16 @@ class User extends Equatable {
   @override
   // TODO: implement props
   List<Object> get props => [
-        username,
-        firstname,
-        lastname,
-        socialnumber,
-        city,
-        gender,
-        password,
-        grade,
-        phoneNumber
-      ];
+    username,
+    firstname,
+    lastname,
+    socialnumber,
+    city,
+    gender,
+    password,
+    grade,
+    phoneNumber
+  ];
 }
 
 // fixme : user profile picture
