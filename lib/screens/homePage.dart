@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage>
   Animation<Alignment> _animation;
   AnimationController _controller;
 
-  Image profilePicture = null;
+  Image profilePicture;
 
   bool expanded = false;
 

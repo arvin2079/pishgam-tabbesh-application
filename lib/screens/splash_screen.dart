@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
+import 'package:pishgamv2/dialogs/waiterDialog.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
 
@@ -34,7 +35,6 @@ class _LanidngPageState extends State<LanidngPage>
     initAnimation();
     startAnimation();
     return BlocConsumer<AuthBloc, AuthState>(
-        bloc: authBloc,
         listener: (context, state) {
           if (state is StartAnimation) {
             startAnimation().then((_) {
@@ -50,11 +50,19 @@ class _LanidngPageState extends State<LanidngPage>
                 );
               },
             );
+          } else if (state is SignInIsLoadingSta) {
+            showDialog(context: context, builder: (context) {
+              return WaiterDialog();
+            });
+          } else if (state is SignInLoadingFinished) {
+            Navigator.pop(context);
           }
         },
         buildWhen: (lastState, thisState) {
-          if (thisState is StartAnimation || thisState is AuthenticationError)
-            return false;
+          if (thisState is StartAnimation ||
+              thisState is AuthenticationError ||
+              thisState is SignInIsLoadingSta ||
+              thisState is SignInLoadingFinished) return false;
           return true;
         },
         // ignore: missing_return
@@ -127,7 +135,7 @@ class _LanidngPageState extends State<LanidngPage>
                       'Tetha',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.w900,
                         shadows: [
                           Shadow(blurRadius: 10, color: Colors.black54)

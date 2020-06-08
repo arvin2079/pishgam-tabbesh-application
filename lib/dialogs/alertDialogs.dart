@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 
 class SimpleAlertDialog extends StatelessWidget {
-  const SimpleAlertDialog({this.onPressed, @required this.content, @required this.title});
+  const SimpleAlertDialog(
+      {this.onPressed, @required this.content, @required this.title});
+
   final String content;
   final String title;
   final Function onPressed;
@@ -41,7 +43,7 @@ class SimpleAlertDialog extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.pop(context);
-              if(onPressed != null) onPressed();
+              if (onPressed != null) onPressed();
             },
             color: Colors.grey[700],
             shape: DialogShape,

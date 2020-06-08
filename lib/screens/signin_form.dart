@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
+import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/phoneNumGetterDialog.dart';
 import 'package:pishgamv2/screens/signup_page.dart';
@@ -20,33 +21,16 @@ class _SignInFormState extends State<SignInForm> {
   final TextEditingController _passwordTextController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  bool _submitEnabled = true;
 
   void _submit() {
-    // TODO : set _submitEnabled to false when futer of authenticatio is in progress
+    // ignore: close_sinks
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     if (widget.emailValidator.isValid(_emailTextController.text) &&
         widget.passwordValidator.isValid(_passwordTextController.text)) {
-      setState(() {
-        _submitEnabled = false;
-      });
-
-      try {
-        authBloc.add(DoSignIn(
-          username: _emailTextController.text,
-          password: _passwordTextController.text,
-        ));
-      } catch (e) {
-        // fixme : handel errors
-        authBloc.add(CatchError(
-          message: 'اشکال در ارتباط با سرور',
-          detail: 'sign in',
-        ));
-      } finally {
-        setState(() {
-          _submitEnabled = true;
-        });
-      }
+      authBloc.add(DoSignIn(
+        username: _emailTextController.text,
+        password: _passwordTextController.text,
+      ));
     } else {
       authBloc.add(CatchError(
         message: 'ایمیل یا رمز عبور نامعتبر',
@@ -76,6 +60,8 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   List<Widget> BodyColumn(BuildContext context) {
+    // fixme : fix the warning
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return <Widget>[
       Padding(
         padding: const EdgeInsets.only(top: 60),
@@ -123,8 +109,8 @@ class _SignInFormState extends State<SignInForm> {
             SigninTextInput(
               focusNode: _emailFocusNode,
               controller: _emailTextController,
-              onEditingComplete: _onEmailEditingComplete,
-              inputType: TextInputType.emailAddress,
+              onEditingComplete: () => _onEmailEditingComplete(),
+              inputType: TextInputType.text,
               obsecureText: false,
             ),
             //password
@@ -132,7 +118,7 @@ class _SignInFormState extends State<SignInForm> {
             SigninTextInput(
               focusNode: _passwordFocusNode,
               controller: _passwordTextController,
-              onEditingComplete: _submit,
+              onEditingComplete: () => _submit(),
               inputType: TextInputType.visiblePassword,
               obsecureText: true,
             ),
@@ -151,7 +137,7 @@ class _SignInFormState extends State<SignInForm> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                onPressed: _submitEnabled ? _submit : null,
+                onPressed: () => _submit(),
               ),
             ),
             Padding(
@@ -170,21 +156,20 @@ class _SignInFormState extends State<SignInForm> {
                   ),
                   SizedBox(width: 5),
                   GestureDetector(
-                    onTap: _submitEnabled
-                        ? () {
-                            Navigator.of(context).push(MaterialPageRoute<void>(
-                              fullscreenDialog: true,
-                              builder: (context) => SignUpPage(),
-                            ));
-                          }
-                        : null,
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute<void>(
+                        fullscreenDialog: true,
+                        builder: (context) => BlocProvider(
+                          create: (context) => authBloc,
+                          child: SignUpPage(),
+                        ),
+                      ));
+                    },
                     child: Text(
                       'ثبت نام کنید',
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
-                        color: _submitEnabled
-                            ? Colors.yellowAccent[700]
-                            : Colors.black45,
+                        color: Colors.yellowAccent[700],
                         fontFamily: 'vazir',
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
