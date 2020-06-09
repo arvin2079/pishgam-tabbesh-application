@@ -31,7 +31,7 @@ dependencies:
   slide_countdown_clock: ^1.0.3
   image_picker: ^0.6.7
   equatable: ^1.1.1
-  flutter_image_compress: ^0.6.8
+  flutter_image_compress:
 
 dev_dependencies:
   flutter_test:
