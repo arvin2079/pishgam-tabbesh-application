@@ -243,15 +243,19 @@ class _SignUpPageState extends State<SignUpPage> {
                             textDirection: TextDirection.rtl,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              CustomDropDownButton(
-                                hint: 'مقطع',
-                                items: grades,
-                                controller: _gradeDropDownController,
+                              Expanded(
+                                child: CustomDropDownButton(
+                                  hint: 'مقطع',
+                                  items: grades,
+                                  controller: _gradeDropDownController,
+                                ),
                               ),
-                              CustomDropDownButton(
-                                hint: 'شهر',
-                                items: locations,
-                                controller: _cityDropDownController,
+                              Expanded(
+                                child: CustomDropDownButton(
+                                  hint: 'شهر',
+                                  items: locations,
+                                  controller: _cityDropDownController,
+                                ),
                               ),
                             ],
                           ),

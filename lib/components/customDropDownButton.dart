@@ -20,8 +20,11 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth= MediaQuery.of(context).size.width;
+    double rp= screenWidth * 0.04;
+    double lp= screenWidth * 0.1;
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 5, right: 10),
+      padding: EdgeInsets.only(top: 5, bottom: 5, right: rp),
       margin: const EdgeInsets.fromLTRB(30, 0, 15, 0),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
@@ -34,6 +37,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
         textDirection: TextDirection.rtl,
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
+            isExpanded: true,
             isDense: true,
             icon: Padding(
               padding: EdgeInsets.all(5),
@@ -43,7 +47,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
               ),
             ),
             hint: Padding(
-              padding: EdgeInsets.only(left: 50),
+              padding: EdgeInsets.only(left: lp),
               child: Text(
                 hint,
                 textDirection: TextDirection.rtl,
@@ -75,7 +79,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
             },
             items: items.map((String item) {
               return DropdownMenuItem<String>(
-                child: Text(item),
+                child: FittedBox(fit: BoxFit.fitWidth,child: Text(item)),
                 value: item,
               );
             }).toList(),
