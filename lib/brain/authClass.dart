@@ -164,7 +164,7 @@ class Auth extends AuthBase {
         'firstname' : user.firstname,
         'lastname' : user.lastname,
         'phonenumber' : user.phoneNumber,
-        'grade' : gradesList.indexOf(user.grade),
+        'grade' : gradesMap.keys.firstWhere((element) => gradesMap[element]==user.grade , orElse: () => null),
         'city' : citiesMap.keys.firstWhere((element) => citiesMap[element]==user.city , orElse: () => null),
         'gender' : user.gender,
         //fixme: address!!
