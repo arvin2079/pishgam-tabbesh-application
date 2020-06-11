@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 
 class CustomDropDownButton extends StatefulWidget {
-  CustomDropDownButton({@required this.hint, @required this.items, this.controller});
+  CustomDropDownButton(
+      {@required this.hint,
+      @required this.items,
+      this.controller,
+      this.color = Colors.white});
   final String hint;
   final List<String> items;
   final DropDownController controller;
+  Color color;
 
   @override
   _CustomDropDownButtonState createState() =>
-      _CustomDropDownButtonState(hint: hint, items: items);
+      _CustomDropDownButtonState(hint: hint, items: items, color: color);
 }
 
 class _CustomDropDownButtonState extends State<CustomDropDownButton> {
-  _CustomDropDownButtonState({this.hint, this.items});
+  _CustomDropDownButtonState({this.hint, this.items, this.color});
 
   String hint;
   List<String> items;
   String selectedItem;
+  Color color;
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth= MediaQuery.of(context).size.width;
-    double rp= screenWidth * 0.04;
-    double lp= screenWidth * 0.1;
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 5, right: rp),
+      padding: EdgeInsets.only(top: 5, bottom: 5, right: 10),
       margin: const EdgeInsets.fromLTRB(30, 0, 15, 0),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-              width: 1.0, style: BorderStyle.solid, color: Colors.white),
+          side: BorderSide(width: 1.0, style: BorderStyle.solid, color: color),
           borderRadius: BorderRadius.all(Radius.circular(5.0)),
         ),
       ),
@@ -37,17 +39,16 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
         textDirection: TextDirection.rtl,
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            isExpanded: true,
             isDense: true,
             icon: Padding(
               padding: EdgeInsets.all(5),
               child: Icon(
                 Icons.expand_more,
-                color: Colors.white,
+                color: color,
               ),
             ),
             hint: Padding(
-              padding: EdgeInsets.only(left: lp),
+              padding: EdgeInsets.only(left: 50),
               child: Text(
                 hint,
                 textDirection: TextDirection.rtl,
@@ -55,7 +56,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
                   fontSize: 13,
                   fontFamily: 'vazir',
                   fontWeight: FontWeight.w100,
-                  color: Colors.white,
+                  color: color,
                 ),
               ),
             ),
@@ -66,8 +67,9 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
                       fontSize: 13,
                       fontFamily: 'vazir',
                       fontWeight: FontWeight.w100,
-                      color: Colors.white,
-                    ));
+                      color: color,
+                    ),
+                );
               }).toList();
             },
             value: selectedItem,
@@ -79,7 +81,7 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
             },
             items: items.map((String item) {
               return DropdownMenuItem<String>(
-                child: FittedBox(fit: BoxFit.fitWidth,child: Text(item)),
+                child: Text(item),
                 value: item,
               );
             }).toList(),

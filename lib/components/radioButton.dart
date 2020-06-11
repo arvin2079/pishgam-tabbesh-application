@@ -4,23 +4,26 @@ class RadioButton extends StatefulWidget {
   RadioButton(
       {@required this.valueFirst,
       @required this.valueSecond,
-        @required this.controller,
+      @required this.controller,
       @required this.first,
       @required this.second,
-      @required this.txt});
+      @required this.txt,
+      this.color = Colors.white});
   final int valueFirst;
   final int valueSecond;
   final String first;
   final String second;
   final RadioGroupController controller;
   final String txt;
+  Color color;
   @override
   _RadioButtonState createState() => _RadioButtonState(
       valueFirst: valueFirst,
       valueSecond: valueSecond,
       first: first,
       second: second,
-      txt: txt);
+      txt: txt,
+      color: color);
 }
 
 class _RadioButtonState extends State<RadioButton> {
@@ -29,7 +32,8 @@ class _RadioButtonState extends State<RadioButton> {
       @required this.valueSecond,
       @required this.first,
       @required this.second,
-      @required this.txt});
+      @required this.txt,
+      this.color});
 
   final int valueFirst;
   int groupValue = 0;
@@ -37,6 +41,7 @@ class _RadioButtonState extends State<RadioButton> {
   final String first;
   final String second;
   final String txt;
+  Color color;
 
   int get value => groupValue;
 
@@ -53,7 +58,7 @@ class _RadioButtonState extends State<RadioButton> {
             style: TextStyle(
               fontSize: 18,
               fontFamily: 'IranianSans',
-              color: Colors.white,
+              color: color,
             ),
           ),
           SizedBox(width: 30),
@@ -62,7 +67,7 @@ class _RadioButtonState extends State<RadioButton> {
             style: TextStyle(
               fontSize: 18,
               fontFamily: 'IranianSans',
-              color: Colors.white,
+              color: color,
             ),
           ),
           Radio(
@@ -77,7 +82,7 @@ class _RadioButtonState extends State<RadioButton> {
             style: TextStyle(
               fontSize: 18,
               fontFamily: 'IranianSans',
-              color: Colors.white,
+              color: color,
             ),
           ),
           Radio(
