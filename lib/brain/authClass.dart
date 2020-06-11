@@ -50,6 +50,16 @@ abstract class AuthBase {
 // todo(optional or in future versoins) : language.
 // todo(optional or in future versoins) : Azmoon online.
 
+class CitiesListHolder {
+  CitiesListHolder(this.list);
+  final List<String> list;
+}
+
+class GradesListHolder {
+  GradesListHolder(this.list);
+  final List<String> list;
+}
+
 class Auth extends AuthBase {
 
   Map citiesMap= Map();
@@ -57,16 +67,16 @@ class Auth extends AuthBase {
   User _currentUser = new User();
 
 
-  List<String> get citiesList{
+  CitiesListHolder get citiesList{
     List<String> citiesList =List<String>();
     citiesMap.forEach((key, value) => citiesList.add(value));
-    return citiesList;
+    return CitiesListHolder(citiesList);
   }
 
-  List<String> get gradesList{
+  GradesListHolder get gradesList{
     List<String> gradesList = List<String>();
     gradesMap.forEach((key, value) => gradesList.add(value));
-    return gradesList;
+    return GradesListHolder(gradesList);
   }
 
   static final String _signInChannelName = 'signin';

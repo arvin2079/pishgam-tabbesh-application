@@ -13,6 +13,7 @@ import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
   @override
@@ -20,8 +21,8 @@ class SignUpPage extends StatefulWidget with SignupFieldValidator {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  List<String> locations = ['اول', 'دهم', 'دوازدهم'];
-  List<String> grades = ['اول', 'دهم', 'دوازدهم'];
+  List<String> locations;
+  List<String> grades;
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _familyNameFocusNode = FocusNode();
   final FocusNode _userNameFocusNode = FocusNode();
@@ -41,6 +42,25 @@ class _SignUpPageState extends State<SignUpPage> {
   Image _image;
 
   bool _submited = false;
+
+  AuthBloc authBloc;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authBloc = BlocProvider.of<AuthBloc>(context);
+    locations = Provider.of<CitiesListHolder>(context).list;
+    grades = Provider.of<GradesListHolder>(context).list;
+
+    if (locations == null || grades == null) {
+      Navigator.pop(context);
+      authBloc.add(CatchError(
+        message: 'اشکال در ارتباط با سرور',
+        detail: 'برنامه در دریافت اطلاعات دوچار مشکل شده است',
+      ));
+    }
+  }
 
   @override
   void dispose() {
@@ -72,7 +92,6 @@ class _SignUpPageState extends State<SignUpPage> {
       _submited = true;
     });
     // ignore: close_sinks
-    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     try {
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
           !widget.firstnameValidator.isValid(_nameController.text) ||
@@ -181,7 +200,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: GestureDetector(
                               child: CircleAvatar(
                                 child: _image == null
-                                    ? Icon(Icons.photo_camera, color: Colors.black45, size: 30)
+                                    ? Icon(Icons.photo_camera,
+                                        color: Colors.black45, size: 30)
                                     : _image,
                                 backgroundColor: Colors.grey[200],
                                 radius: 35,
@@ -232,7 +252,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         .isValid(_phoneNumberController.text)
                                 ? widget.inValidPhoneNumberErrorMassage
                                 : null,
-                            maxLength: 11,
+                            maxLength: 10,
                             focusNode: _passwordFocusNode,
                             controller: _phoneNumberController,
                             onEditingComplete: _onPhoneNumberEditingComplete,

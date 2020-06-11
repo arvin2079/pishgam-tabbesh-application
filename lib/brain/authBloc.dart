@@ -45,9 +45,7 @@ class CatchError extends AuthEvent {
 
   @override
   List<Object> get props => null;
-
 }
-
 
 
 abstract class AuthState extends Equatable {
@@ -121,6 +119,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       User user;
       try {
         user = await auth.currentUser();
+        await auth.initCitiesMap();
+        await auth.initGradesMap();
       } catch(e) {
         this.add(CatchError(
           message: 'خطا',

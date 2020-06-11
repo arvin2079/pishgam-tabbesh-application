@@ -22,16 +22,23 @@ class _LanidngPageState extends State<LanidngPage>
   Animation<RelativeRect> _animationPishgamMoveToTop;
   Animation<RelativeRect> _animationTetha;
 
+  AuthBloc authBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    authBloc = BlocProvider.of<AuthBloc>(context);
+  }
+
   @override
   void dispose() {
     super.dispose();
     disposAnimation();
+    authBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    //fixme : warning
-    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     initAnimation();
     startAnimation();
     return BlocConsumer<AuthBloc, AuthState>(
