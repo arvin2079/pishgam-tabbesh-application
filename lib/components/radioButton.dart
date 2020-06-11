@@ -54,12 +54,13 @@ class _RadioButtonState extends State<RadioButton> {
       child: SingleChildScrollView(
         child: Row(
           textDirection: TextDirection.rtl,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text(
               txt,
+              textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17,
                 fontFamily: 'IranianSans',
                 color: color,
               ),
@@ -68,7 +69,7 @@ class _RadioButtonState extends State<RadioButton> {
             Text(
               first,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17,
                 fontFamily: 'IranianSans',
                 color: color,
               ),
@@ -79,11 +80,10 @@ class _RadioButtonState extends State<RadioButton> {
               activeColor: Colors.yellowAccent[700],
               onChanged: (int value) => radioButtonChecked(value),
             ),
-            Spacer(),
             Text(
               second,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17,
                 fontFamily: 'IranianSans',
                 color: color,
               ),

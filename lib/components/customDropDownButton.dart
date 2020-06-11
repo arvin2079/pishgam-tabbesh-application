@@ -27,8 +27,8 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 5, bottom: 5, right: 10),
-      margin: const EdgeInsets.fromLTRB(30, 0, 15, 0),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           side: BorderSide(width: 1.0, style: BorderStyle.solid, color: color),
@@ -40,24 +40,18 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             isDense: true,
-            icon: Padding(
-              padding: EdgeInsets.all(5),
-              child: Icon(
-                Icons.expand_more,
-                color: color,
-              ),
+            icon: Icon(
+              Icons.expand_more,
+              color: color,
             ),
-            hint: Padding(
-              padding: EdgeInsets.only(left: 50),
-              child: Text(
-                hint,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: 'vazir',
-                  fontWeight: FontWeight.w100,
-                  color: color,
-                ),
+            hint: Text(
+              hint,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                fontSize: 13,
+                fontFamily: 'vazir',
+                fontWeight: FontWeight.w100,
+                color: color,
               ),
             ),
             selectedItemBuilder: (BuildContext context) {

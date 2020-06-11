@@ -101,19 +101,23 @@ class _SettingScreenState extends State<SettingScreen> {
                 SizedBox(height: 40),
                 Row(
                   textDirection: TextDirection.rtl,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    CustomDropDownButton(
-                      color: Colors.grey[600],
-                      hint: 'مقطع',
-                      items: grades,
-                      controller: _gradeDropDownController,
+                    Expanded(
+                      child: CustomDropDownButton(
+                        color: Colors.grey[600],
+                        hint: 'مقطع',
+                        items: grades,
+                        controller: _gradeDropDownController,
+                      ),
                     ),
-                    CustomDropDownButton(
-                      color: Colors.grey[600],
-                      hint: 'شهر',
-                      items: locations,
-                      controller: _cityDropDownController,
+                    Expanded(
+                      child: CustomDropDownButton(
+                        color: Colors.grey[600],
+                        hint: 'شهر',
+                        items: locations,
+                        controller: _cityDropDownController,
+                      ),
                     ),
                   ],
                 ),

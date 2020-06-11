@@ -240,8 +240,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           SizedBox(height: 40),
                           Row(
-                            textDirection: TextDirection.rtl,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
                                 child: CustomDropDownButton(
@@ -260,7 +258,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ],
                           ),
                           RadioButton(
-                            txt: 'جنسيت',
+                            txt: 'جنسیت',
                             valueFirst: 1,
                             valueSecond: 2,
                             first: 'پسر',
