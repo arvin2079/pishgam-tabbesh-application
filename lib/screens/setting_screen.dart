@@ -3,12 +3,12 @@ import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
 
-class Setting extends StatefulWidget {
+class SettingScreen extends StatefulWidget {
   @override
-  _SettingState createState() => _SettingState();
+  _SettingScreenState createState() => _SettingScreenState();
 }
 
-class _SettingState extends State<Setting> {
+class _SettingScreenState extends State<SettingScreen> {
   List<String> locations = ['اول', 'دهم', 'دوازدهم'];
   List<String> grades = ['اول', 'دهم', 'دوازدهم'];
 

@@ -9,6 +9,7 @@ class RadioButton extends StatefulWidget {
       @required this.second,
       @required this.txt,
       this.color = Colors.white});
+
   final int valueFirst;
   final int valueSecond;
   final String first;
@@ -16,6 +17,7 @@ class RadioButton extends StatefulWidget {
   final RadioGroupController controller;
   final String txt;
   Color color;
+
   @override
   _RadioButtonState createState() => _RadioButtonState(
       valueFirst: valueFirst,
@@ -49,49 +51,51 @@ class _RadioButtonState extends State<RadioButton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 25, 32, 30),
-      child: Row(
-        textDirection: TextDirection.rtl,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            txt,
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'IranianSans',
-              color: color,
+      child: SingleChildScrollView(
+        child: Row(
+          textDirection: TextDirection.rtl,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              txt,
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'IranianSans',
+                color: color,
+              ),
             ),
-          ),
-          SizedBox(width: 30),
-          Text(
-            first,
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'IranianSans',
-              color: color,
+            Spacer(),
+            Text(
+              first,
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'IranianSans',
+                color: color,
+              ),
             ),
-          ),
-          Radio(
-            value: valueFirst,
-            groupValue: groupValue,
-            activeColor: Colors.yellowAccent[700],
-            onChanged: (int value) => radioButtonChecked(value),
-          ),
-          SizedBox(width: 15),
-          Text(
-            second,
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'IranianSans',
-              color: color,
+            Radio(
+              value: valueFirst,
+              groupValue: groupValue,
+              activeColor: Colors.yellowAccent[700],
+              onChanged: (int value) => radioButtonChecked(value),
             ),
-          ),
-          Radio(
-            value: valueSecond,
-            groupValue: groupValue,
-            activeColor: Colors.yellowAccent[700],
-            onChanged: (int value) => radioButtonChecked(value),
-          ),
-        ],
+            Spacer(),
+            Text(
+              second,
+              style: TextStyle(
+                fontSize: 18,
+                fontFamily: 'IranianSans',
+                color: color,
+              ),
+            ),
+            Radio(
+              value: valueSecond,
+              groupValue: groupValue,
+              activeColor: Colors.yellowAccent[700],
+              onChanged: (int value) => radioButtonChecked(value),
+            ),
+          ],
+        ),
       ),
     );
   }
