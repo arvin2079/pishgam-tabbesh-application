@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'authClass.dart';
 
 
@@ -103,6 +104,7 @@ class AuthenticationError extends AuthState {
   List<Object> get props => [Random().nextInt(1000)];
 }
 
+// todo : platform Exception
 
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -121,11 +123,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         user = await auth.currentUser();
         await auth.initCitiesMap();
         await auth.initGradesMap();
-      } catch(e) {
+      } on PlatformException catch (err) {
         this.add(CatchError(
-          message: 'خطا',
-          detail: e.toString(),
+          message: err.message,
+          detail: err.code,
         ));
+      } catch (err) {
+        print('error happend in flutter code!');
       }
       yield user == null ? StartAnimation() : Home();
     }
@@ -135,11 +139,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         user = await auth.signin(username: event.username, password: event.password);
         await Future.delayed(Duration(seconds: 2));
-      } catch (e) {
+      } on PlatformException catch (err) {
         this.add(CatchError(
-          message: 'خطا',
-          detail: e.toString(),
+          message: err.message,
+          detail: err.code,
         ));
+      } catch (err) {
+        print('error happend in flutter code!');
       }
       yield SignInLoadingFinished();
       yield user == null ? AuthenticationError(message : "ناموفق", details: "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.") : Home();
@@ -151,11 +157,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       bool result;
       try {
         result = await auth.signup(user: event.user);
-      } catch(e) {
+      } on PlatformException catch (err) {
         this.add(CatchError(
-            message: 'خطا',
-            detail: e.toString(),
+          message: err.message,
+          detail: err.code,
         ));
+      } catch (err) {
+        print('error happend in flutter code!');
       }
       yield SignUpLoadingFinished();
       yield result == null ? AuthenticationError(message : "ناموفق", details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : SignIn();
