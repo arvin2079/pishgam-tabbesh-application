@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/signInInputs.dart';
 import 'package:pishgamv2/components/signupInputs.dart';

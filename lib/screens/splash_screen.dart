@@ -5,10 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/waiterDialog.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/singin_page.dart';
+import 'package:provider/provider.dart';
 
 class LanidngPage extends StatefulWidget {
   @override
@@ -41,6 +43,9 @@ class _LanidngPageState extends State<LanidngPage>
   Widget build(BuildContext context) {
     initAnimation();
     startAnimation();
+    //fixme
+    print(Provider.of<CitiesListHolder>(context).list.toString());
+
     return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
       if (state is StartAnimation) {
         startAnimation().then((_) {

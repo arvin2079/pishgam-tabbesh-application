@@ -84,7 +84,7 @@ class Auth extends AuthBase {
   static final String _zarinpallChannelName = 'zarinpall';
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
-  static final String _currentUserChannelName = 'currentUser';
+  static final String _currentUserChannelName = 'currentuser';
   static final String _setUserProfileChannelName = 'setUserprofile';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
@@ -98,20 +98,23 @@ class Auth extends AuthBase {
 
   @override
   Future<User> currentUser() async {
-    final String _methodName = 'currentUser';
-    final Map<String, String> result =
-        await _currentUserChannel.invokeMethod(_methodName);
+    final String _methodName = 'currentuser';
+    final Map<String, String> result = await _currentUserChannel.invokeMethod(_methodName);
     if (result.isEmpty)
+      return null;
+    else if (result == null)
       return null;
     else {
       _currentUser = User(
-        firstname: result["first_name"],
-        lastname: result["last_name"],
-        username: result["user_name"],
+        firstname: result["firstname"],
+        lastname: result["lastname"],
+        username: result["username"],
         password: result["password"],
         gender: result["gender"],
         phoneNumber: result["phone_number"],
         grade: result["grades"],
+        city: result["city"],
+        //todo : avatar , email ??!
       );
       return _currentUser;
     }
