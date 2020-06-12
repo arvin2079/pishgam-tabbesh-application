@@ -332,7 +332,7 @@ public class MainActivity extends FlutterActivity {
                           if(call.method.equals("currentuser"))
                             {
                               SharePref pref=new SharePref(getApplicationContext());
-                              if(pref.load("token")==null) result.error("خظا","شما وارد نشده اید",null);
+                              if(pref.load("token")==null) result.success(null);
                               else
                               {
                                 //use get method to get list of cities and grades
@@ -349,7 +349,8 @@ public class MainActivity extends FlutterActivity {
                                   client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
-                                      result.error("خطا","اطلاعات نا معتبر",null);
+                                      // fixme : handel 401 and other errors with result.error(...)
+                                      result.success(null);
                                     }
 
                                     @Override
