@@ -13,9 +13,9 @@ abstract class AuthBase {
 
   Future<User> currentUser();
 
-  Future<void> signOut();
+  Future<String> editProfile(@required User user);
 
-  Future<Image> getUserProfilePicture();
+  Future<bool> signOut();
 
   Future<bool> payWithZarinpall(@required int amount);
 
@@ -23,7 +23,6 @@ abstract class AuthBase {
 
   Future<void> initGradesMap();
 
-  Future<void> setUserProfilePicture(String path);
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -85,7 +84,6 @@ class Auth extends AuthBase {
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
   static final String _currentUserChannelName = 'currentuser';
-  static final String _setUserProfileChannelName = 'setUserprofile';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -93,17 +91,17 @@ class Auth extends AuthBase {
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
   static final _currentUserChannel = MethodChannel(_currentUserChannelName);
-  static final _setUserProfileChannel =
-      MethodChannel(_setUserProfileChannelName);
 
   @override
   Future<User> currentUser() async {
     final String _methodName = 'currentuser';
-    final Map<String, String> result = await _currentUserChannel.invokeMethod(_methodName);
+    final Map<String, String> result =
+        await _currentUserChannel.invokeMethod(_methodName);
     if (result.isEmpty)
       return null;
     else if (result == null)
       return null;
+    //todo : pass this user to homeScreen in Authbloc
     else {
       _currentUser = User(
         firstname: result["firstname"],
@@ -114,21 +112,14 @@ class Auth extends AuthBase {
         phoneNumber: result["phone_number"],
         grade: result["grades"],
         city: result["city"],
-        //todo : avatar , email ??!
       );
       return _currentUser;
     }
   }
 
   @override
-  Future<void> signOut() {
+  Future<bool> signOut() {
     // TODO: implement signOut
-    return null;
-  }
-
-  @override
-  Future<Image> getUserProfilePicture() {
-    // TODO: get image from user if it return null means no picture uploaded
     return null;
   }
 
@@ -151,6 +142,7 @@ class Auth extends AuthBase {
         gender: result["gender"],
         phoneNumber: result["phone_number"],
         grade: result["grades"],
+        avatar: result["avatar"],
       );
     }
   }
@@ -206,13 +198,20 @@ class Auth extends AuthBase {
     gradesMap = await _gradesChannel.invokeMethod(_methodName);
   }
 
+  //todo : put profile pic in editeProfile method
+//  @override
+//  Future<void> setUserProfilePicture(String path) async {
+//    final bytes = await Io.File(path).readAsBytes();
+//    String encodedImage = base64Encode(bytes);
+//    String _methodName = "setUserProfile";
+//    final String result = await _setUserProfileChannel
+//        .invokeMethod(_methodName, {'encodedImage': encodedImage});
+//  }
+
   @override
-  Future<void> setUserProfilePicture(String path) async {
-    final bytes = await Io.File(path).readAsBytes();
-    String encodedImage = base64Encode(bytes);
-    String _methodName = "setUserProfile";
-    final String result = await _setUserProfileChannel
-        .invokeMethod(_methodName, {'encodedImage': encodedImage});
+  Future<String> editProfile(User user) {
+    // TODO: implement editProfile
+    throw UnimplementedError();
   }
 }
 
@@ -226,12 +225,14 @@ class User extends Equatable {
       this.gender,
       this.grade,
       this.password,
+      this.avatar,
       this.phoneNumber,
       this.socialnumber});
 
   final String username;
   final String firstname;
   final String lastname;
+  final String avatar;
   final String password;
   final String socialnumber;
   final String city;
