@@ -45,6 +45,7 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings Getcities=new ChannelsStrings("cities");
       ChannelsStrings Getgrades=new ChannelsStrings("grades");
       ChannelsStrings CurrentUser=new ChannelsStrings("currentuser");
+      ChannelsStrings Signout=new ChannelsStrings("signout");
 
 
 
@@ -386,6 +387,19 @@ public class MainActivity extends FlutterActivity {
                             }
 
 
+                      });
+
+
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Signout.getChannelsString())
+                      .setMethodCallHandler((call, result) ->
+                      {
+                        if(call.method.equals("signout"))
+                          {
+                              SharePref signout=new SharePref();
+                              signout.save("token",null);
+                              result.success(true);
+
+                          }
                       });
 
 
