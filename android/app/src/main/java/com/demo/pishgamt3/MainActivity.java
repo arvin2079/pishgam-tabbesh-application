@@ -359,16 +359,20 @@ public class MainActivity extends FlutterActivity {
                                       MainActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                          if(response.code()==403)result.success(null);
 
-                                          try {
-                                            if(response.code()==403)result.success(null); ;
-                                            String message =response.body().string();
-                                            result.success(new JsonParser().currentUser(message));
+                                          else
+                                            {
+                                              try {
+                                                String message =response.body().string();
+                                                result.success(new JsonParser().currentUser(message));
 
-                                          }
-                                          catch (IOException | JSONException e) {
-                                            e.printStackTrace();
-                                          }
+                                              }
+                                              catch (IOException | JSONException e) {
+                                                e.printStackTrace();
+
+                                              }
+                                            }
                                         }
                                       });
 
