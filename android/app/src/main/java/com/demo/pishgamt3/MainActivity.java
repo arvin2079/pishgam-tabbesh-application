@@ -44,6 +44,8 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings ZaringPal=new ChannelsStrings("zarinpal");
       ChannelsStrings Getcities=new ChannelsStrings("cities");
       ChannelsStrings Getgrades=new ChannelsStrings("grades");
+      ChannelsStrings CurrentUser=new ChannelsStrings("currentuser");
+
 
 
     //signin
@@ -323,6 +325,60 @@ public class MainActivity extends FlutterActivity {
 
                           })
               );
+
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CurrentUser.getChannelsString())
+                      .setMethodCallHandler((call, result) ->
+                      {
+                          if(call.method.equals("currentuser"))
+                            {
+                              SharePref pref=new SharePref(getApplicationContext());
+                              if(pref.load("token")==null) result.error("خظا","شما وارد نشده اید",null);
+                              else
+                              {
+                                //use get method to get list of cities and grades
+                                String path="http://tabbesh.ir:8000/api/token/";
+                                HashMap<String,String> header =new HashMap<>();
+                                header.put(new Header().getKayheader(),new Header().getValueheader());
+                                header.put(new Header().getKeyvalue(),new Header().getValueval());
+
+
+                                OkHttpClient client=new OkHttpClient();
+                                RequestforServer requestforServer=new RequestforServer(client,path,header);
+
+                                try {
+                                  client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                      result.error("خطا","اطلاعات نا معتبر",null);
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+
+                                      MainActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                          try {
+                                            String message =response.body().string();
+                                            result.success(new JsonParser().currentUser(message));
+
+                                          } catch (IOException | JSONException e) {
+                                            e.printStackTrace();
+                                          }
+                                        }
+                                      });
+
+                                    }
+                                  });
+                                } catch (IOException e) {
+                                  e.printStackTrace();
+                                }
+                              }
+
+                            }
+
+
+                      });
 
 
 

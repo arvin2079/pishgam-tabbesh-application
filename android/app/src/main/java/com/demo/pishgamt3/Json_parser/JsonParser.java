@@ -66,6 +66,25 @@ public class JsonParser {
                         return hashMap;
                     }
 
+                    public HashMap<String,String> currentUser(String json) throws JSONException
+                    {
+                            HashMap<String,String> hashMap=new HashMap<>();
+
+                            JSONObject jsonObject=new JSONObject(json);
+                            hashMap.put("firstname",jsonObject.getString("firstname"));
+                            hashMap.put("lastname",jsonObject.getString("lastname"));
+                            hashMap.put("username",jsonObject.getString("username"));
+                            hashMap.put("email",jsonObject.getString("email"));
+                            hashMap.put("grades",jsonObject.getString("grades"));
+                            hashMap.put("gender",jsonObject.getString("gender"));
+                            hashMap.put("phone_number",jsonObject.getString("phone_number"));
+                            hashMap.put("city",jsonObject.getString("city"));
+                            hashMap.put("avatar",jsonObject.getString("avatar"));
+
+
+                        return hashMap;
+                    }
+
 
       }
 
