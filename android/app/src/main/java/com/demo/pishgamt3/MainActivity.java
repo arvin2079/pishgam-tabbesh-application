@@ -45,6 +45,7 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings Getcities=new ChannelsStrings("cities");
       ChannelsStrings Getgrades=new ChannelsStrings("grades");
       ChannelsStrings CurrentUser=new ChannelsStrings("currentuser");
+      ChannelsStrings Signout=new ChannelsStrings("signout");
 
 
 
@@ -359,13 +360,20 @@ public class MainActivity extends FlutterActivity {
                                       MainActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                          try {
-                                            String message =response.body().string();
-                                            result.success(new JsonParser().currentUser(message));
+                                          if(response.code()==403)result.success(null);
 
-                                          } catch (IOException | JSONException e) {
-                                            e.printStackTrace();
-                                          }
+                                          else
+                                            {
+                                              try {
+                                                String message =response.body().string();
+                                                result.success(new JsonParser().currentUser(message));
+
+                                              }
+                                              catch (IOException | JSONException e) {
+                                                e.printStackTrace();
+
+                                              }
+                                            }
                                         }
                                       });
 
@@ -379,6 +387,19 @@ public class MainActivity extends FlutterActivity {
                             }
 
 
+                      });
+
+
+              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Signout.getChannelsString())
+                      .setMethodCallHandler((call, result) ->
+                      {
+                        if(call.method.equals("signout"))
+                          {
+                              SharePref signout=new SharePref();
+                              signout.save("token",null);
+                              result.success(true);
+
+                          }
                       });
 
 
