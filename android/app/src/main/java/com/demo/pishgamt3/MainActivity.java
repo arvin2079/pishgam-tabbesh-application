@@ -284,7 +284,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    result.error("failed in sign up",e.getMessage(),null);
+                                    result.error("failed in sign up","خطا در برقراری ارتباط",null);
                                   }
 
                                   @Override
@@ -294,29 +294,29 @@ public class MainActivity extends FlutterActivity {
                                       switch (response.body().string())
                                       {
                                         case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
-                                          result.success(0);
+                                          result.success("ثبت نام با موفقیت انجام شد");
                                           break;
                                         case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                          result.success(1);
+                                          result.success("شماره وارد شده نامعتبر است");
                                           break;
                                         case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
-                                          result.success(2);
+                                          result.success("کاربر با این نام کاربری از قبل موجود است");
                                           break;
                                         case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                          result.success(3);
+                                          result.success("خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید");
                                           break;
                                         default:
-                                          result.success(null);
+                                          result.success("ناموفق");
                                       }
                                     }
-                                    if(response.code()==401)result.success(null);
+                                    if(response.code()==401)result.error("error","خطا در برقراری ارتباط");
                                     else {result.success(null);}
 
 
                                   }
                                 });
                               } catch (IOException e) {
-                                result.error("failed in sign up",e.getMessage(),null);
+                                result.error("failed in sign up","",null);
                               }
 
                             }
