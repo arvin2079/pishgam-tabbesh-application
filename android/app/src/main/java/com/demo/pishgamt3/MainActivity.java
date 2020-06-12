@@ -49,7 +49,7 @@ public class MainActivity extends FlutterActivity {
 
 
 
-    //signin
+              //signin
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignIn.getChannelsString())
                          .setMethodCallHandler(((call, result) ->
                          {
@@ -132,8 +132,7 @@ public class MainActivity extends FlutterActivity {
                         }
 
 
-                      }
-               ));
+                      } ));
 
 
               //GET for list of cities and grades
@@ -198,62 +197,60 @@ public class MainActivity extends FlutterActivity {
               //GET for list of cities and grades
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Getgrades.getChannelsString())
                       .setMethodCallHandler(((call, result) ->
-                      {
-                        if(call.method.equals("grades"))
-                        {
-                          //use get method to get list of cities and grades
-                          String path="http://tabbesh.ir:8000/api/token/";
-                          HashMap<String,String> header =new HashMap<>();
-                          header.put(new Header().getKayheader(),new Header().getValueheader());
-                          header.put(new Header().getKeyvalue(),new Header().getValueval());
+                          {
+                            if(call.method.equals("grades"))
+                            {
+                              //use get method to get list of cities and grades
+                              String path="http://tabbesh.ir:8000/api/token/";
+                              HashMap<String,String> header =new HashMap<>();
+                              header.put(new Header().getKayheader(),new Header().getValueheader());
+                              header.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
-                          OkHttpClient client=new OkHttpClient();
-                          RequestforServer requestforServer=new RequestforServer(client,path,header);
+                              OkHttpClient client=new OkHttpClient();
+                              RequestforServer requestforServer=new RequestforServer(client,path,header);
 
-                          try {
-                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
-                              @Override
-                              public void onFailure(Call call, IOException e) {
-                                result.error("failed in get method",e.getMessage(),null);
+                              try {
+                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                  @Override
+                                  public void onFailure(Call call, IOException e) {
+                                    result.error("failed in get method",e.getMessage(),null);
 
-                              }
+                                  }
 
-                              @Override
-                              public void onResponse(Call call, Response response) throws IOException
-                              {
-                                if(response.isSuccessful())
-                                {
-                                  MainActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                      try {
-                                        //get json
-                                        String maplist=response.body().string();
-                                        //parse json
-                                        JsonParser jsonParser=new JsonParser();
-                                        //send hashmap
-                                        result.success(jsonParser.getgrades(maplist));
-                                      } catch (IOException | JSONException e) {
-                                        result.error("failed in get method",e.getMessage(),null);
-                                      }
+                                  @Override
+                                  public void onResponse(Call call, Response response) throws IOException
+                                  {
+                                    if(response.isSuccessful())
+                                    {
+                                      MainActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                          try {
+                                            //get json
+                                            String maplist=response.body().string();
+                                            //parse json
+                                            JsonParser jsonParser=new JsonParser();
+                                            //send hashmap
+                                            result.success(jsonParser.getgrades(maplist));
+                                          } catch (IOException | JSONException e) {
+                                            result.error("failed in get method",e.getMessage(),null);
+                                          }
+                                        }
+                                      });
                                     }
-                                  });
-                                }
 
 
+                                  }
+                                });
+                              } catch (IOException e) {
+                                result.error("failed in get method",e.getMessage(),null);
                               }
-                            });
-                          } catch (IOException e) {
-                            result.error("failed in get method",e.getMessage(),null);
-                          }
 
 
-                        }
+                            }
 
-                      }));
-
-
+                          }));
 
               //signup
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignUp.getChannelsString())
@@ -324,95 +321,87 @@ public class MainActivity extends FlutterActivity {
 
                             }
 
-                          })
-              );
+                          }));
 
+              //current user
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CurrentUser.getChannelsString())
                       .setMethodCallHandler((call, result) ->
-                      {
-                          if(call.method.equals("currentuser"))
-                            {
-                              SharePref pref=new SharePref(getApplicationContext());
-                              if(pref.load("token")==null) result.success(null);
-                              else
-                              {
-                                //use get method to get list of cities and grades
-                                String path="http://tabbesh.ir:8000/api/token/";
-                                HashMap<String,String> header =new HashMap<>();
-                                header.put(new Header().getKayheader(),new Header().getValueheader());
-                                header.put(new Header().getKeyvalue(),new Header().getValueval());
+                          {
+                              if(call.method.equals("currentuser"))
+                                {
+                                  SharePref pref=new SharePref(getApplicationContext());
+                                  if(pref.load("token")==null) result.success(null);
+                                  else
+                                  {
+                                    //use get method to get list of cities and grades
+                                    String path="http://tabbesh.ir:8000/api/token/";
+                                    HashMap<String,String> header =new HashMap<>();
+                                    header.put(new Header().getKayheader(),new Header().getValueheader());
+                                    header.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
-                                OkHttpClient client=new OkHttpClient();
-                                RequestforServer requestforServer=new RequestforServer(client,path,header);
+                                    OkHttpClient client=new OkHttpClient();
+                                    RequestforServer requestforServer=new RequestforServer(client,path,header);
 
-                                try {
-                                  client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
-                                    @Override
-                                    public void onFailure(Call call, IOException e) {
-                                      // fixme : handel 401 and other errors with result.error(...)
-                                      result.success(null);
-                                    }
-
-                                    @Override
-                                    public void onResponse(Call call, Response response) throws IOException {
-
-                                      MainActivity.this.runOnUiThread(new Runnable() {
+                                    try {
+                                      client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                         @Override
-                                        public void run() {
-                                          if(response.code()==403)result.success(null);
+                                        public void onFailure(Call call, IOException e) {
+                                          // fixme : handel 401 and other errors with result.error(...)
+                                          result.success(null);
+                                        }
 
-                                          else
-                                            {
-                                              try {
-                                                String message =response.body().string();
-                                                result.success(new JsonParser().currentUser(message));
+                                        @Override
+                                        public void onResponse(Call call, Response response) throws IOException {
 
-                                              }
-                                              catch (IOException | JSONException e) {
-                                                e.printStackTrace();
+                                          MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                              if(response.code()==403)result.success(null);
 
-                                              }
+                                              else
+                                                {
+                                                  try {
+                                                    String message =response.body().string();
+                                                    result.success(new JsonParser().currentUser(message));
+
+                                                  }
+                                                  catch (IOException | JSONException e) {
+                                                    e.printStackTrace();
+
+                                                  }
+                                                }
                                             }
+                                          });
+
                                         }
                                       });
-
+                                    } catch (IOException e) {
+                                      e.printStackTrace();
                                     }
-                                  });
-                                } catch (IOException e) {
-                                  e.printStackTrace();
+                                  }
+
                                 }
-                              }
-
-                            }
 
 
-                      });
+                          });
 
-
+              //sign out
               new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Signout.getChannelsString())
                       .setMethodCallHandler((call, result) ->
-                      {
-                        if(call.method.equals("signout"))
                           {
-                              SharePref signout=new SharePref();
-                              signout.save("token",null);
-                              result.success(true);
+                            if(call.method.equals("signout"))
+                              {
+                                  SharePref signout=new SharePref();
+                                  signout.save("token",null);
+                                  result.success(true);
 
-                          }
-                      });
-
-
-
+                              }
+                          });
 
 
     GeneratedPluginRegistrant.registerWith(flutterEngine);
 
   }
-
-
-
-
-
 
 }
