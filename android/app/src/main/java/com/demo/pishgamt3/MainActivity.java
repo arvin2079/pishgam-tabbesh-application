@@ -297,20 +297,20 @@ public class MainActivity extends FlutterActivity {
                                           result.success("ثبت نام با موفقیت انجام شد");
                                           break;
                                         case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                          result.success("شماره وارد شده نامعتبر است");
+                                          result.error("خطا","شماره وارد شده نامعتبر است", null);
                                           break;
                                         case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
-                                          result.success("کاربر با این نام کاربری از قبل موجود است");
+                                          result.error("خطا","کاربر با این نام کاربری از قبل موجود است", null);
                                           break;
                                         case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                          result.success("خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید");
+                                          result.error("خطا","در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
                                           break;
                                         default:
-                                          result.success("ناموفق");
+                                          result.error("خطا","ثبت نام ناموفق" ,null);
                                       }
                                     }
-                                    if(response.code()==401)result.error("error","خطا در برقراری ارتباط");
-                                    else {result.success(null);}
+                                    if(response.code()==401)result.error("error","خطا در برقراری ارتباط", null);
+                                    else {result.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);}
 
 
                                   }

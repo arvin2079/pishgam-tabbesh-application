@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
 
-  Future<bool> signup({@required User user});
+  Future<String> signup({@required User user});
 
   Future<User> signin({@required String username, @required String password});
 
@@ -157,7 +157,7 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> signup({User user}) async{
+  Future<String> signup({User user}) async{
     final String _methodName = 'signup';
     try {
       final String result = await _signUpChannel.invokeMethod(_methodName, {
