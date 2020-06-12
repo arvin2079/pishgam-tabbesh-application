@@ -80,6 +80,7 @@ class Auth extends AuthBase {
 
   static final String _signInChannelName = 'signin';
   static final String _signUpChannelName = 'signup';
+  static final String _signoutChannelName = 'signout';
   static final String _zarinpallChannelName = 'zarinpall';
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
@@ -87,6 +88,7 @@ class Auth extends AuthBase {
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
+  static final _signoutChannel = MethodChannel(_signoutChannelName);
   static final _zarinpallChannel = MethodChannel(_zarinpallChannelName);
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
@@ -118,9 +120,10 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> signOut() {
-    // TODO: implement signOut
-    return null;
+  Future<bool> signOut() async{
+    final String _methodName = 'signout';
+    bool result = await _signoutChannel.invokeMethod(_methodName);
+    return result;
   }
 
   /*
