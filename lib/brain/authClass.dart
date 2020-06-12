@@ -52,28 +52,28 @@ abstract class AuthBase {
 
 class CitiesListHolder {
   CitiesListHolder(this.list);
+
   final List<String> list;
 }
 
 class GradesListHolder {
   GradesListHolder(this.list);
+
   final List<String> list;
 }
 
 class Auth extends AuthBase {
-
-  Map citiesMap= Map();
-  Map gradesMap= Map();
+  Map citiesMap = Map();
+  Map gradesMap = Map();
   User _currentUser = new User();
 
-
-  CitiesListHolder get citiesList{
-    List<String> citiesList =List<String>();
+  CitiesListHolder get citiesList {
+    List<String> citiesList = List<String>();
     citiesMap.forEach((key, value) => citiesList.add(value));
     return CitiesListHolder(citiesList);
   }
 
-  GradesListHolder get gradesList{
+  GradesListHolder get gradesList {
     List<String> gradesList = List<String>();
     gradesMap.forEach((key, value) => gradesList.add(value));
     return GradesListHolder(gradesList);
@@ -87,23 +87,23 @@ class Auth extends AuthBase {
   static final String _currentUserChannelName = 'currentUser';
   static final String _setUserProfileChannelName = 'setUserprofile';
 
-
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
   static final _zarinpallChannel = MethodChannel(_zarinpallChannelName);
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
-  static final _currentUserChannel= MethodChannel(_currentUserChannelName);
-  static final _setUserProfileChannel = MethodChannel(_setUserProfileChannelName);
-
+  static final _currentUserChannel = MethodChannel(_currentUserChannelName);
+  static final _setUserProfileChannel =
+      MethodChannel(_setUserProfileChannelName);
 
   @override
   Future<User> currentUser() async {
-    final String _methodName= 'currentUser';
-    final Map<String ,String> result = await _currentUserChannel.invokeMethod(_methodName);
+    final String _methodName = 'currentUser';
+    final Map<String, String> result =
+        await _currentUserChannel.invokeMethod(_methodName);
     if (result.isEmpty)
       return null;
-    else{
+    else {
       _currentUser = User(
         firstname: result["first_name"],
         lastname: result["last_name"],
@@ -137,73 +137,70 @@ class Auth extends AuthBase {
   @override
   Future<User> signin({String username, String password}) async {
     final String _methodName = 'signin';
-    try {
-      final Map<String, String> result = await _signInChannel.invokeMethod(
-          _methodName, {"username": username, "password": password});
-      if (result != null) {
-        return User(
-          firstname: result["first_name"],
-          lastname: result["last_name"],
-          username: result["user_name"],
-          password: result["password"],
-          gender: result["gender"],
-          phoneNumber: result["phone_number"],
-          grade: result["grades"],
-        );
-      }
-    } catch(_) {
-      return null;
+    final Map<String, String> result = await _signInChannel.invokeMethod(
+        _methodName, {"username": username, "password": password});
+    if (result != null) {
+      return User(
+        firstname: result["first_name"],
+        lastname: result["last_name"],
+        username: result["user_name"],
+        password: result["password"],
+        gender: result["gender"],
+        phoneNumber: result["phone_number"],
+        grade: result["grades"],
+      );
     }
   }
 
   @override
-  Future<String> signup({User user}) async{
+  Future<String> signup({User user}) async {
     final String _methodName = 'signup';
+    final String result = await _signUpChannel.invokeMethod(_methodName, {
+      'firstname': user.firstname,
+      'lastname': user.lastname,
+      'phonenumber': user.phoneNumber,
+      'grade': gradesMap.keys.firstWhere(
+          (element) => gradesMap[element] == user.grade,
+          orElse: () => null),
+      'city': citiesMap.keys.firstWhere(
+          (element) => citiesMap[element] == user.city,
+          orElse: () => null),
+      'gender': user.gender,
+      //fixme: address!!
+    });
+    if (result == null)
+      throw PlatformException(
+          message: "خطا", code: "اشکال در انجام عملیات ثبت نام", details: null);
+    else
+      return result;
+  }
+
+  @override
+  Future<bool> payWithZarinpall(int amount) async {
+    final String _methodName = "zarinpall";
+    // fixme : remove try catch from here --> must handel in bloc
     try {
-      final String result = await _signUpChannel.invokeMethod(_methodName, {
-        'firstname' : user.firstname,
-        'lastname' : user.lastname,
-        'phonenumber' : user.phoneNumber,
-        'grade' : gradesMap.keys.firstWhere((element) => gradesMap[element]==user.grade , orElse: () => null),
-        'city' : citiesMap.keys.firstWhere((element) => citiesMap[element]==user.city , orElse: () => null),
-        'gender' : user.gender,
-        //fixme: address!!
-      });
-      if(result == 'added')
+      final String result =
+          await _zarinpallChannel.invokeMethod(_methodName, {'amount': amount});
+      if (result == 'done')
         return true;
-      else if (result == 'failed')
-        return false;
+      else if (result == 'failed') return false;
       return null;
     } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<bool> payWithZarinpall(int amount) async{
-    final String _methodName = "zarinpall";
-    try{
-      final String result = await _zarinpallChannel.invokeMethod(_methodName, {'amount' : amount});
-      if(result == 'done')
-        return true;
-      else if(result == 'failed')
-        return false;
-      return null;
-    } catch(_){
       throw Exception('payment process failed');
     }
   }
 
   @override
   Future<void> initCitiesMap() async {
-    final String _methodName= "cities";
-    citiesMap= await _citiesChannel.invokeMethod(_methodName);
+    final String _methodName = "cities";
+    citiesMap = await _citiesChannel.invokeMethod(_methodName);
   }
 
   @override
-  Future<void> initGradesMap() async{
-    final String _methodName= "grades";
-    gradesMap= await _gradesChannel.invokeMethod(_methodName);
+  Future<void> initGradesMap() async {
+    final String _methodName = "grades";
+    gradesMap = await _gradesChannel.invokeMethod(_methodName);
   }
 
   @override
@@ -211,21 +208,23 @@ class Auth extends AuthBase {
     final bytes = await Io.File(path).readAsBytes();
     String encodedImage = base64Encode(bytes);
     String _methodName = "setUserProfile";
-    final String result = await _setUserProfileChannel.invokeMethod(_methodName , {'encodedImage' : encodedImage});
+    final String result = await _setUserProfileChannel
+        .invokeMethod(_methodName, {'encodedImage': encodedImage});
   }
 }
 
 class User extends Equatable {
   //fixme: address!!
-  User({this.username,
-    this.firstname,
-    this.lastname,
-    this.city,
-    this.gender,
-    this.grade,
-    this.password,
-    this.phoneNumber,
-    this.socialnumber});
+  User(
+      {this.username,
+      this.firstname,
+      this.lastname,
+      this.city,
+      this.gender,
+      this.grade,
+      this.password,
+      this.phoneNumber,
+      this.socialnumber});
 
   final String username;
   final String firstname;
@@ -240,16 +239,16 @@ class User extends Equatable {
   @override
   // TODO: implement props
   List<Object> get props => [
-    username,
-    firstname,
-    lastname,
-    socialnumber,
-    city,
-    gender,
-    password,
-    grade,
-    phoneNumber
-  ];
+        username,
+        firstname,
+        lastname,
+        socialnumber,
+        city,
+        gender,
+        password,
+        grade,
+        phoneNumber
+      ];
 }
 
 // fixme : user profile picture

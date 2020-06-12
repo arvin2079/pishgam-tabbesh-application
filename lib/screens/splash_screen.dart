@@ -41,49 +41,49 @@ class _LanidngPageState extends State<LanidngPage>
   Widget build(BuildContext context) {
     initAnimation();
     startAnimation();
-    return BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is StartAnimation) {
-            startAnimation().then((_) {
-              authBloc.add(GoAuthenticationPage());
-            });
-          } else if (state is AuthenticationError) {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return SimpleAlertDialog(
-                  title: state.message,
-                  content: state.details,
-                );
-              },
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+      if (state is StartAnimation) {
+        startAnimation().then((_) {
+          authBloc.add(GoAuthenticationPage());
+        });
+      } else if (state is AuthenticationError) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleAlertDialog(
+              title: state.message,
+              content: state.details,
             );
-          } else if (state is SignInIsLoadingSta) {
-            showDialog(context: context, builder: (context) {
+          },
+        );
+      } else if (state is SignInIsLoadingSta) {
+        showDialog(
+            context: context,
+            builder: (context) {
               return WaiterDialog();
             });
-          } else if (state is SignInLoadingFinished) {
-            Navigator.pop(context);
-          }
-        },
-        buildWhen: (lastState, thisState) {
-          if (thisState is StartAnimation ||
-              thisState is AuthenticationError ||
-              thisState is SignInIsLoadingSta ||
-              thisState is SignInLoadingFinished) return false;
-          return true;
-        },
+      } else if (state is SignInLoadingFinished) {
+        Navigator.pop(context);
+      }
+    }, buildWhen: (lastState, thisState) {
+      if (thisState is StartAnimation ||
+          thisState is AuthenticationError ||
+          thisState is SignInIsLoadingSta ||
+          thisState is SignInLoadingFinished) return false;
+      return true;
+    },
         // ignore: missing_return
         builder: (context, state) {
-          if (state is InitialState) {
-            authBloc.add(CheckIfSignedInBefor());
-            return _buildSplashScreen();
-          } else if (state is SignIn) {
-            return SigninPage();
-          } else if (state is Home) {
-            disposAnimation();
-            return HomePage();
-          }
-        });
+      if (state is InitialState) {
+        authBloc.add(CheckIfSignedInBefor());
+        return _buildSplashScreen();
+      } else if (state is SignIn) {
+        return SigninPage();
+      } else if (state is Home) {
+        disposAnimation();
+        return HomePage();
+      }
+    });
   }
 
   Scaffold _buildSplashScreen() {
@@ -133,7 +133,7 @@ class _LanidngPageState extends State<LanidngPage>
                       ),
                     ),
                   ),
-                  const SpinKitThreeBounce(
+                  SpinKitThreeBounce(
                     color: Colors.white,
                     size: 30,
                   ),

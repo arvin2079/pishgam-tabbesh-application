@@ -154,7 +154,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
     else if (event is DoSignUp) {
       yield SignUpIsLoadingSta();
-      bool result;
+      String result;
       try {
         result = await auth.signup(user: event.user);
       } on PlatformException catch (err) {
@@ -166,6 +166,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print('error happend in flutter code!');
       }
       yield SignUpLoadingFinished();
+      print(result);
       yield result == null ? AuthenticationError(message : "ناموفق", details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.") : SignIn();
     }
     else if (event is GoAuthenticationPage) {
