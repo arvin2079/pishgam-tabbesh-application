@@ -51,7 +51,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+
+        pickFirst 'lib/armeabi-v7a/libassmidi.so'
+        pickFirst 'lib/x86/libassmidi.so'
+    }
 }
+
+
 
 flutter {
     source '../..'

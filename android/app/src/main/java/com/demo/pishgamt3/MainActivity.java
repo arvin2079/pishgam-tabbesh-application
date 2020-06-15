@@ -12,6 +12,7 @@ import com.demo.pishgamt3.Method_channels_Strings.Header;
 import com.demo.pishgamt3.Requesr_for_server.RequestforServer;
 
 import com.demo.pishgamt3.Shareprefences.SharePref;
+import com.demo.pishgamt3.channel_result.MainThreadResult;
 
 
 import org.json.JSONException;
@@ -38,6 +39,7 @@ public class MainActivity extends FlutterActivity {
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
 
+
       //every channels need a string to indentify so we use an class to handle it
       ChannelsStrings SignIn=new ChannelsStrings("signin");
       ChannelsStrings SignUp=new ChannelsStrings("signup");
@@ -55,6 +57,9 @@ public class MainActivity extends FlutterActivity {
                          {
                         if(call.method.equals("signin"))
                         {
+                          MainThreadResult mainresult=new MainThreadResult(result);
+
+
                           // prepare construcors params
                           HashMap<String,String> info=new HashMap<>();
                           String path="http://tabbesh.ir:8000/api/token/";
@@ -77,7 +82,7 @@ public class MainActivity extends FlutterActivity {
                                 //failed response
                                 @Override
                                 public void onFailure(Call call, IOException e) {
-                                  result.error("failed in sign in",e.getMessage(),null);
+                                  mainresult.error("failed in sign in",e.getMessage(),null);
                                 }
                                 //request recieved to server so now we can get require feedback
                                 @Override
@@ -92,7 +97,7 @@ public class MainActivity extends FlutterActivity {
                                             try {
                                               token = response.body().string();
                                             } catch (IOException e) {
-                                              result.error("failed in sign in",e.getMessage(),null);
+                                              mainresult.error("failed in sign in",e.getMessage(),null);
                                             }
                                             //parse json
                                             JsonParser jsonParser=new JsonParser();
@@ -101,10 +106,10 @@ public class MainActivity extends FlutterActivity {
                                               SharePref pref=new SharePref(getApplicationContext());
                                               pref.save("token",jsonParser.token(token));
                                             } catch (JSONException e) {
-                                              result.error("failed in sign in",e.getMessage(),null);
+                                              mainresult.error("failed in sign in",e.getMessage(),null);
                                             }
                                             //return feedback
-                                            result.success(0);
+                                            mainresult.success(0);
                                           }
                                         });
 
@@ -114,17 +119,17 @@ public class MainActivity extends FlutterActivity {
                                     MainActivity.this.runOnUiThread(new Runnable() {
                                       @Override
                                       public void run() {
-                                        result.success(1);
+                                        mainresult.success(1);
                                       }
                                     });
                                   }
 
-                                  else {result.success(null);}
+                                  else {mainresult.success(null);}
 
                                 }
                               });
                             } catch (IOException e) {
-                              result.error("failed in sign in",e.getMessage(),null);
+                              mainresult.error("failed in sign in",e.getMessage(),null);
                             }
 
 
@@ -141,6 +146,9 @@ public class MainActivity extends FlutterActivity {
                           {
                             if(call.method.equals("cities"))
                             {
+                              MainThreadResult mainresult=new MainThreadResult(result);
+
+
                               //use get method to get list of cities and grades
                               String path="http://tabbesh.ir:8000/api/token/";
                               HashMap<String,String> header =new HashMap<>();
@@ -155,7 +163,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    result.error("failed in get method",e.getMessage(),null);
+                                    mainresult.error("failed in get method",e.getMessage(),null);
 
                                   }
 
@@ -173,9 +181,9 @@ public class MainActivity extends FlutterActivity {
                                               //parse json
                                               JsonParser jsonParser=new JsonParser();
                                               //send hashmap
-                                              result.success(jsonParser.getcities(maplist));
+                                              mainresult.success(jsonParser.getcities(maplist));
                                             } catch (IOException | JSONException e) {
-                                              result.error("failed in get method",e.getMessage(),null);
+                                              mainresult.error("failed in get method",e.getMessage(),null);
                                             }
                                           }
                                         });
@@ -185,7 +193,7 @@ public class MainActivity extends FlutterActivity {
                                   }
                                 });
                               } catch (IOException e) {
-                                result.error("failed in get method",e.getMessage(),null);
+                                mainresult.error("failed in get method",e.getMessage(),null);
                               }
 
 
@@ -200,6 +208,9 @@ public class MainActivity extends FlutterActivity {
                           {
                             if(call.method.equals("grades"))
                             {
+                              MainThreadResult mainresult=new MainThreadResult(result);
+
+
                               //use get method to get list of cities and grades
                               String path="http://tabbesh.ir:8000/api/token/";
                               HashMap<String,String> header =new HashMap<>();
@@ -214,7 +225,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    result.error("failed in get method",e.getMessage(),null);
+                                    mainresult.error("failed in get method",e.getMessage(),null);
 
                                   }
 
@@ -232,9 +243,9 @@ public class MainActivity extends FlutterActivity {
                                             //parse json
                                             JsonParser jsonParser=new JsonParser();
                                             //send hashmap
-                                            result.success(jsonParser.getgrades(maplist));
+                                            mainresult.success(jsonParser.getgrades(maplist));
                                           } catch (IOException | JSONException e) {
-                                            result.error("failed in get method",e.getMessage(),null);
+                                            mainresult.error("failed in get method",e.getMessage(),null);
                                           }
                                         }
                                       });
@@ -244,7 +255,7 @@ public class MainActivity extends FlutterActivity {
                                   }
                                 });
                               } catch (IOException e) {
-                                result.error("failed in get method",e.getMessage(),null);
+                                mainresult.error("failed in get method",e.getMessage(),null);
                               }
 
 
@@ -259,6 +270,8 @@ public class MainActivity extends FlutterActivity {
                           {
                             if(call.method.equals("signup"))
                             {
+                              MainThreadResult mainresult=new MainThreadResult(result);
+
                               //create require params for constructor
                               HashMap<String,String> info=new HashMap<>();
                               String path="http://tabbesh.ir:8000/signup/";
@@ -283,8 +296,10 @@ public class MainActivity extends FlutterActivity {
                               try {
                                 client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
                                   @Override
-                                  public void onFailure(Call call, IOException e) {
-                                    result.error("failed in sign up","خطا در برقراری ارتباط",null);
+                                  public void onFailure(Call call, IOException e)
+                                  {
+                                    mainresult.error("failed","خطا در برقرای اربتیاط",null);
+
                                   }
 
                                   @Override
@@ -294,29 +309,29 @@ public class MainActivity extends FlutterActivity {
                                       switch (response.body().string())
                                       {
                                         case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
-                                          result.success("ثبت نام با موفقیت انجام شد");
+                                          mainresult.success("ثبت نام با موفقیت انجام شد");
                                           break;
                                         case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                          result.error("خطا","شماره وارد شده نامعتبر است", null);
+                                          mainresult.error("خطا","شماره وارد شده نامعتبر است", null);
                                           break;
                                         case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
-                                          result.error("خطا","کاربر با این نام کاربری از قبل موجود است", null);
+                                          mainresult.error("خطا","کاربر با این نام کاربری از قبل موجود است", null);
                                           break;
                                         case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                          result.error("خطا","در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
+                                          mainresult.error("خطا","در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
                                           break;
                                         default:
-                                          result.error("خطا","ثبت نام ناموفق" ,null);
+                                          mainresult.error("خطا","ثبت نام ناموفق" ,null);
                                       }
                                     }
-                                    if(response.code()==401)result.error("error","خطا در برقراری ارتباط", null);
-                                    else {result.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);}
+                                    if(response.code()==401)mainresult.error("error","خطا در برقراری ارتباط", null);
+                                    else {mainresult.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);}
 
 
                                   }
                                 });
                               } catch (IOException e) {
-                                result.error("failed in sign up","",null);
+                                mainresult.error("failed in sign up","",null);
                               }
 
                             }
@@ -329,6 +344,8 @@ public class MainActivity extends FlutterActivity {
                           {
                               if(call.method.equals("currentuser"))
                                 {
+                                  MainThreadResult mainresult=new MainThreadResult(result);
+
                                   SharePref pref=new SharePref(getApplicationContext());
                                   if(pref.load("token")==null) result.success(null);
                                   else
@@ -348,7 +365,7 @@ public class MainActivity extends FlutterActivity {
                                         @Override
                                         public void onFailure(Call call, IOException e) {
                                           // fixme : handel 401 and other errors with result.error(...)
-                                          result.success(null);
+                                          mainresult.success(null);
                                         }
 
                                         @Override
@@ -357,13 +374,13 @@ public class MainActivity extends FlutterActivity {
                                           MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                              if(response.code()==403)result.success(null);
+                                              if(response.code()==403)mainresult.success(null);
 
                                               else
                                                 {
                                                   try {
                                                     String message =response.body().string();
-                                                    result.success(new JsonParser().currentUser(message));
+                                                    mainresult.success(new JsonParser().currentUser(message));
 
                                                   }
                                                   catch (IOException | JSONException e) {
