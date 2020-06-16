@@ -162,7 +162,10 @@ class _SignInFormState extends State<SignInForm> {
                         fullscreenDialog: true,
                         builder: (context) => BlocProvider(
                           create: (context) => authBloc,
-                          child: SignUpPage(),
+                          child: SignUpPage(
+                            grades: Provider.of<GradesListHolder>(context, listen: false).list,
+                            locations: Provider.of<CitiesListHolder>(context, listen: false).list,
+                          ),
                         ),
                       ));
                     },

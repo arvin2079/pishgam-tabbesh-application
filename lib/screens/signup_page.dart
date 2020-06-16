@@ -16,13 +16,15 @@ import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
+  SignUpPage({this.locations, this.grades});
+  final List<String> locations;
+  final List<String> grades;
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  List<String> locations;
-  List<String> grades;
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _familyNameFocusNode = FocusNode();
   final FocusNode _userNameFocusNode = FocusNode();
@@ -50,14 +52,12 @@ class _SignUpPageState extends State<SignUpPage> {
     // TODO: implement initState
     super.initState();
     authBloc = BlocProvider.of<AuthBloc>(context);
-    locations = Provider.of<CitiesListHolder>(context).list;
-    grades = Provider.of<GradesListHolder>(context).list;
 
-    if (locations == null || grades == null) {
+    if (widget.locations == null || widget.grades == null) {
       Navigator.pop(context);
       authBloc.add(CatchError(
         message: 'اشکال در ارتباط با سرور',
-        detail: 'برنامه در دریافت اطلاعات دوچار مشکل شده است',
+        detail: 'برنامه در دریافت اطلاعات دوچار مشکل شده است. لطفا از برنامه خارج شده و بعدا دوباره امتحان کنید',
       ));
     }
   }
@@ -264,14 +264,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               Expanded(
                                 child: CustomDropDownButton(
                                   hint: 'مقطع',
-                                  items: grades,
+                                  items: widget.grades,
                                   controller: _gradeDropDownController,
                                 ),
                               ),
                               Expanded(
                                 child: CustomDropDownButton(
                                   hint: 'شهر',
-                                  items: locations,
+                                  items: widget.locations,
                                   controller: _cityDropDownController,
                                 ),
                               ),

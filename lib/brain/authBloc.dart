@@ -121,11 +121,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       User user;
       try {
         user = await auth.currentUser();
-        print('herl');
         await auth.initCitiesMap();
-        print('herl2');
         await auth.initGradesMap();
-        print('herl3');
       } on PlatformException catch (err) {
         this.add(CatchError(
           message: err.message,
@@ -134,7 +131,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (err) {
         print('error happend in flutter code!');
       }
-      print('sdfsdal');
       yield user == null ? StartAnimation() : Home();
     }
     else if(event is DoSignIn) {
