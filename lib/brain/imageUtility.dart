@@ -2,7 +2,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'dart:io';
 
 
-class Utility {
+class ImageUtility {
   static final int _quality = 65;
   static final int _minWidth = 200;
   static final int _minHeight = 200;

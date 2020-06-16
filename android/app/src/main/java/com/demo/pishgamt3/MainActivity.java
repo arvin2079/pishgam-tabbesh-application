@@ -49,6 +49,9 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings CurrentUser=new ChannelsStrings("currentuser");
       ChannelsStrings Signout=new ChannelsStrings("signout");
 
+      //server address :
+      final String servAd = "http://192.168.1.6:8000";
+
 
 
               //signin
@@ -62,7 +65,7 @@ public class MainActivity extends FlutterActivity {
 
                           // prepare construcors params
                           HashMap<String,String> info=new HashMap<>();
-                          String path="http://tabbesh.ir:8000/api/token/";
+                          String path = servAd + "/api/token/";
                           OkHttpClient client=new OkHttpClient();
 
                           //set params to hashmap
@@ -150,7 +153,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path="http://tabbesh.ir:8000/api/token/";
+                              String path= servAd + "/api/token/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -212,7 +215,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path="http://tabbesh.ir:8000/api/token/";
+                              String path = servAd + "/api/token/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -274,7 +277,7 @@ public class MainActivity extends FlutterActivity {
 
                               //create require params for constructor
                               HashMap<String,String> info=new HashMap<>();
-                              String path="http://tabbesh.ir:8000/signup/";
+                              String path = servAd + "/signup/";
                               OkHttpClient client=new OkHttpClient();
 
                               //set params to hashmap
@@ -351,7 +354,7 @@ public class MainActivity extends FlutterActivity {
                                   else
                                   {
                                     //use get method to get list of cities and grades
-                                    String path="http://tabbesh.ir:8000/api/token/";
+                                    String path = servAd + "/api/token/";
                                     HashMap<String,String> header =new HashMap<>();
                                     header.put(new Header().getKayheader(),new Header().getValueheader());
                                     header.put(new Header().getKeyvalue(),new Header().getValueval());

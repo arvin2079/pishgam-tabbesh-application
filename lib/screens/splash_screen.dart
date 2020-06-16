@@ -42,9 +42,6 @@ class _LanidngPageState extends State<LanidngPage>
   @override
   Widget build(BuildContext context) {
     initAnimation();
-    startAnimation();
-    //fixme
-    print(Provider.of<CitiesListHolder>(context).list.toString());
 
     return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
       if (state is StartAnimation) {

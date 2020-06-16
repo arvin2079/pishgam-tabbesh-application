@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pishgamv2/brain/Utility.dart';
+import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/validator.dart';
@@ -350,7 +350,7 @@ class _SignUpPageState extends State<SignUpPage> {
     print("sdklfjsldkf");
 //    print(pickedFile.path);
     File file = File(pickedFile.path);
-    File finalFile = await Utility.compressAndGetFile(file);
+    File finalFile = await ImageUtility.compressAndGetFile(file);
     print(finalFile.path);
     _image = Image.file(finalFile);
     setState(() {});
