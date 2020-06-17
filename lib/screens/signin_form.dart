@@ -158,13 +158,15 @@ class _SignInFormState extends State<SignInForm> {
                   SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
+                      final grades = Provider.of<GradesListHolder>(context, listen: false).list;
+                      final cities = Provider.of<CitiesListHolder>(context, listen: false).list;
                       Navigator.of(context).push(MaterialPageRoute<void>(
                         fullscreenDialog: true,
                         builder: (context) => BlocProvider(
                           create: (context) => authBloc,
                           child: SignUpPage(
-                            grades: Provider.of<GradesListHolder>(context, listen: false).list,
-                            locations: Provider.of<CitiesListHolder>(context, listen: false).list,
+                            grades: grades,
+                            locations: cities,
                           ),
                         ),
                       ));
