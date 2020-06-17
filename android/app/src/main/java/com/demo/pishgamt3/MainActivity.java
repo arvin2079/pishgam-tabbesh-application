@@ -50,7 +50,7 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings Signout=new ChannelsStrings("signout");
 
       //server address :
-      final String servAd = "http://192.168.1.6:8000";
+      final String servAd = "http://192.168.1.4:8000";
 
 
 

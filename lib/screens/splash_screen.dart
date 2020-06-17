@@ -55,6 +55,7 @@ class _LanidngPageState extends State<LanidngPage>
             return SimpleAlertDialog(
               title: state.message,
               content: state.details,
+              onPressed: state.onPressed,
             );
           },
         );
