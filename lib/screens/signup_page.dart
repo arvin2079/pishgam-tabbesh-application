@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,9 +10,7 @@ import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
-import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
-import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
   SignUpPage({this.locations, this.grades});
@@ -41,7 +38,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String city;
   String grade;
   String gender;
-  Image _image;
 
   bool _submited = false;
 
@@ -195,20 +191,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(15),
-                            child: GestureDetector(
-                              child: CircleAvatar(
-                                child: _image == null
-                                    ? Icon(Icons.photo_camera,
-                                        color: Colors.black45, size: 30)
-                                    : _image,
-                                backgroundColor: Colors.grey[200],
-                                radius: 35,
-                              ),
-                              onTap: () => _pickImage(),
-                            ),
-                          ),
+
                           SignupTextInput(
                             labelText: 'نام',
                             errorText: _submited &&
@@ -342,28 +325,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _getImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
-    print("sdklfjsldkf");
-//    print(pickedFile.path);
-    File file = File(pickedFile.path);
-    File finalFile = await ImageUtility.compressAndGetFile(file);
-    print(finalFile.path);
-    _image = Image.file(finalFile);
-    setState(() {});
-  }
-
-  void _pickImage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return ImageSourceDialog(
-            onCamera: () => _getImage(ImageSource.camera),
-            onGallery: () => _getImage(ImageSource.gallery),
-          );
-        });
   }
 }
