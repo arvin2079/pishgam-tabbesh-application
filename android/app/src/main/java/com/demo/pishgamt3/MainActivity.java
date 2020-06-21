@@ -50,7 +50,7 @@ public class MainActivity extends FlutterActivity {
       ChannelsStrings Signout=new ChannelsStrings("signout");
 
       //server address :
-      final String servAd = "http://192.168.1.6:8000";
+      final String servAd = "http://192.168.1.7:8000";
 
 
 
@@ -281,8 +281,10 @@ public class MainActivity extends FlutterActivity {
                               OkHttpClient client=new OkHttpClient();
 
                               //set params to hashmap
-                              info.put("firstname",call.argument("username"));
+
+                              info.put("firstname",call.argument("firstname"));
                               info.put("lastname",call.argument("lastname"));
+                              info.put("username",call.argument("username"));
                               info.put("gender",call.argument("gender"));
                               info.put("phonenuber",call.argument("phonenumber"));
                               info.put("grade",call.argument("grade"));
