@@ -356,7 +356,7 @@ public class MainActivity extends FlutterActivity {
                                   else
                                   {
                                     //use get method to get list of cities and grades
-                                    String path = servAd + "/api/token/";
+                                    String path = servAd + "/dashboard/edit_profile/";
                                     HashMap<String,String> header =new HashMap<>();
                                     header.put(new Header().getKayheader(),new Header().getValueheader());
                                     header.put(new Header().getKeyvalue(),new Header().getValueval());
