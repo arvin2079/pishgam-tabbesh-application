@@ -30,7 +30,7 @@ public class SharePref {
                     public String load(String key)
                     {
                         SharedPreferences pref=context.getSharedPreferences("mypref",MODE_PRIVATE);
-                        return pref.getString(key,"wrong key!!!!!");
+                        return pref.getString(key,"");
 
                     }
 

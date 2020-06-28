@@ -151,10 +151,10 @@ public class MainActivity extends FlutterActivity {
                             if(call.method.equals("cities"))
                             {
                               MainThreadResult mainresult=new MainThreadResult(result);
-
+                              Log.i("TAG", "here23");
 
                               //use get method to get list of cities and grades
-                              String path= servAd + "/api/token/";
+                              String path= servAd + "/signup";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -167,6 +167,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
+                                    Log.i("TAG", "here26");
                                     mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
 
                                   }
@@ -175,6 +176,7 @@ public class MainActivity extends FlutterActivity {
                                   public void onResponse(Call call, Response response) throws IOException
                                   {
                                     if(response.isSuccessful())
+                                      Log.i("TAG", "here25");
                                     {
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                           @Override
@@ -182,11 +184,19 @@ public class MainActivity extends FlutterActivity {
                                             try {
                                               //get json
                                               String maplist=response.body().string();
+                                              Log.i("TAG", maplist);
                                               //parse json
+
+                                              Log.i("TAG", "befor exception");
                                               JsonParser jsonParser=new JsonParser();
+                                              Log.i("TAG", "after exception");
                                               //send hashmap
-                                              mainresult.success(jsonParser.getcities(maplist));
+                                              HashMap<String, String> map = jsonParser.getcities(maplist);
+                                              Log.i("TAG", "after exception3");
+                                              Log.i("TAG", map.size()+ "");
+                                              mainresult.success(map);
                                             } catch (IOException | JSONException e) {
+                                              Log.i("TAG", "here27");
                                               mainresult.error("failed in get method",e.getMessage(),null);
                                             }
                                           }
@@ -197,6 +207,7 @@ public class MainActivity extends FlutterActivity {
                                   }
                                 });
                               } catch (IOException e) {
+                                Log.i("TAG", "here28");
                                 mainresult.error("failed in get method",e.getMessage(),null);
                               }
 
@@ -216,7 +227,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path = servAd + "/api/token/";
+                              String path = servAd + "/signup";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -351,7 +362,8 @@ public class MainActivity extends FlutterActivity {
                                   MainThreadResult mainresult=new MainThreadResult(result);
 
                                   SharePref pref=new SharePref(getApplicationContext());
-                                  if(pref.load("token")==null) result.success(null);
+                                  String token = pref.load("token");
+                                  if(token == null || token.isEmpty()) result.success(null);
                                   else
                                   {
                                     //use get method to get list of cities and grades

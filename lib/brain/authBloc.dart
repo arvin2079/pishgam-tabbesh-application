@@ -142,8 +142,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         User user;
         try {
           user = await auth.currentUser();
+          print("hello world1");
           await auth.initCitiesMap();
+          print("hello world2");
           await auth.initGradesMap();
+          print("hello world3");
         } on PlatformException catch (err) {
           this.add(CatchError(
             message: err.message,

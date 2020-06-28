@@ -1,6 +1,7 @@
 package com.demo.pishgamt3.Json_parser;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -27,16 +28,23 @@ public class JsonParser {
                     {
                         HashMap<String,String> hashMap=new HashMap<>();
 
+                        Log.i("jason PARSER", "getcities: here1");
                         JSONObject jsonObject=new JSONObject(json);
+                        Log.i("jason PARSER", "getcities: here2");
                         JSONArray  cities=new JSONArray(jsonObject.getJSONArray("cities"));
+                        Log.i("jason PARSER", "getcities: here3");
                         for(int i=0;i<cities.length();i++)
                         {
+                            Log.i("jason PARSER", "getcities: inFor1" + i);
                             JSONObject city=cities.getJSONObject(i);
+                            Log.i("jason PARSER", "getcities: inFor2" + i);
                             //get title and code
                             String title=city.getString("title");
                             String code=city.getString("code");
                             //set in hashmap
+                            Log.i("jason PARSER", "getcities: inFor3" + i);
                             hashMap.put(title,code);
+                            Log.i("jason PARSER", "getcities: inFor4" + i);
 
                         }
 
