@@ -1,0 +1,4 @@
+com/example/connectivity/ConnectivityPlugin.java
+ com.example.connectivity.ConnectivityPlugin
+com/example/connectivity/BuildConfig.java
+ com.example.connectivity.BuildConfig

@@ -158,12 +158,9 @@ class _SignInFormState extends State<SignInForm> {
                       final cities = Provider.of<CitiesListHolder>(context, listen: false).list;
                       Navigator.of(context).push(MaterialPageRoute<void>(
                         fullscreenDialog: true,
-                        builder: (context) => BlocProvider(
-                          create: (context) => authBloc,
-                          child: SignUpPage(
-                            grades: grades,
-                            locations: cities,
-                          ),
+                        builder: (context) => SignUpPage(
+                          grades: grades,
+                          locations: cities,
                         ),
                       ));
                     },

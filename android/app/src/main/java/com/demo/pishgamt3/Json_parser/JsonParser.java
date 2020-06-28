@@ -71,8 +71,8 @@ public class JsonParser {
                             HashMap<String,String> hashMap=new HashMap<>();
 
                             JSONObject jsonObject=new JSONObject(json);
-                            hashMap.put("firstname",jsonObject.getString("firstname"));
-                            hashMap.put("lastname",jsonObject.getString("lastname"));
+                            hashMap.put("firstname",jsonObject.getString("first_name"));
+                            hashMap.put("lastname",jsonObject.getString("last_name"));
                             hashMap.put("username",jsonObject.getString("username"));
                             hashMap.put("email",jsonObject.getString("email"));
                             hashMap.put("grades",jsonObject.getString("grades"));
