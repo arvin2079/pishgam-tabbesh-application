@@ -127,7 +127,9 @@ public class MainActivity extends FlutterActivity {
                                     });
                                   }
 
-                                  else {mainresult.success(null);}
+                                  else {mainresult.success(null);
+
+                                  }
 
                                 }
                               });
@@ -153,7 +155,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path= servAd + "/api/token/";
+                              String path= servAd + "/signup/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -215,7 +217,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path = servAd + "/api/token/";
+                              String path = servAd + "/signup/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -358,8 +360,8 @@ public class MainActivity extends FlutterActivity {
                                     //use get method to get list of cities and grades
                                     String path = servAd + "/dashboard/edit_profile/";
                                     HashMap<String,String> header =new HashMap<>();
-                                    header.put(new Header().getKayheader(),new Header().getValueheader());
-                                    header.put(new Header().getKeyvalue(),new Header().getValueval());
+                                    header.put(new Header().getKayheader(),"Authorization");
+                                    header.put(new Header().getKeyvalue(),"Token "+pref.load("token"));
 
 
                                     OkHttpClient client=new OkHttpClient();
@@ -383,7 +385,8 @@ public class MainActivity extends FlutterActivity {
 
                                               else
                                                 {
-                                                  try {
+                                                  try
+                                                  {
                                                     String message =response.body().string();
                                                     mainresult.success(new JsonParser().currentUser(message));
 

@@ -28,7 +28,7 @@ public class JsonParser {
                         HashMap<String,String> hashMap=new HashMap<>();
 
                         JSONObject jsonObject=new JSONObject(json);
-                        JSONArray  cities=new JSONArray(jsonObject.getJSONArray("cities"));
+                        JSONArray  cities=jsonObject.getJSONArray("cities");
                         for(int i=0;i<cities.length();i++)
                         {
                             JSONObject city=cities.getJSONObject(i);
@@ -51,7 +51,7 @@ public class JsonParser {
                         HashMap<String,String> hashMap=new HashMap<>();
 
                         JSONObject jsonObject=new JSONObject(json);
-                        JSONArray  grades=new JSONArray(jsonObject.getJSONArray("grades"));
+                        JSONArray  grades=jsonObject.getJSONArray("grades");
                         for(int i=0;i<grades.length();i++)
                         {
                             JSONObject grade=grades.getJSONObject(i);
