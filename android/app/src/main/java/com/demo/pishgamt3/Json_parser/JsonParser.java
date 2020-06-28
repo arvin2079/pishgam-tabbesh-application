@@ -30,9 +30,7 @@ public class JsonParser {
 
                         Log.i("jason PARSER", "getcities: here1");
                         JSONObject jsonObject=new JSONObject(json);
-                        Log.i("jason PARSER", "getcities: here2");
-                        JSONArray  cities=new JSONArray(jsonObject.getJSONArray("cities"));
-                        Log.i("jason PARSER", "getcities: here3");
+                        JSONArray  cities=jsonObject.getJSONArray("cities");
                         for(int i=0;i<cities.length();i++)
                         {
                             Log.i("jason PARSER", "getcities: inFor1" + i);
@@ -59,7 +57,7 @@ public class JsonParser {
                         HashMap<String,String> hashMap=new HashMap<>();
 
                         JSONObject jsonObject=new JSONObject(json);
-                        JSONArray  grades=new JSONArray(jsonObject.getJSONArray("grades"));
+                        JSONArray  grades=jsonObject.getJSONArray("grades");
                         for(int i=0;i<grades.length();i++)
                         {
                             JSONObject grade=grades.getJSONObject(i);

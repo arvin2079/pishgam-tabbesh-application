@@ -154,7 +154,7 @@ public class MainActivity extends FlutterActivity {
                               Log.i("TAG", "here23");
 
                               //use get method to get list of cities and grades
-                              String path= servAd + "/signup";
+                              String path= servAd + "/signup/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
@@ -227,7 +227,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path = servAd + "/signup";
+                              String path = servAd + "/signup/";
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
