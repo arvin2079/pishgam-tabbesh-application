@@ -203,8 +203,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield result == null
           ? AuthenticationError(
               message: "ناموفق",
-              details:
-                  "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.")
+              details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.")
           : SignIn();
     } else if (event is GoAuthenticationPage) {
       yield SignIn();

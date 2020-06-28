@@ -1,6 +1,7 @@
 package com.demo.pishgamt3;
 
 import android.os.Build;
+import android.util.Log;
 
 
 import androidx.annotation.NonNull;
@@ -85,7 +86,7 @@ public class MainActivity extends FlutterActivity {
                                 //failed response
                                 @Override
                                 public void onFailure(Call call, IOException e) {
-                                  mainresult.error("failed in sign in",e.getMessage(),null);
+                                  mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست","خطا", null);
                                 }
                                 //request recieved to server so now we can get require feedback
                                 @Override
@@ -117,18 +118,18 @@ public class MainActivity extends FlutterActivity {
                                         });
 
                                       }
-                                  if(response.code()==401)
-                                  {
+                                  else if(response.code()==401) {
                                     MainActivity.this.runOnUiThread(new Runnable() {
                                       @Override
                                       public void run() {
-                                        mainresult.success(1);
+                                        mainresult.error("خطا در انجام مراحل ثبت نام","خطا", null);
                                       }
                                     });
                                   }
 
-                                  else {mainresult.success(null);}
-
+                                  else {
+                                    mainresult.error("خطای پیشبینی نشده","خطا", null);
+                                  }
                                 }
                               });
                             } catch (IOException e) {
@@ -166,7 +167,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    mainresult.error("failed in get method",e.getMessage(),null);
+                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
 
                                   }
 
@@ -228,7 +229,7 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    mainresult.error("failed in get method",e.getMessage(),null);
+                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
 
                                   }
 
@@ -301,7 +302,7 @@ public class MainActivity extends FlutterActivity {
                                   @Override
                                   public void onFailure(Call call, IOException e)
                                   {
-                                    mainresult.error("failed","خطا در برقرای اربتیاط",null);
+                                    mainresult.error("انجام عملیات ثبت نام در حال حاضر ممکن نیست","خطا", null);
 
                                   }
 
@@ -356,8 +357,8 @@ public class MainActivity extends FlutterActivity {
                                     //use get method to get list of cities and grades
                                     String path = servAd + "/api/token/";
                                     HashMap<String,String> header =new HashMap<>();
-                                    header.put(new Header().getKayheader(),new Header().getValueheader());
-                                    header.put(new Header().getKeyvalue(),new Header().getValueval());
+                                    header.put(new Header().getKayheader(),"Authorization");
+                                    header.put(new Header().getKeyvalue(),"Token "+pref.load("token"));
 
 
                                     OkHttpClient client=new OkHttpClient();
@@ -368,7 +369,7 @@ public class MainActivity extends FlutterActivity {
                                         @Override
                                         public void onFailure(Call call, IOException e) {
                                           // fixme : handel 401 and other errors with result.error(...)
-                                          mainresult.success(null);
+                                          mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست","خطا", null);
                                         }
 
                                         @Override
@@ -377,7 +378,7 @@ public class MainActivity extends FlutterActivity {
                                           MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                              if(response.code()==403)mainresult.success(null);
+                                              if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
 
                                               else
                                                 {

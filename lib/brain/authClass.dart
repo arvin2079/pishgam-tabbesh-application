@@ -99,9 +99,7 @@ class Auth extends AuthBase {
     final String _methodName = 'currentuser';
     final Map<String, String> result =
         await _currentUserChannel.invokeMethod(_methodName);
-    if (result.isEmpty)
-      return null;
-    else if (result == null)
+    if (result == null)
       return null;
     //todo : pass this user to homeScreen in Authbloc
     else {
@@ -131,6 +129,7 @@ class Auth extends AuthBase {
   * exceptions must be handeled in SignInPage and SignUpPage with BlocErrorEvent
   */
 
+  //fixme : on back send user instead of 1/0
   @override
   Future<User> signin({String username, String password}) async {
     final String _methodName = 'signin';
@@ -157,12 +156,8 @@ class Auth extends AuthBase {
       'firstname': user.firstname,
       'lastname': user.lastname,
       'phonenumber': user.phoneNumber,
-      'grade': gradesMap.keys.firstWhere(
-          (element) => gradesMap[element] == user.grade,
-          orElse: () => null),
-      'city': citiesMap.keys.firstWhere(
-          (element) => citiesMap[element] == user.city,
-          orElse: () => null),
+      'grade': gradesMap.keys.firstWhere((element) => gradesMap[element] == user.grade, orElse: () => null),
+      'city': citiesMap.keys.firstWhere((element) => citiesMap[element] == user.city, orElse: () => null),
       'gender': user.gender,
       //fixme: address!!
     });
