@@ -1,6 +1,8 @@
 package com.demo.pishgamt3;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 
@@ -93,7 +95,8 @@ public class MainActivity extends FlutterActivity {
                                 public void onResponse(Call call, Response response) throws IOException {
                                   if(response.isSuccessful())
                                       {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                        Handler handler=new Handler(Looper.getMainLooper());
+                                        handler.post(new Runnable() {
                                           @Override
                                           public void run() {
                                             //convert response to string
@@ -119,10 +122,12 @@ public class MainActivity extends FlutterActivity {
 
                                       }
                                   else if(response.code()==401) {
-                                    MainActivity.this.runOnUiThread(new Runnable() {
+                                    Handler handler=new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
                                       @Override
                                       public void run() {
                                         mainresult.error("خطا در انجام مراحل ثبت نام","خطا", null);
+
                                       }
                                     });
                                   }
@@ -178,7 +183,8 @@ public class MainActivity extends FlutterActivity {
                                     if(response.isSuccessful())
                                       Log.i("TAG", "here25");
                                     {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                        Handler handler=new Handler(Looper.getMainLooper());
+                                        handler.post(new Runnable() {
                                           @Override
                                           public void run() {
                                             try {
@@ -249,21 +255,22 @@ public class MainActivity extends FlutterActivity {
                                   {
                                     if(response.isSuccessful())
                                     {
-                                      MainActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                          try {
-                                            //get json
-                                            String maplist=response.body().string();
-                                            //parse json
-                                            JsonParser jsonParser=new JsonParser();
-                                            //send hashmap
-                                            mainresult.success(jsonParser.getgrades(maplist));
-                                          } catch (IOException | JSONException e) {
-                                            mainresult.error("failed in get method",e.getMessage(),null);
-                                          }
-                                        }
-                                      });
+                                      Handler handler=new Handler(Looper.getMainLooper());
+                                       handler.post(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                           try {
+                                             //get json
+                                             String maplist=response.body().string();
+                                             //parse json
+                                             JsonParser jsonParser=new JsonParser();
+                                             //send hashmap
+                                             mainresult.success(jsonParser.getgrades(maplist));
+                                           } catch (IOException | JSONException e) {
+                                             mainresult.error("failed in get method",e.getMessage(),null);
+                                           }
+                                         }
+                                       });
                                     }
 
 
@@ -387,25 +394,26 @@ public class MainActivity extends FlutterActivity {
                                         @Override
                                         public void onResponse(Call call, Response response) throws IOException {
 
-                                          MainActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                              if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
+                                         Handler handler=new Handler(Looper.getMainLooper());
+                                         handler.post(new Runnable() {
+                                           @Override
+                                           public void run() {
+                                             if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
 
-                                              else
-                                                {
-                                                  try {
-                                                    String message =response.body().string();
-                                                    mainresult.success(new JsonParser().currentUser(message));
+                                             else
+                                             {
+                                               try {
+                                                 String message =response.body().string();
+                                                 mainresult.success(new JsonParser().currentUser(message));
 
-                                                  }
-                                                  catch (IOException | JSONException e) {
-                                                    e.printStackTrace();
+                                               }
+                                               catch (IOException | JSONException e) {
+                                                 e.printStackTrace();
 
-                                                  }
-                                                }
-                                            }
-                                          });
+                                               }
+                                             }
+                                           }
+                                         });
 
                                         }
                                       });
