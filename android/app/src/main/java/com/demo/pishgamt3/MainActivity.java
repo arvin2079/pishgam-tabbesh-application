@@ -1,6 +1,8 @@
 package com.demo.pishgamt3;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 
 import androidx.annotation.NonNull;
@@ -92,7 +94,8 @@ public class MainActivity extends FlutterActivity {
                                 public void onResponse(Call call, Response response) throws IOException {
                                   if(response.isSuccessful())
                                       {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                        Handler handler=new Handler(Looper.getMainLooper());
+                                        handler.post(new Runnable() {
                                           @Override
                                           public void run() {
                                             //convert response to string
@@ -177,21 +180,22 @@ public class MainActivity extends FlutterActivity {
                                   {
                                     if(response.isSuccessful())
                                     {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
-                                          @Override
-                                          public void run() {
-                                            try {
-                                              //get json
-                                              String maplist=response.body().string();
-                                              //parse json
-                                              JsonParser jsonParser=new JsonParser();
-                                              //send hashmap
-                                              mainresult.success(jsonParser.getcities(maplist));
-                                            } catch (IOException | JSONException e) {
-                                              mainresult.error("failed in get method",e.getMessage(),null);
-                                            }
-                                          }
-                                        });
+                                       Handler handler=new Handler(Looper.getMainLooper());
+                                       handler.post(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                           try {
+                                             //get json
+                                             String maplist=response.body().string();
+                                             //parse json
+                                             JsonParser jsonParser=new JsonParser();
+                                             //send hashmap
+                                             mainresult.success(jsonParser.getcities(maplist));
+                                           } catch (IOException | JSONException e) {
+                                             mainresult.error("failed in get method",e.getMessage(),null);
+                                           }
+                                         }
+                                       });
                                     }
 
 
@@ -239,7 +243,8 @@ public class MainActivity extends FlutterActivity {
                                   {
                                     if(response.isSuccessful())
                                     {
-                                      MainActivity.this.runOnUiThread(new Runnable() {
+                                      Handler handler=new Handler(Looper.getMainLooper());
+                                      handler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                           try {
@@ -313,23 +318,35 @@ public class MainActivity extends FlutterActivity {
                                   public void onResponse(Call call, Response response) throws IOException {
                                     if(response.isSuccessful())
                                     {
-                                      switch (response.body().string())
-                                      {
-                                        case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
-                                          mainresult.success("ثبت نام با موفقیت انجام شد");
-                                          break;
-                                        case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                          mainresult.error("خطا","شماره وارد شده نامعتبر است", null);
-                                          break;
-                                        case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
-                                          mainresult.error("خطا","کاربر با این نام کاربری از قبل موجود است", null);
-                                          break;
-                                        case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                          mainresult.error("خطا","در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
-                                          break;
-                                        default:
-                                          mainresult.error("خطا","ثبت نام ناموفق" ,null);
-                                      }
+                                      Handler handler=new Handler(Looper.getMainLooper());
+                                      handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                          try {
+                                            String message = response.body().string();
+
+                                          switch (message) {
+                                            case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
+                                              mainresult.success("ثبت نام با موفقیت انجام شد");
+                                              break;
+                                            case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
+                                              mainresult.error("خطا", "شماره وارد شده نامعتبر است", null);
+                                              break;
+                                            case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}":
+                                              mainresult.error("خطا", "کاربر با این نام کاربری از قبل موجود است", null);
+                                              break;
+                                            case "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
+                                              mainresult.error("خطا", "در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
+                                              break;
+                                            default:
+                                              mainresult.error("خطا", "ثبت نام ناموفق", null);
+                                          }
+                                        }
+                                          catch (IOException e) {
+                                            e.printStackTrace();
+                                          }
+                                        }
+                                      });
                                     }
                                     if(response.code()==401)mainresult.error("error","خطا در برقراری ارتباط", null);
                                     else {mainresult.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);}
@@ -376,29 +393,39 @@ public class MainActivity extends FlutterActivity {
                                         }
 
                                         @Override
-                                        public void onResponse(Call call, Response response) throws IOException {
-
-                                          MainActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                              if(response.code()==403)mainresult.success(null);
-
-                                              else
+                                        public void onResponse(Call call, Response response) throws IOException
+                                        {
+                                                if(response.isSuccessful())
                                                 {
-                                                  try
-                                                  {
-                                                    String message =response.body().string();
-                                                    mainresult.success(new JsonParser().currentUser(message));
+                                                  Handler handler=new Handler(Looper.getMainLooper()  );
+                                                  handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run()
+                                                    {
+                                                      if(response.code()==403)mainresult.success(null);
 
-                                                  }
-                                                  catch (IOException | JSONException e) {
-                                                    e.printStackTrace();
+                                                      else
+                                                      {
+                                                        try
+                                                        {
+                                                          String message =response.body().string();
+                                                          mainresult.success(new JsonParser().currentUser(message));
 
-                                                  }
+                                                        }
+                                                        catch (IOException | JSONException e) {
+                                                          e.printStackTrace();
+
+                                                        }
+                                                      }
+
+                                                    }
+                                                  });
+
                                                 }
-                                            }
-                                          });
-
+                                                else
+                                                  {
+                                                    mainresult.error("خطا", "در حال حاضر دریافت اطلاعات کاربر ممکن نیست", null);
+                                                  }
                                         }
                                       });
                                     } catch (IOException e) {
