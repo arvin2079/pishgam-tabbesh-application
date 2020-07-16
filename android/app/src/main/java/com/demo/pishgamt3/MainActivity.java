@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.demo.pishgamt3.Json_parser.JsonParser;
 import com.demo.pishgamt3.Method_channels_Strings.ChannelsStrings;
 import com.demo.pishgamt3.Method_channels_Strings.Header;
+import com.demo.pishgamt3.Method_channels_Strings.Path;
 import com.demo.pishgamt3.Requesr_for_server.RequestforServer;
 
 import com.demo.pishgamt3.Shareprefences.SharePref;
@@ -53,7 +54,7 @@ public class MainActivity extends FlutterActivity {
 
       //server address :
       final String servAd = "http://192.168.1.7:8000";
-
+      Path address = new Path();
 
 
               //signin
@@ -67,7 +68,7 @@ public class MainActivity extends FlutterActivity {
 
                           // prepare construcors params
                           HashMap<String,String> info=new HashMap<>();
-                          String path = servAd + "/api/token/";
+
                           OkHttpClient client=new OkHttpClient();
 
                           //set params to hashmap
@@ -79,7 +80,7 @@ public class MainActivity extends FlutterActivity {
                           info.put(new Header().getKeyvalue(),new Header().getValueval());
 
                           //send request
-                          RequestforServer requestforServer=new RequestforServer(client,path,info);
+                          RequestforServer requestforServer=new RequestforServer(client,address.getSignin(),info);
 
                             try {
                               //get feedback from server
@@ -158,14 +159,14 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path= servAd + "/signup/";
+
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
                               OkHttpClient client=new OkHttpClient();
-                              RequestforServer requestforServer=new RequestforServer(client,path,header);
+                              RequestforServer requestforServer=new RequestforServer(client,address.getSignup(),header);
 
                               try {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
@@ -221,14 +222,14 @@ public class MainActivity extends FlutterActivity {
 
 
                               //use get method to get list of cities and grades
-                              String path = servAd + "/signup/";
+
                               HashMap<String,String> header =new HashMap<>();
                               header.put(new Header().getKayheader(),new Header().getValueheader());
                               header.put(new Header().getKeyvalue(),new Header().getValueval());
 
 
                               OkHttpClient client=new OkHttpClient();
-                              RequestforServer requestforServer=new RequestforServer(client,path,header);
+                              RequestforServer requestforServer=new RequestforServer(client,address.getSignup(),header);
 
                               try {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
@@ -284,7 +285,7 @@ public class MainActivity extends FlutterActivity {
 
                               //create require params for constructor
                               HashMap<String,String> info=new HashMap<>();
-                              String path = servAd + "/signup/";
+
                               OkHttpClient client=new OkHttpClient();
 
                               //set params to hashmap
@@ -303,7 +304,7 @@ public class MainActivity extends FlutterActivity {
 
 
                               //send request
-                              RequestforServer requestforServer=new RequestforServer(client,path,info);
+                              RequestforServer requestforServer=new RequestforServer(client,address.getSignup(),info);
 
                               try {
                                 client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
@@ -375,14 +376,14 @@ public class MainActivity extends FlutterActivity {
                                   else
                                   {
                                     //use get method to get list of cities and grades
-                                    String path = servAd + "/dashboard/edit_profile/";
+                                    
                                     HashMap<String,String> header =new HashMap<>();
                                     header.put(new Header().getKayheader(),"Authorization");
                                     header.put(new Header().getKeyvalue(),"Token "+pref.load("token"));
 
 
                                     OkHttpClient client=new OkHttpClient();
-                                    RequestforServer requestforServer=new RequestforServer(client,path,header);
+                                    RequestforServer requestforServer=new RequestforServer(client,address.getCurrentUser(),header);
 
                                     try {
                                       client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
