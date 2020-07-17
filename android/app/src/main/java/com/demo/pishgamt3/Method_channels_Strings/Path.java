@@ -5,7 +5,7 @@ public class Path
     String mainPath="http://192.168.1.4:8000";
     String Signup=mainPath+"/signup/";
     String Signin=mainPath+"/api/token/";
-    String currentUser="";
+    String currentUser=mainPath+"/dashboard/app_profile/";
 
             public String getMainPath() {
                 return mainPath;
