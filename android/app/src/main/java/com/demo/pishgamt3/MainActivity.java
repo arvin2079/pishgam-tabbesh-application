@@ -151,7 +151,6 @@ public class MainActivity extends FlutterActivity {
                             if(call.method.equals("cities"))
                             {
                               MainThreadResult mainresult=new MainThreadResult(result);
-                              Log.i("TAG", "here23");
 
                               //use get method to get list of cities and grades
                               String path= servAd + "/signup/";
@@ -167,7 +166,6 @@ public class MainActivity extends FlutterActivity {
                                 client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                   @Override
                                   public void onFailure(Call call, IOException e) {
-                                    Log.i("TAG", "here26");
                                     mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
 
                                   }
@@ -176,38 +174,22 @@ public class MainActivity extends FlutterActivity {
                                   public void onResponse(Call call, Response response) throws IOException
                                   {
                                     if(response.isSuccessful())
-                                      Log.i("TAG", "here25");
-                                    {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
-                                          @Override
-                                          public void run() {
                                             try {
                                               //get json
                                               String maplist=response.body().string();
-                                              Log.i("TAG", maplist);
                                               //parse json
 
-                                              Log.i("TAG", "befor exception");
                                               JsonParser jsonParser=new JsonParser();
-                                              Log.i("TAG", "after exception");
                                               //send hashmap
                                               HashMap<String, String> map = jsonParser.getcities(maplist);
-                                              Log.i("TAG", "after exception3");
-                                              Log.i("TAG", map.size()+ "");
                                               mainresult.success(map);
                                             } catch (IOException | JSONException e) {
-                                              Log.i("TAG", "here27");
                                               mainresult.error("failed in get method",e.getMessage(),null);
                                             }
-                                          }
-                                        });
-                                    }
-
 
                                   }
                                 });
                               } catch (IOException e) {
-                                Log.i("TAG", "here28");
                                 mainresult.error("failed in get method",e.getMessage(),null);
                               }
 
@@ -249,9 +231,6 @@ public class MainActivity extends FlutterActivity {
                                   {
                                     if(response.isSuccessful())
                                     {
-                                      MainActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
                                           try {
                                             //get json
                                             String maplist=response.body().string();
@@ -263,9 +242,6 @@ public class MainActivity extends FlutterActivity {
                                             mainresult.error("failed in get method",e.getMessage(),null);
                                           }
                                         }
-                                      });
-                                    }
-
 
                                   }
                                 });
