@@ -81,6 +81,7 @@ class Home extends AuthState {
 }
 
 class SignIn extends AuthState {
+
   @override
   List<Object> get props => [];
 }
@@ -111,9 +112,8 @@ class AuthenticationError extends AuthState {
 // todo : platform Exception
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(this.auth);
 
-  final AuthBase auth;
+  final Auth auth = Auth();
 
   @override
   get initialState => InitialState();
@@ -142,18 +142,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         User user;
         try {
           user = await auth.currentUser();
-          print("hello world1");
+          print('sssssss');
+          print(user.toString());
+          print('sssssss');
           await auth.initCitiesMap();
-          print("hello world2");
           await auth.initGradesMap();
-          print("hello world3");
         } on PlatformException catch (err) {
           this.add(CatchError(
             message: err.message,
             detail: err.code,
           ));
         } catch (err) {
-          print('error happend in flutter code!');
+          print('error --> '+err.toString());
+//          print('error happend in flutter code!');
         }
         yield user == null ? StartAnimation() : Home();
       } else {
@@ -165,30 +166,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               this.add(CheckIfSignedInBefor());
             });
       }
-    } else if (event is DoSignIn) {
+    }
+
+    else if (event is DoSignIn) {
       yield SignInIsLoadingSta();
       User user;
       try {
-        user = await auth.signin(
-            username: event.username, password: event.password);
-        await Future.delayed(Duration(seconds: 2));
+        print('befor');
+        user = await auth.signin(username: event.username, password: event.password);
+        print('after');
       } on PlatformException catch (err) {
         this.add(CatchError(
           message: err.message,
           detail: err.code,
         ));
       } catch (err) {
-        print('error happend in flutter code!');
+//        print('error happend in flutter code!');
+        print(err.toString());
       }
       yield SignInLoadingFinished();
-      yield user == null
-          ? AuthenticationError(
-              message: "ناموفق",
-              details:
-                  "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.")
-          : Home();
-      if (user != null) await this.close();
-    } else if (event is DoSignUp) {
+//      yield user == null
+//          ? AuthenticationError(
+//              message: "ناموفق",
+//              details:
+//                  "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.")
+//          : Home();
+      if(user != null)
+        yield Home();
+
+      //fixme : close bloc stream for home() and create new bloc for home()
+    }
+
+    else if (event is DoSignUp) {
       yield SignUpIsLoadingSta();
       String result;
       try {
@@ -202,13 +211,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print('error happend in flutter code!');
       }
       yield SignUpLoadingFinished();
-      print(result);
-      yield result == null
-          ? AuthenticationError(
-              message: "ناموفق",
-              details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.")
-          : SignIn();
-    } else if (event is GoAuthenticationPage) {
+      if(result != null)
+        yield SignIn();
+//      print(result);
+//      yield result == null
+//          ? AuthenticationError(
+//              message: "ناموفق",
+//              details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.")
+//          : SignIn();
+
+    }
+
+    else if (event is GoAuthenticationPage) {
       yield SignIn();
     } else if (event is CatchError) {
       yield AuthenticationError(

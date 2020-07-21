@@ -11,6 +11,8 @@ abstract class AuthBase {
 
   Future<User> signin({@required String username, @required String password});
 
+  Future<bool> signout();
+
   Future<User> currentUser();
 
   Future<String> editProfile(@required User user);
@@ -22,7 +24,6 @@ abstract class AuthBase {
   Future<void> initCitiesMap();
 
   Future<void> initGradesMap();
-
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -49,33 +50,32 @@ abstract class AuthBase {
 // todo(optional or in future versoins) : language.
 // todo(optional or in future versoins) : Azmoon online.
 
-class CitiesListHolder {
-  CitiesListHolder(this.list);
-
-  final List<String> list;
-}
-
-class GradesListHolder {
-  GradesListHolder(this.list);
-
-  final List<String> list;
-}
+//switched to singleton
 
 class Auth extends AuthBase {
   Map citiesMap = Map();
   Map gradesMap = Map();
   User _currentUser = new User();
 
-  CitiesListHolder get citiesList {
-    List<String> citiesList = List<String>();
-    citiesMap.forEach((key, value) => citiesList.add(value));
-    return CitiesListHolder(citiesList);
+  //singleton pattern in dart
+  static final Auth _instance = Auth._internalConst();
+
+  Auth._internalConst();
+
+  factory Auth() {
+    return _instance;
   }
 
-  GradesListHolder get gradesList {
+  List<String> get citiesList {
+    List<String> citiesList = List<String>();
+    citiesMap.forEach((key, value) => citiesList.add(key));
+    return citiesList;
+  }
+
+  List<String> get gradesList {
     List<String> gradesList = List<String>();
-    gradesMap.forEach((key, value) => gradesList.add(value));
-    return GradesListHolder(gradesList);
+    gradesMap.forEach((key, value) => gradesList.add(key));
+    return gradesList;
   }
 
   static final String _signInChannelName = 'signin';
@@ -97,8 +97,9 @@ class Auth extends AuthBase {
   @override
   Future<User> currentUser() async {
     final String _methodName = 'currentuser';
-    final Map<String, String> result =
-        await _currentUserChannel.invokeMethod(_methodName);
+    final Map<dynamic, dynamic> result = await _currentUserChannel.invokeMethod(_methodName);
+    print('ssgggggggg');
+    print(result.toString());
     if (result == null)
       return null;
     //todo : pass this user to homeScreen in Authbloc
@@ -118,7 +119,7 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> signOut() async{
+  Future<bool> signOut() async {
     final String _methodName = 'signout';
     bool result = await _signoutChannel.invokeMethod(_methodName);
     return result;
@@ -133,7 +134,7 @@ class Auth extends AuthBase {
   @override
   Future<User> signin({String username, String password}) async {
     final String _methodName = 'signin';
-    final Map<String, String> result = await _signInChannel.invokeMethod(
+    final Map<dynamic, dynamic> result = await _signInChannel.invokeMethod(
         _methodName, {"username": username, "password": password});
     if (result != null) {
       return User(
@@ -154,12 +155,16 @@ class Auth extends AuthBase {
     final String _methodName = 'signup';
     final String result = await _signUpChannel.invokeMethod(_methodName, {
       'firstname': user.firstname,
+      'username': user.username,
       'lastname': user.lastname,
       'phonenumber': user.phoneNumber,
-      'grade': gradesMap.keys.firstWhere((element) => gradesMap[element] == user.grade, orElse: () => null),
-      'city': citiesMap.keys.firstWhere((element) => citiesMap[element] == user.city, orElse: () => null),
+      'grade': gradesMap.values.firstWhere(
+          (element) => gradesMap[user.grade.trim()] == element,
+          orElse: () => null),
+      'city': citiesMap.values.firstWhere(
+          (element) => citiesMap[user.city.trim()] == element,
+          orElse: () => null),
       'gender': user.gender,
-      //fixme: address!!
     });
     if (result == null)
       throw PlatformException(
@@ -211,6 +216,16 @@ class Auth extends AuthBase {
     // TODO: implement editProfile
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> signout() async{
+    final String _methodName = "signout";
+    bool result = await _gradesChannel.invokeMethod(_methodName);
+    if(result)
+      return true;
+
+    return false;
+  }
 }
 
 class User extends Equatable {
@@ -237,6 +252,28 @@ class User extends Equatable {
   final String gender;
   final String grade;
   final String phoneNumber;
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return firstname.toString() +
+        "\n" +
+        lastname.toString() +
+        "\nusername: " +
+        username.toString() +
+        "\ngender: " +
+        gender.toString() +
+        "\ncity: " +
+        city.toString() +
+        "\ngrade: " +
+        grade.toString() +
+        "\nphoneNumber: " +
+        phoneNumber.toString() +
+        "\nsocialNumber: " +
+        socialnumber.toString() +
+        "\npassword: " +
+        password.toString();
+  }
 
   @override
   // TODO: implement props

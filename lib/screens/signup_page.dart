@@ -13,9 +13,6 @@ import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SignUpPage extends StatefulWidget with SignupFieldValidator {
-  SignUpPage({this.locations, this.grades});
-  final List<String> locations;
-  final List<String> grades;
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -35,21 +32,19 @@ class _SignUpPageState extends State<SignUpPage> {
   final DropDownController _gradeDropDownController = DropDownController();
   final DropDownController _cityDropDownController = DropDownController();
 
-  String city;
-  String grade;
-  String gender;
-
   bool _submited = false;
 
   AuthBloc authBloc;
+  Auth auth;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    auth = Auth();
     authBloc = BlocProvider.of<AuthBloc>(context);
 
-    if (widget.locations == null || widget.grades == null) {
+    if (auth.citiesList == null || auth.gradesList == null || auth.citiesList.isEmpty || auth.gradesList.isEmpty) {
       Navigator.pop(context);
       authBloc.add(CatchError(
         message: 'اشکال در ارتباط با سرور',
@@ -84,10 +79,11 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _submit() {
+
     setState(() {
       _submited = true;
     });
-    // ignore: close_sinks
+
     try {
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
           !widget.firstnameValidator.isValid(_nameController.text) ||
@@ -97,19 +93,22 @@ class _SignUpPageState extends State<SignUpPage> {
           _cityDropDownController.getValue == null ||
           _gradeDropDownController.getValue == null) throw Exception;
 
+      User user = User(
+        firstname: _nameController.text,
+        lastname: _familyNameController.text,
+        username: _userNameController.text,
+        gender: _radioGroupController == 1 ? "True" : "False",
+        city: _cityDropDownController.getValue,
+        grade: _gradeDropDownController.getValue,
+        phoneNumber: _phoneNumberController.text,
+      );
+
       authBloc.add(
         DoSignUp(
-          user: User(
-            firstname: _nameController.text,
-            lastname: _familyNameController.text,
-            username: _userNameController.text,
-            gender: gender,
-            city: city,
-            grade: grade,
-            phoneNumber: _phoneNumberController.text,
-          ),
+          user: user,
         ),
       );
+
     } catch (_) {}
   }
 
@@ -247,14 +246,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               Expanded(
                                 child: CustomDropDownButton(
                                   hint: 'مقطع',
-                                  items: widget.grades,
+                                  items: auth.gradesList,
                                   controller: _gradeDropDownController,
                                 ),
                               ),
                               Expanded(
                                 child: CustomDropDownButton(
                                   hint: 'شهر',
-                                  items: widget.locations,
+                                  items: auth.citiesList,
                                   controller: _cityDropDownController,
                                 ),
                               ),

@@ -72,7 +72,9 @@ class _LanidngPageState extends State<LanidngPage>
       if (thisState is StartAnimation ||
           thisState is AuthenticationError ||
           thisState is SignInIsLoadingSta ||
-          thisState is SignInLoadingFinished) return false;
+          thisState is SignInLoadingFinished ||
+          thisState is SignUpIsLoadingSta ||
+          thisState is SignUpLoadingFinished) return false;
       return true;
     },
         // ignore: missing_return

@@ -31,7 +31,7 @@ class _SignInFormState extends State<SignInForm> {
     } else {
       authBloc.add(CatchError(
         message: 'ایمیل یا رمز عبور نامعتبر',
-        detail: 'ایمبل یا رمز عبورت اشکال داشت دوباره چکش کن',
+        detail: 'لطفا ایمیل و رمز عبور خود را چک کرده و سپس دوباره امتحان کنید',
       ));
     }
   }
@@ -154,14 +154,9 @@ class _SignInFormState extends State<SignInForm> {
                   SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
-                      final grades = Provider.of<GradesListHolder>(context, listen: false).list;
-                      final cities = Provider.of<CitiesListHolder>(context, listen: false).list;
                       Navigator.of(context).push(MaterialPageRoute<void>(
                         fullscreenDialog: true,
-                        builder: (context) => SignUpPage(
-                          grades: grades,
-                          locations: cities,
-                        ),
+                        builder: (context) => SignUpPage(),
                       ));
                     },
                     child: Text(

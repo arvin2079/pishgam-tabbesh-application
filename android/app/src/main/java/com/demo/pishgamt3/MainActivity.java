@@ -1,6 +1,8 @@
 package com.demo.pishgamt3;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 
@@ -36,381 +38,385 @@ import okhttp3.Response;
 
 public class MainActivity extends FlutterActivity {
 
-  @RequiresApi(api = Build.VERSION_CODES.N)
-  @Override
-  public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
 
 
-      //every channels need a string to indentify so we use an class to handle it
-      ChannelsStrings SignIn=new ChannelsStrings("signin");
-      ChannelsStrings SignUp=new ChannelsStrings("signup");
-      ChannelsStrings ZaringPal=new ChannelsStrings("zarinpal");
-      ChannelsStrings Getcities=new ChannelsStrings("cities");
-      ChannelsStrings Getgrades=new ChannelsStrings("grades");
-      ChannelsStrings CurrentUser=new ChannelsStrings("currentuser");
-      ChannelsStrings Signout=new ChannelsStrings("signout");
+        //every channels need a string to indentify so we use an class to handle it
+        ChannelsStrings SignIn = new ChannelsStrings("signin");
+        ChannelsStrings SignUp = new ChannelsStrings("signup");
+        ChannelsStrings ZaringPal = new ChannelsStrings("zarinpal");
+        ChannelsStrings Getcities = new ChannelsStrings("cities");
+        ChannelsStrings Getgrades = new ChannelsStrings("grades");
+        ChannelsStrings CurrentUser = new ChannelsStrings("currentuser");
+        ChannelsStrings Signout = new ChannelsStrings("signout");
 
-      //server address :
-      final String servAd = "http://192.168.1.4:8000";
-
-
-
-              //signin
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignIn.getChannelsString())
-                         .setMethodCallHandler(((call, result) ->
-                         {
-                        if(call.method.equals("signin"))
-                        {
-                          MainThreadResult mainresult=new MainThreadResult(result);
+        //server address :
+        final String servAd = "http://192.168.1.7:8000";
 
 
-                          // prepare construcors params
-                          HashMap<String,String> info=new HashMap<>();
-                          String path = servAd + "/api/token/";
-                          OkHttpClient client=new OkHttpClient();
+        //signin
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), SignIn.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    if (call.method.equals("signin")) {
+                        //test1
+                        Log.i("signin arguments ---> ", call.arguments.toString());
 
-                          //set params to hashmap
-                          info.put("username",call.argument("username"));
-                          info.put("password",call.argument("password"));
-                          //Each request requires a header, the key and value of which must be
-                          // defined in the hash map with the following strings.
-                          info.put(new Header().getKayheader(),new Header().getValueheader());
-                          info.put(new Header().getKeyvalue(),new Header().getValueval());
+                        MainThreadResult mainresult = new MainThreadResult(result);
 
-                          //send request
-                          RequestforServer requestforServer=new RequestforServer(client,path,info);
 
-                            try {
-                              //get feedback from server
-                              client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
+                        // prepare construcors params
+                        HashMap<String, String> info = new HashMap<>();
+                        String path = servAd + "/api/token/";
+                        OkHttpClient client = new OkHttpClient();
+
+                        //set params to hashmap
+                        info.put("username", call.argument("username"));
+                        info.put("password", call.argument("password"));
+                        //Each request requires a header, the key and value of which must be
+                        // defined in the hash map with the following strings.
+                        info.put(new Header().getKayheader(), new Header().getValueheader());
+                        info.put(new Header().getKeyvalue(), new Header().getValueval());
+
+                        //send request
+                        RequestforServer requestforServer = new RequestforServer(client, path, info);
+
+                        try {
+                            //get feedback from server
+                            client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
                                 //failed response
                                 @Override
                                 public void onFailure(Call call, IOException e) {
-                                  mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست","خطا", null);
+                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
                                 }
+
                                 //request recieved to server so now we can get require feedback
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
-                                  if(response.isSuccessful())
-                                      {
+                                    if (response.isSuccessful()) {
                                         MainActivity.this.runOnUiThread(new Runnable() {
-                                          @Override
-                                          public void run() {
-                                            //convert response to string
-                                            String token= null;
-                                            try {
-                                              token = response.body().string();
-                                            } catch (IOException e) {
-                                              mainresult.error("failed in sign in",e.getMessage(),null);
+                                            @Override
+                                            public void run() {
+                                                //convert response to string
+                                                String token = null;
+                                                try {
+                                                    token = response.body().string();
+                                                } catch (IOException e) {
+                                                    mainresult.error("failed in sign in", e.getMessage(), null);
+                                                }
+                                                //parse json
+                                                JsonParser jsonParser = new JsonParser();
+                                                try {
+                                                    //save token
+                                                    SharePref pref = new SharePref(getApplicationContext());
+                                                    pref.save("token", jsonParser.token(token));
+                                                } catch (JSONException e) {
+                                                    mainresult.error("failed in sign in", e.getMessage(), null);
+                                                }
+                                                //return feedback
+                                                mainresult.success(0);
                                             }
-                                            //parse json
-                                            JsonParser jsonParser=new JsonParser();
-                                            try {
-                                              //save token
-                                              SharePref pref=new SharePref(getApplicationContext());
-                                              pref.save("token",jsonParser.token(token));
-                                            } catch (JSONException e) {
-                                              mainresult.error("failed in sign in",e.getMessage(),null);
-                                            }
-                                            //return feedback
-                                            mainresult.success(0);
-                                          }
                                         });
 
-                                      }
-                                  else if(response.code()==401) {
-                                    MainActivity.this.runOnUiThread(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                        mainresult.error("خطا در انجام مراحل ثبت نام","خطا", null);
-                                      }
-                                    });
-                                  }
-
-                                  else {
-                                    mainresult.error("خطای پیشبینی نشده","خطا", null);
-                                  }
+                                    } else if (response.code() == 401) {
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mainresult.error("خطا در انجام مراحل ثبت نام", "خطا", null);
+                                            }
+                                        });
+                                    } else {
+                                        Log.i("response code :", "" + response.code());
+                                        mainresult.error("رمز عبور نادرست", "خطا", null);
+                                    }
                                 }
-                              });
-                            } catch (IOException e) {
-                              mainresult.error("failed in sign in",e.getMessage(),null);
-                            }
-
-
-
+                            });
+                        } catch (IOException e) {
+                            mainresult.error("failed in sign in", e.getMessage(), null);
                         }
 
 
-                      } ));
+                    }
 
 
-              //GET for list of cities and grades
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Getcities.getChannelsString())
-                          .setMethodCallHandler(((call, result) ->
-                          {
-                            if(call.method.equals("cities"))
-                            {
-                              MainThreadResult mainresult=new MainThreadResult(result);
-
-                              //use get method to get list of cities and grades
-                              String path= servAd + "/signup/";
-                              HashMap<String,String> header =new HashMap<>();
-                              header.put(new Header().getKayheader(),new Header().getValueheader());
-                              header.put(new Header().getKeyvalue(),new Header().getValueval());
+                }));
 
 
-                              OkHttpClient client=new OkHttpClient();
-                              RequestforServer requestforServer=new RequestforServer(client,path,header);
+        //GET for list of cities and grades
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), Getcities.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    if (call.method.equals("cities")) {
+                        MainThreadResult mainresult = new MainThreadResult(result);
 
-                              try {
-                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
-                                  @Override
-                                  public void onFailure(Call call, IOException e) {
-                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
-
-                                  }
-
-                                  @Override
-                                  public void onResponse(Call call, Response response) throws IOException
-                                  {
-                                    if(response.isSuccessful())
-                                            try {
-                                              //get json
-                                              String maplist=response.body().string();
-                                              //parse json
-
-                                              JsonParser jsonParser=new JsonParser();
-                                              //send hashmap
-                                              HashMap<String, String> map = jsonParser.getcities(maplist);
-                                              mainresult.success(map);
-                                            } catch (IOException | JSONException e) {
-                                              mainresult.error("failed in get method",e.getMessage(),null);
-                                            }
-
-                                  }
-                                });
-                              } catch (IOException e) {
-                                mainresult.error("failed in get method",e.getMessage(),null);
-                              }
+                        //use get method to get list of cities and grades
+                        String path = servAd + "/signup/";
+                        HashMap<String, String> header = new HashMap<>();
+                        header.put(new Header().getKayheader(), new Header().getValueheader());
+                        header.put(new Header().getKeyvalue(), new Header().getValueval());
 
 
-                            }
+                        OkHttpClient client = new OkHttpClient();
+                        RequestforServer requestforServer = new RequestforServer(client, path, header);
 
-                          }));
+                        try {
+                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست", "خطا", null);
 
+                                }
 
-              //GET for list of cities and grades
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Getgrades.getChannelsString())
-                      .setMethodCallHandler(((call, result) ->
-                          {
-                            if(call.method.equals("grades"))
-                            {
-                              MainThreadResult mainresult=new MainThreadResult(result);
-
-
-                              //use get method to get list of cities and grades
-                              String path = servAd + "/signup/";
-                              HashMap<String,String> header =new HashMap<>();
-                              header.put(new Header().getKayheader(),new Header().getValueheader());
-                              header.put(new Header().getKeyvalue(),new Header().getValueval());
-
-
-                              OkHttpClient client=new OkHttpClient();
-                              RequestforServer requestforServer=new RequestforServer(client,path,header);
-
-                              try {
-                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
-                                  @Override
-                                  public void onFailure(Call call, IOException e) {
-                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست","خطا", null);
-
-                                  }
-
-                                  @Override
-                                  public void onResponse(Call call, Response response) throws IOException
-                                  {
-                                    if(response.isSuccessful())
-                                    {
-                                          try {
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful())
+                                        try {
                                             //get json
-                                            String maplist=response.body().string();
+                                            String maplist = response.body().string();
                                             //parse json
-                                            JsonParser jsonParser=new JsonParser();
+
+                                            JsonParser jsonParser = new JsonParser();
                                             //send hashmap
-                                            mainresult.success(jsonParser.getgrades(maplist));
-                                          } catch (IOException | JSONException e) {
-                                            mainresult.error("failed in get method",e.getMessage(),null);
-                                          }
+                                            HashMap<String, String> map = jsonParser.getcities(maplist);
+                                            mainresult.success(map);
+                                        } catch (IOException | JSONException e) {
+                                            mainresult.error("failed in get method", e.getMessage(), null);
                                         }
 
-                                  }
-                                });
-                              } catch (IOException e) {
-                                mainresult.error("failed in get method",e.getMessage(),null);
-                              }
+                                }
+                            });
+                        } catch (IOException e) {
+                            mainresult.error("failed in get method", e.getMessage(), null);
+                        }
 
 
-                            }
+                    }
 
-                          }));
-
-              //signup
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),SignUp.getChannelsString())
-                          .setMethodCallHandler(
-                          ((call, result) ->
-                          {
-                            if(call.method.equals("signup"))
-                            {
-                              MainThreadResult mainresult=new MainThreadResult(result);
-
-                              //create require params for constructor
-                              HashMap<String,String> info=new HashMap<>();
-                              String path = servAd + "/signup/";
-                              OkHttpClient client=new OkHttpClient();
-
-                              //set params to hashmap
-                              info.put("firstname",call.argument("username"));
-                              info.put("lastname",call.argument("lastname"));
-                              info.put("gender",call.argument("gender"));
-                              info.put("phonenuber",call.argument("phonenumber"));
-                              info.put("grade",call.argument("grade"));
-                              info.put("city",call.argument("city"));
-                              //Each request requires a header, the key and value of which must be
-                              // defined in the hash map with the following strings.
-                              info.put(new Header().getKayheader(),new Header().getValueheader());
-                              info.put(new Header().getKeyvalue(),new Header().getValueval());
+                }));
 
 
-                              //send request
-                              RequestforServer requestforServer=new RequestforServer(client,path,info);
+        //GET for list of cities and grades
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), Getgrades.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    if (call.method.equals("grades")) {
+                        MainThreadResult mainresult = new MainThreadResult(result);
 
-                              try {
-                                client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
-                                  @Override
-                                  public void onFailure(Call call, IOException e)
-                                  {
-                                    mainresult.error("انجام عملیات ثبت نام در حال حاضر ممکن نیست","خطا", null);
 
-                                  }
+                        //use get method to get list of cities and grades
+                        String path = servAd + "/signup/";
+                        HashMap<String, String> header = new HashMap<>();
+                        header.put(new Header().getKayheader(), new Header().getValueheader());
+                        header.put(new Header().getKeyvalue(), new Header().getValueval());
 
-                                  @Override
-                                  public void onResponse(Call call, Response response) throws IOException {
-                                    if(response.isSuccessful())
-                                    {
-                                      switch (response.body().string())
-                                      {
-                                        case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
-                                          mainresult.success("ثبت نام با موفقیت انجام شد");
-                                          break;
-                                        case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                          mainresult.error("خطا","شماره وارد شده نامعتبر است", null);
-                                          break;
-                                        case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}"  :
-                                          mainresult.error("خطا","کاربر با این نام کاربری از قبل موجود است", null);
-                                          break;
-                                        case  "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                          mainresult.error("خطا","در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
-                                          break;
-                                        default:
-                                          mainresult.error("خطا","ثبت نام ناموفق" ,null);
-                                      }
+
+                        OkHttpClient client = new OkHttpClient();
+                        RequestforServer requestforServer = new RequestforServer(client, path, header);
+
+                        try {
+                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mainresult.error("دریافت لیست شهر ها از سوی سرور در حال حاضر مقدور نیست", "خطا", null);
+
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        try {
+                                            //get json
+                                            String maplist = response.body().string();
+                                            //parse json
+                                            JsonParser jsonParser = new JsonParser();
+                                            //send hashmap
+                                            mainresult.success(jsonParser.getgrades(maplist));
+                                        } catch (IOException | JSONException e) {
+                                            mainresult.error("failed in get method", e.getMessage(), null);
+                                        }
                                     }
-                                    if(response.code()==401)mainresult.error("error","خطا در برقراری ارتباط", null);
-                                    else {mainresult.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);}
+
+                                }
+                            });
+                        } catch (IOException e) {
+                            mainresult.error("failed in get method", e.getMessage(), null);
+                        }
 
 
-                                  }
-                                });
-                              } catch (IOException e) {
-                                mainresult.error("failed in sign up","",null);
-                              }
+                    }
 
-                            }
+                }));
 
-                          }));
+        //signup
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), SignUp.getChannelsString())
+                .setMethodCallHandler(
+                        ((call, result) ->
+                        {
+                            if (call.method.equals("signup")) {
+                                MainThreadResult mainresult = new MainThreadResult(result);
 
-              //current user
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),CurrentUser.getChannelsString())
-                      .setMethodCallHandler((call, result) ->
-                          {
-                              if(call.method.equals("currentuser"))
-                                {
-                                  MainThreadResult mainresult=new MainThreadResult(result);
+                                //create require params for constructor
+                                HashMap<String, String> info = new HashMap<>();
+                                String path = servAd + "/signup/";
+                                OkHttpClient client = new OkHttpClient();
 
-                                  SharePref pref=new SharePref(getApplicationContext());
-                                  String token = pref.load("token");
-                                  if(token == null || token.isEmpty()) result.success(null);
-                                  else
-                                  {
-                                    //use get method to get list of cities and grades
-                                    String path = servAd + "/api/token/";
-                                    HashMap<String,String> header =new HashMap<>();
-                                    header.put(new Header().getKayheader(),"Authorization");
-                                    header.put(new Header().getKeyvalue(),"Token "+pref.load("token"));
+                                //set params to hashmap
+                                info.put("firstname", call.argument("firstname"));
+                                info.put("lastname", call.argument("lastname"));
+                                info.put("username", call.argument("username"));
+                                info.put("gender", call.argument("gender"));
+                                info.put("phonenuber", call.argument("phonenumber"));
+                                info.put("grade", call.argument("grade"));
+                                info.put("city", call.argument("city"));
+
+                                //test1 for signup
+                              Log.i("arguments___", call.argument("firstname").toString());
+                              Log.i("arguments___", call.argument("gender").toString());
+                              Log.i("arguments___", call.argument("city").toString());
+                              Log.i("arguments___", call.argument("grade").toString());
+                              Log.i("arguments___", call.argument("username").toString());
+                              Log.i("arguments___", call.argument("lastname").toString());
+                              Log.i("arguments___", call.argument("phonenumber").toString());
+
+                                //Each request requires a header, the key and value of which must be
+                                // defined in the hash map with the following strings.
+                                info.put(new Header().getKayheader(), new Header().getValueheader());
+                                info.put(new Header().getKeyvalue(), new Header().getValueval());
 
 
-                                    OkHttpClient client=new OkHttpClient();
-                                    RequestforServer requestforServer=new RequestforServer(client,path,header);
+                                //send request
+                                RequestforServer requestforServer = new RequestforServer(client, path, info);
 
-                                    try {
-                                      client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                try {
+                                    client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
                                         @Override
                                         public void onFailure(Call call, IOException e) {
-                                          // fixme : handel 401 and other errors with result.error(...)
-                                          mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست","خطا", null);
+                                            mainresult.error("خطا", "انجام عملیات ثبت نام در حال حاضر ممکن نیست", null);
+
                                         }
 
                                         @Override
                                         public void onResponse(Call call, Response response) throws IOException {
-
-                                          MainActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                              if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
-
-                                              else
-                                                {
-                                                  try {
-                                                    String message =response.body().string();
-                                                    mainresult.success(new JsonParser().currentUser(message));
-
-                                                  }
-                                                  catch (IOException | JSONException e) {
-                                                    e.printStackTrace();
-
-                                                  }
+                                            if (response.isSuccessful()) {
+                                                switch (response.body().string()) {
+                                                    case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
+                                                        mainresult.success("ثبت نام با موفقیت انجام شد");
+                                                        break;
+                                                    case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
+                                                        mainresult.error("خطا", "شماره وارد شده نامعتبر است", null);
+                                                        break;
+                                                    case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}":
+                                                        mainresult.error("خطا", "کاربر با این نام کاربری از قبل موجود است", null);
+                                                        break;
+                                                    case "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
+                                                        mainresult.error("خطا", "در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
+                                                        break;
+                                                    default:
+                                                        mainresult.error("خطا", "ثبت نام ناموفق", null);
                                                 }
                                             }
-                                          });
+                                            if (response.code() == 401)
+                                                mainresult.error("error", "خطا در برقراری ارتباط", null);
+                                            else {
+                                                mainresult.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);
+                                            }
+
 
                                         }
-                                      });
-                                    } catch (IOException e) {
-                                      e.printStackTrace();
-                                    }
-                                  }
-
+                                    });
+                                } catch (IOException e) {
+                                    mainresult.error("failed in sign up", "", null);
                                 }
 
+                            }
 
-                          });
+                        }));
 
-              //sign out
-              new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Signout.getChannelsString())
-                      .setMethodCallHandler((call, result) ->
-                          {
-                            if(call.method.equals("signout"))
-                              {
-                                  SharePref signout=new SharePref();
-                                  signout.save("token",null);
-                                  result.success(true);
+        //current user
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CurrentUser.getChannelsString())
+                .setMethodCallHandler((call, result) ->
+                {
+                    if (call.method.equals("currentuser")) {
+                        Log.i("TAG", "enter to currentuser");
+                        MainThreadResult mainresult = new MainThreadResult(result);
 
-                              }
-                          });
+                        SharePref pref = new SharePref(getApplicationContext());
+                        String token = pref.load("token");
+                        Log.i("user token :: ", token);
+                        if (token == null || token.isEmpty()) result.success(null);
+                        else {
+                            //use get method to get list of cities and grades
+                            String path = servAd + "/dashboard/app_profile/";
+                            HashMap<String, String> header = new HashMap<>();
+                            header.put(new Header().getKayheader(), "Authorization");
+                            header.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
 
 
-    GeneratedPluginRegistrant.registerWith(flutterEngine);
+                            OkHttpClient client = new OkHttpClient();
+                            RequestforServer requestforServer = new RequestforServer(client, path, header);
 
-  }
+                            try {
+                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (response.code() == 403)
+                                                    mainresult.error("مشکل در ارتباط با سرور", "خطا", null);
+
+                                                else {
+                                                    try {
+                                                        String message = response.body().string();
+                                                        mainresult.success(new JsonParser().currentUser(message));
+
+                                                    } catch (Exception e/* | JSONException e*/) {
+                                                        e.printStackTrace();
+
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+
+
+                });
+
+        //sign out
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), Signout.getChannelsString())
+                .setMethodCallHandler((call, result) ->
+                {
+                    MainThreadResult mainresult = new MainThreadResult(result);
+                    try {
+                        if (call.method.equals("signout")) {
+                            SharePref signout = new SharePref();
+                            signout.save("token", null);
+                            mainresult.success(true);
+                        }
+                    } catch (Exception e) {
+                        mainresult.error(e.toString(), "خطا", null);
+                    }
+                });
+
+
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
+
+    }
 
 }
