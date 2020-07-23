@@ -181,16 +181,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           detail: err.code,
         ));
       } catch (err) {
-//        print('error happend in flutter code!');
         print(err.toString());
       }
       yield SignInLoadingFinished();
-//      yield user == null
-//          ? AuthenticationError(
-//              message: "ناموفق",
-//              details:
-//                  "اشکال در ارتباط با سرور یا رمز و کلمه عبور نامعتبر می باشد.")
-//          : Home();
       if(user != null)
         yield Home();
 
@@ -208,18 +201,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           detail: err.code,
         ));
       } catch (err) {
-        print('error happend in flutter code!');
+        print(err.toString());
       }
       yield SignUpLoadingFinished();
-      if(result != null)
+      if(result != null) {
+        this.add(CatchError(
+          message: 'موفق',
+          detail: 'ثبت نام شما با موفقیت به پایان رسید . رمز عبور به شماره همراه شما ارسال خواهد شد',
+        ));
         yield SignIn();
-//      print(result);
-//      yield result == null
-//          ? AuthenticationError(
-//              message: "ناموفق",
-//              details: "عملیات ثبت نام با اشکال مواجه شده لطفا بعدا دوباره تلاش کنید.")
-//          : SignIn();
-
+      }
     }
 
     else if (event is GoAuthenticationPage) {

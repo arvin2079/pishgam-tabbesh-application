@@ -31,6 +31,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -53,7 +54,7 @@ public class MainActivity extends FlutterActivity {
         ChannelsStrings Signout = new ChannelsStrings("signout");
 
         //server address :
-        final String servAd = "http://192.168.1.7:8000";
+        final String servAd = "http://192.168.1.6:8000";
 
 
         //signin
@@ -99,24 +100,27 @@ public class MainActivity extends FlutterActivity {
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                //convert response to string
-                                                String token = null;
+
                                                 try {
-                                                    token = response.body().string();
-                                                } catch (IOException e) {
-                                                    mainresult.error("failed in sign in", e.getMessage(), null);
+                                                    String message;
+                                                    switch (response.code()) {
+                                                        case 400:
+                                                            message = "اطلاعات وارد شده نامعتبر میباشد";
+                                                            break;
+                                                        case 401:
+                                                            message = "اشکال در اراباط با سرور";
+                                                            break;
+                                                        case 404:
+                                                            message = "404";
+                                                            break;
+                                                        case 200:
+                                                            saveToken(response, result);
+                                                            break;
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    mainresult.error("error2", "failed", null);
                                                 }
-                                                //parse json
-                                                JsonParser jsonParser = new JsonParser();
-                                                try {
-                                                    //save token
-                                                    SharePref pref = new SharePref(getApplicationContext());
-                                                    pref.save("token", jsonParser.token(token));
-                                                } catch (JSONException e) {
-                                                    mainresult.error("failed in sign in", e.getMessage(), null);
-                                                }
-                                                //return feedback
-                                                mainresult.success(0);
                                             }
                                         });
 
@@ -252,7 +256,7 @@ public class MainActivity extends FlutterActivity {
         //signup
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), SignUp.getChannelsString())
                 .setMethodCallHandler(
-                        ((call, result) ->
+                        (call, result) ->
                         {
                             if (call.method.equals("signup")) {
                                 MainThreadResult mainresult = new MainThreadResult(result);
@@ -262,77 +266,84 @@ public class MainActivity extends FlutterActivity {
                                 String path = servAd + "/signup/";
                                 OkHttpClient client = new OkHttpClient();
 
+//                                String json = "{\"username\" : " + call.argument("username") + "," +
+//                                        "\"first_name\" : " + call.argument("firstname") + " ," +
+//                                        " \"last_name\" :" + call.argument("lastname") + "," +
+//                                        "\"gender\" : " + call.argument("gender") + " ," +
+//                                        "\"phone_number\" : " + call.argument("phonenumber") + ", " +
+//                                        "\"grades\" : " + "[" + call.argument("grades") + "] " + ", " +
+//                                        "\"city\" : " + call.argument("city") + " }";
+//                                Log.i("my request json ----> ", json);
+
+                                String json = "{\"username\" : \"" + call.argument("username") + "\" ,\"first_name\" : \"" + call.argument("firstname") + "\" , \"last_name\" : \"" + call.argument("lastname") + "\" ,\"gender\" : \"" + call.argument("gender") + "\" ,\"phone_number\" : \"" + call.argument("phonenumber") + "\" , \"grades\" : [\"" + call.argument("grades") + "\"] , \"city\" : \"" + call.argument("city") + "\" }";
+                                Log.i("second jasonbody--->", json);
+
+                                Request request = new Request.Builder()
+                                        .header(new Header().getValueheader(), new Header().getValueval())
+                                        .url(path)
+                                        .post(RequestBody
+                                                .create(MediaType
+                                                        .parse("application/json"), json))
+                                        .build();
+
+//                                Log.i("my request body ----> ", request.body().toString());
+
+
                                 //set params to hashmap
-                                info.put("firstname", call.argument("firstname"));
-                                info.put("lastname", call.argument("lastname"));
-                                info.put("username", call.argument("username"));
-                                info.put("gender", call.argument("gender"));
-                                info.put("phonenuber", call.argument("phonenumber"));
-                                info.put("grade", call.argument("grade"));
-                                info.put("city", call.argument("city"));
-
-                                //test1 for signup
-                              Log.i("arguments___", call.argument("firstname").toString());
-                              Log.i("arguments___", call.argument("gender").toString());
-                              Log.i("arguments___", call.argument("city").toString());
-                              Log.i("arguments___", call.argument("grade").toString());
-                              Log.i("arguments___", call.argument("username").toString());
-                              Log.i("arguments___", call.argument("lastname").toString());
-                              Log.i("arguments___", call.argument("phonenumber").toString());
-
-                                //Each request requires a header, the key and value of which must be
-                                // defined in the hash map with the following strings.
-                                info.put(new Header().getKayheader(), new Header().getValueheader());
-                                info.put(new Header().getKeyvalue(), new Header().getValueval());
-
 
                                 //send request
-                                RequestforServer requestforServer = new RequestforServer(client, path, info);
 
-                                try {
-                                    client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
-                                        @Override
-                                        public void onFailure(Call call, IOException e) {
-                                            mainresult.error("خطا", "انجام عملیات ثبت نام در حال حاضر ممکن نیست", null);
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        mainresult.error("خطا", "انجام عملیات ثبت نام در حال حاضر ممکن نیست", null);
+                                    }
 
-                                        }
-
-                                        @Override
-                                        public void onResponse(Call call, Response response) throws IOException {
-                                            if (response.isSuccessful()) {
-                                                switch (response.body().string()) {
-                                                    case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
-                                                        mainresult.success("ثبت نام با موفقیت انجام شد");
-                                                        break;
-                                                    case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
-                                                        mainresult.error("خطا", "شماره وارد شده نامعتبر است", null);
-                                                        break;
-                                                    case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}":
-                                                        mainresult.error("خطا", "کاربر با این نام کاربری از قبل موجود است", null);
-                                                        break;
-                                                    case "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
-                                                        mainresult.error("خطا", "در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
-                                                        break;
-                                                    default:
-                                                        mainresult.error("خطا", "ثبت نام ناموفق", null);
-                                                }
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        Log.i("my response code ----> ", response.code() + "");
+                                        if (response.isSuccessful()) {
+                                            String message;
+                                            switch (response.code()) {
+                                                case 200:
+                                                    message = "ثبت نام با موفقیت انجام شد";
+                                                    break;
+                                                case 406:
+                                                    message = "کاربر با این مشخصات موجود می باشد";
+                                                    break;
+                                                case 401:
+                                                    message = "خطا در برقراری ارتباط با سرور";
+                                                    break;
+                                                default:
+                                                    message = "اشکال در انجام عملیات ثبت نام";
+                                                    break;
                                             }
-                                            if (response.code() == 401)
-                                                mainresult.error("error", "خطا در برقراری ارتباط", null);
-                                            else {
-                                                mainresult.error("خطا", "در حال حاظر عملیات ثبت نام ممکن نیست", null);
-                                            }
-
-
+                                            Log.i("messsssage--->", message);
+                                            mainresult.success(message);
+//                                            switch (response.body().string()) {
+//                                                case "{'signup_success': 'ثبت نام با موفقیت انجام شد.'}":
+//                                                    mainresult.success("ثبت نام با موفقیت انجام شد");
+//                                                    break;
+//                                                case " { \"non_field_errors\": [\"شماره وارد شده نامعتبر است\"] }  ":
+//                                                    mainresult.error("خطا", "شماره وارد شده نامعتبر است", null);
+//                                                    break;
+//                                                case "{\"username\": [ \"کاربر با این نام کاربری از قبل موجود است.\"]}":
+//                                                    mainresult.error("خطا", "کاربر با این نام کاربری از قبل موجود است", null);
+//                                                    break;
+//                                                case "{ \"non_field_errors\": [\"خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید\"] }   ":
+//                                                    mainresult.error("خطا", "در انجام عملیبات ثبت نام خطایی رخ داده است . لطفا یک بار دیگر تلاش کنید یا با پشتیبان تماس بگیرید", null);
+//                                                    break;
+//                                                default:
+//                                                    mainresult.error("خطا", "ثبت نام ناموفق", null);
+//                                            }
                                         }
-                                    });
-                                } catch (IOException e) {
-                                    mainresult.error("failed in sign up", "", null);
-                                }
+                                    }
+                                });
 
                             }
 
-                        }));
+                        });
+
 
         //current user
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CurrentUser.getChannelsString())
@@ -417,6 +428,24 @@ public class MainActivity extends FlutterActivity {
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
 
+    }
+
+    private void saveToken(Response response, MethodChannel.Result result) throws JSONException{
+        MainThreadResult mainresult = new MainThreadResult(result);
+//        try {
+            //convert response to string
+            String token = null;
+            token = response.body().string().trim();
+        Log.i("saved token ---> ", token);
+            //parse json
+            JsonParser jsonParser = new JsonParser();
+            //save token
+            SharePref pref = new SharePref(getApplicationContext());
+            pref.save("token", jsonParser.token(token));
+            mainresult.success(null);
+//        } catch (Exception e) {
+//            mainresult.error("error1" , "failed", null);
+//        }
     }
 
 }

@@ -85,6 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     try {
+      print("value of gender >> " + _radioGroupController.getValue.toString());
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
           !widget.firstnameValidator.isValid(_nameController.text) ||
           !widget.lastnameValidator.isValid(_familyNameController.text) ||

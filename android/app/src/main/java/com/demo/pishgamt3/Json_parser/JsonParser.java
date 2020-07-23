@@ -32,7 +32,7 @@ public class JsonParser {
             JSONObject city = cities.getJSONObject(i);
             //get title and code
             String title = city.getString("title");
-            String code = city.getString("code");
+            String code = city.getString("id");
             //set in hashmap
             hashMap.put(title, code);
 
@@ -53,7 +53,7 @@ public class JsonParser {
             JSONObject grade = grades.getJSONObject(i);
             //get title and code
             String title = grade.getString("title");
-            String code = grade.getString("code");
+            String code = grade.getString("id");
             //set in hashmap
             hashMap.put(title, code);
 
