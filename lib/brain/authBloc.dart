@@ -81,7 +81,6 @@ class Home extends AuthState {
 }
 
 class SignIn extends AuthState {
-
   @override
   List<Object> get props => [];
 }
@@ -112,7 +111,6 @@ class AuthenticationError extends AuthState {
 // todo : platform Exception
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-
   final Auth auth = Auth();
 
   @override
@@ -142,9 +140,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         User user;
         try {
           user = await auth.currentUser();
-          print('sssssss');
           print(user.toString());
-          print('sssssss');
           await auth.initCitiesMap();
           await auth.initGradesMap();
         } on PlatformException catch (err) {
@@ -153,14 +149,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             detail: err.code,
           ));
         } catch (err) {
-          print('error --> '+err.toString());
+          print('error --> ' + err.toString());
 //          print('error happend in flutter code!');
         }
         yield user == null ? StartAnimation() : Home();
       } else {
         yield AuthenticationError(
             message: "اشکال در اتصال به اینترنت",
-            details: "لطفا از اتصال خود به اینترنت اطمینان حاصل کرده و دوباره تلاش کنید.",
+            details:
+                "لطفا از اتصال خود به اینترنت اطمینان حاصل کرده و دوباره تلاش کنید.",
             onPressed: () async {
               await Future.delayed(Duration(milliseconds: 500));
               this.add(CheckIfSignedInBefor());
@@ -170,11 +167,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     else if (event is DoSignIn) {
       yield SignInIsLoadingSta();
-      User user;
       try {
-        print('befor');
-        user = await auth.signin(username: event.username, password: event.password);
-        print('after');
+        await auth.signin(username: event.username, password: event.password);
       } on PlatformException catch (err) {
         this.add(CatchError(
           message: err.message,
@@ -184,8 +178,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(err.toString());
       }
       yield SignInLoadingFinished();
-      if(user != null)
-        yield Home();
+      yield Home();
 
       //fixme : close bloc stream for home() and create new bloc for home()
     }
@@ -204,7 +197,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(err.toString());
       }
       yield SignUpLoadingFinished();
-      if(result != null) {
+      if (result != null) {
         this.add(CatchError(
           message: 'موفق',
           detail: 'ثبت نام شما با موفقیت به پایان رسید . رمز عبور به شماره همراه شما ارسال خواهد شد',
@@ -215,7 +208,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     else if (event is GoAuthenticationPage) {
       yield SignIn();
-    } else if (event is CatchError) {
+    }
+
+    else if (event is CatchError) {
       yield AuthenticationError(
         message: event.message,
         details: event.detail,

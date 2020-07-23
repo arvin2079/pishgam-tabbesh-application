@@ -9,7 +9,7 @@ abstract class AuthBase {
 
   Future<String> signup({@required User user});
 
-  Future<User> signin({@required String username, @required String password});
+  Future<void> signin({@required String username, @required String password});
 
   Future<bool> signout();
 
@@ -132,22 +132,22 @@ class Auth extends AuthBase {
 
   //fixme : on back send user instead of 1/0
   @override
-  Future<User> signin({String username, String password}) async {
+  Future<void> signin({String username, String password}) async {
     final String _methodName = 'signin';
     final Map<dynamic, dynamic> result = await _signInChannel.invokeMethod(
         _methodName, {"username": username, "password": password});
-    if (result != null) {
-      return User(
-        firstname: result["first_name"],
-        lastname: result["last_name"],
-        username: result["user_name"],
-        password: result["password"],
-        gender: result["gender"],
-        phoneNumber: result["phone_number"],
-        grade: result["grades"],
-        avatar: result["avatar"],
-      );
-    }
+//    if (result != null) {
+//      return User(
+//        firstname: result["first_name"],
+//        lastname: result["last_name"],
+//        username: result["user_name"],
+//        password: result["password"],
+//        gender: result["gender"],
+//        phoneNumber: result["phone_number"],
+//        grade: result["grades"],
+//        avatar: result["avatar"],
+//      );
+//    }
   }
 
   @override
