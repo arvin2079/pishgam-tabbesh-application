@@ -1,7 +1,5 @@
 package com.demo.pishgamt3.Requesr_for_server;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,11 +55,10 @@ public class RequestforServer {
                             final Request request=new Request.Builder()
                                     .url(url_path)
                                     .post(requestBody)
-//                                    .addHeader("Accept", "application/json")
-                                    .addHeader("Content-Type", "application/json")
-                                    .addHeader(info.get("nameOfheader"),info.get("valueOfheader"))
-                                    .build();
 
+                                    .addHeader(info.get("nameOfheader"),info.get("valueOfheader"))
+
+                                    .build();
 
                 //return request for getting response in main class
                 return request;
