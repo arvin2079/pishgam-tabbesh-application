@@ -375,18 +375,20 @@ public class MainActivity extends FlutterActivity {
                                     @Override
                                     public void onResponse(Call call, Response response) throws IOException {
 
-                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                        Handler handler=new Handler(Looper.getMainLooper());
+                                        handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (response.code() == 403)
-                                                    mainresult.error("مشکل در ارتباط با سرور", "خطا", null);
+                                                if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
 
-                                                else {
+                                                else
+                                                {
                                                     try {
-                                                        String message = response.body().string();
+                                                        String message =response.body().string();
                                                         mainresult.success(new JsonParser().currentUser(message));
 
-                                                    } catch (Exception e/* | JSONException e*/) {
+                                                    }
+                                                    catch (IOException | JSONException e) {
                                                         e.printStackTrace();
 
                                                     }
@@ -494,8 +496,62 @@ public class MainActivity extends FlutterActivity {
                         HashMap<String, String> info = new HashMap<>();
                         String path = servAd + "/signup/";
                         OkHttpClient client = new OkHttpClient();
-                        String json = "{\"username\" : \"" + call.argument("username") + "\" ,\"first_name\" : \"" + call.argument("firstname") + "\" , \"last_name\" : \"" + call.argument("lastname") + "\" ,\"gender\" : \"" + call.argument("gender") + "\" ,\"phone_number\" : \"" + call.argument("phonenumber") + "\" , \"grades\" : [\"" + call.argument("grades") + "\"] , \"city\" : \"" + call.argument("city") + "\" }";
+                        String json = "{\"username\" : \"" + call.argument("username")
+                                + "\" ,\"first_name\" : \"" + call.argument("firstname")
+                                + "\" , \"last_name\" : \"" + call.argument("lastname")
+                                + "\" ,\"gender\" : \"" + call.argument("gender")
+                                + "\" ,\"email\" : \"" + call.argument("email")
+                                + "\" , \"grades\" : [\"" + call.argument("grades")
+                                + "\"] , \"city\" : \"" + call.argument("city") + "\" }";
                         Log.i("second jasonbody--->", json);
+
+                        SharePref pref = new SharePref(getApplicationContext());
+                        String token = pref.load("token");
+
+                        Request request = new Request.Builder()
+                                .header("Authorization","Token " + pref.load("token"))
+                                .url(path)
+                                .post(RequestBody
+                                        .create(MediaType
+                                                .parse("application/json"), json))
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e)
+                            {
+                                mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException
+                            {
+
+                                Handler handler=new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if(response.isSuccessful())
+                                        {
+
+                                                    mainresult.success("done");
+                                        }
+                                        if(response.code()==406)
+                                        {
+                                            mainresult.error("نام کاربری درست نیست", "خطا", null);
+
+
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
+
+
+
 
 
 
