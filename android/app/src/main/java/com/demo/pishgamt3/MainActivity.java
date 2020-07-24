@@ -54,6 +54,7 @@ public class MainActivity extends FlutterActivity {
         ChannelsStrings Acountlessons =new ChannelsStrings("acountlessons");
         ChannelsStrings Editprofile=new ChannelsStrings("editprof");
         ChannelsStrings Lessons =new ChannelsStrings("lessons");
+        ChannelsStrings ChangePass=new ChannelsStrings("changepass");
 
         //server address :
 //        final String servAd = "http://192.168.1.6:8000";
@@ -497,7 +498,7 @@ public class MainActivity extends FlutterActivity {
 
                         //create require params for constructor
                         HashMap<String, String> info = new HashMap<>();
-                        String path = servAd + "/signup/";
+                        String path = servAd + "/dashboard/edit_profile/";
                         OkHttpClient client = new OkHttpClient();
                         String json = "{\"username\" : \"" + call.argument("username")
                                 + "\" ,\"first_name\" : \"" + call.argument("firstname")
@@ -570,6 +571,73 @@ public class MainActivity extends FlutterActivity {
 
                      }
                  }));
+
+         //change pass
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),ChangePass.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    MainThreadResult mainresult = new MainThreadResult(result);
+
+
+                    // prepare construcors params
+                    HashMap<String, String> info = new HashMap<>();
+                    String path = servAd + "/dashboard/edit_profile/";
+                    OkHttpClient client = new OkHttpClient();
+
+                    SharePref pref = new SharePref(getApplicationContext());
+
+                    //set params to hashmap
+                    info.put("username", call.argument("username"));
+                    info.put("password", call.argument("password"));
+                    //Each request requires a header, the key and value of which must be
+                    // defined in the hash map with the following strings.
+                    info.put(new Header().getKayheader(), "Authorization");
+                    info.put(new Header().getKeyvalue(),"Token " + pref.load("token"));
+
+                    RequestforServer requestforServer = new RequestforServer(client, path, info);
+
+                    try {
+                        client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e)
+                            {
+                                mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException
+                            {
+                                Handler handler=new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if(response.isSuccessful())
+                                        {
+
+                                            mainresult.success("done");
+                                        }
+                                        if(response.code()==406)
+                                        {
+                                            mainresult.error("نام کاربری درست نیست", "خطا", null);
+
+
+                                        }
+                                    }
+                                });
+
+
+
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }));
 
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
