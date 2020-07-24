@@ -5,11 +5,14 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class JsonParser {
 
@@ -67,19 +70,6 @@ public class JsonParser {
 
 
         JSONObject jsonObject = new JSONObject(json);
-
-        //test
-        Log.i("in JsonParser --->", jsonObject.getString("first_name"));
-        Log.i("in JsonParser --->", jsonObject.getString("last_name"));
-        Log.i("in JsonParser --->", jsonObject.getString("username"));
-        Log.i("in JsonParser --->", jsonObject.getString("grade"));
-        Log.i("in JsonParser --->", jsonObject.getString("gender"));
-//        Log.i("in JsonParser --->", jsonObject.getString("email"));
-        Log.i("in JsonParser --->", jsonObject.getString("avatar"));
-        Log.i("in JsonParser --->", jsonObject.getString("phone_number"));
-        Log.i("in JsonParser --->", jsonObject.getString("cityTitle"));
-
-
         //fixme : check email
 //        hashMap.put("email", jsonObject.getString("email"));
         hashMap.put("firstname", jsonObject.getString("first_name"));
@@ -129,6 +119,34 @@ public class JsonParser {
              return  hashMap;
 
          }
+
+     public HashMap lessonslist(String json) throws JSONException {
+         HashMap hashMap=new HashMap();
+
+         JSONArray jsonArray=new JSONArray(json);
+         hashMap.put(0,jsonArray.length());
+         for (int i=0;i<jsonArray.length();i++)
+         {
+             HashMap lessons=new HashMap();
+             JSONObject jsonObject= (JSONObject) jsonArray.get(i);
+             lessons.put("code",jsonObject.getString("code"));
+             lessons.put("title",jsonObject.getString("title"));
+             lessons.put("start_date",jsonObject.getString("start_date"));
+             lessons.put("end_date",jsonObject.getString("end_date"));
+             lessons.put("image",jsonObject.getString("image"));
+             lessons.put("teacher",jsonObject.getString("teacher"));
+             lessons.put("url",jsonObject.getString("url"));
+             lessons.put("is_active",jsonObject.getString("is_active"));
+             lessons.put("first_class",jsonObject.getString("first_class"));
+             lessons.put("description",jsonObject.getString("description"));
+
+             hashMap.put(i+1,lessons);
+
+         }
+
+
+         return  hashMap;
+     }
 
 }
 

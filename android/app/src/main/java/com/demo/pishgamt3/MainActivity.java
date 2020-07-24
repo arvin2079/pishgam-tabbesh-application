@@ -256,9 +256,8 @@ public class MainActivity extends FlutterActivity {
 
         //signup
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), SignUp.getChannelsString())
-                .setMethodCallHandler(
-                        (call, result) ->
-                        {
+                .setMethodCallHandler( (call, result) ->
+               {
                             if (call.method.equals("signup")) {
                                 MainThreadResult mainresult = new MainThreadResult(result);
 
@@ -351,9 +350,8 @@ public class MainActivity extends FlutterActivity {
 
         //current user
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CurrentUser.getChannelsString())
-                  .setMethodCallHandler(
-                          (call, result) ->
-                        {
+                  .setMethodCallHandler((call, result) ->
+               {
                             if (call.method.equals("currentuser")) {
                                 Log.i("TAG", "enter to currentuser");
                                 MainThreadResult mainresult = new MainThreadResult(result);
@@ -574,6 +572,55 @@ public class MainActivity extends FlutterActivity {
                  {
                      if(call.method.equals("lessons"))
                      {
+                         MainThreadResult mainresult = new MainThreadResult(result);
+
+                         //use get method to get list of cities and grades
+                         String path = servAd + "/dashboard/get-lessons/";
+                         HashMap<String, String> header = new HashMap<>();
+                         header.put(new Header().getKayheader(), new Header().getValueheader());
+                         header.put(new Header().getKeyvalue(), new Header().getValueval());
+
+                         OkHttpClient client = new OkHttpClient();
+                         RequestforServer requestforServer = new RequestforServer(client, path, header);
+
+                         try {
+                             client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                 @Override
+                                 public void onFailure(Call call, IOException e)
+                                 {
+                                     mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+
+
+                                 }
+
+                                 @Override
+                                 public void onResponse(Call call, Response response) throws IOException
+                                 {
+                                     MainActivity.this.runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run()
+                                         {
+                                             if(response.isSuccessful())
+                                             {
+                                                String token=response.body().toString();
+                                                 try {
+                                                     mainresult.success(new JsonParser().lessonslist(token));
+                                                 } catch (JSONException e) {
+                                                     mainresult.error("خطا", "خطا", null);
+
+                                                 }
+
+                                             }
+
+                                         }
+                                     });
+
+
+                                 }
+                             });
+                         } catch (IOException e) {
+                             e.printStackTrace();
+                         }
 
                      }
                  }));
@@ -661,7 +708,7 @@ public class MainActivity extends FlutterActivity {
 
                     final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
 
-                    String filename ="";
+                    String filename =call.argument("image_path");
 
                     RequestBody requestBody = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
@@ -688,7 +735,7 @@ public class MainActivity extends FlutterActivity {
                         {
                             if(response.isSuccessful())
                             {
-
+                                mainresult.success(true);
                             }
 
                         }
