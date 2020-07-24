@@ -425,7 +425,7 @@ public class MainActivity extends FlutterActivity {
                     try {
                         if (call.method.equals("signout")) {
                             SharePref signout = new SharePref();
-                            signout.save("token", null);
+                            signout.save("token", "");
                             mainresult.success(true);
                         }
                     } catch (Exception e) {
