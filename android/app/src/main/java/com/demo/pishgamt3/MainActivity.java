@@ -47,11 +47,12 @@ public class MainActivity extends FlutterActivity {
         //every channels need a string to indentify so we use an class to handle it
         ChannelsStrings SignIn = new ChannelsStrings("signin");
         ChannelsStrings SignUp = new ChannelsStrings("signup");
-        ChannelsStrings ZaringPal = new ChannelsStrings("zarinpal");
+ 
         ChannelsStrings Getcities = new ChannelsStrings("cities");
         ChannelsStrings Getgrades = new ChannelsStrings("grades");
         ChannelsStrings CurrentUser = new ChannelsStrings("currentuser");
         ChannelsStrings Signout = new ChannelsStrings("signout");
+        ChannelsStrings Lessons =new ChannelsStrings("lessons");
 
         //server address :
 //        final String servAd = "http://192.168.1.6:8000";
@@ -420,6 +421,65 @@ public class MainActivity extends FlutterActivity {
                     }
                 });
 
+        //lessons
+
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Lessons.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    if(call.method.equals("lessons"))
+                        {
+                            MainThreadResult mainresult = new MainThreadResult(result);
+                            String path = servAd + "/dashboard/";
+                            OkHttpClient client = new OkHttpClient();
+
+                            SharePref pref = new SharePref(getApplicationContext());
+                            String token = pref.load("token");
+
+
+                            HashMap<String, String> header = new HashMap<>();
+
+                            header.put(new Header().getKayheader(), "Authorization");
+                            header.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
+
+                            RequestforServer requestforServer = new RequestforServer(client, path, header);
+
+                            try {
+                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException
+                                    {
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run()
+                                            {
+                                                String json=response.body().toString();
+                                                switch (response.code())
+                                                {
+                                                    case 403:
+                                                        mainresult.error("مشکل در ارتباط با سرور", "خطا", null);
+                                                        break;
+                                                    case  200:
+                                                        mainresult.success(new JsonParser().lessons(json));
+                                                        break;
+
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                }));
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
 
