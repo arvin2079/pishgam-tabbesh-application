@@ -12,6 +12,11 @@ abstract class AuthEvent extends Equatable {
   const AuthEvent();
 }
 
+class Signout extends AuthEvent{
+  @override
+  List<Object> get props => null;
+}
+
 class CheckIfSignedInBefor extends AuthEvent {
   @override
   List<Object> get props => [];
@@ -179,8 +184,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       yield SignInLoadingFinished();
       yield Home();
-
-      //fixme : close bloc stream for home() and create new bloc for home()
     }
 
     else if (event is DoSignUp) {
@@ -215,6 +218,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         message: event.message,
         details: event.detail,
       );
+    }
+
+    else if(event is Signout) {
+      auth.signOut();
+      yield SignIn();
     }
   }
 }
