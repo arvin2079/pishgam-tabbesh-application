@@ -54,6 +54,7 @@ public class MainActivity extends FlutterActivity {
         ChannelsStrings Acountlessons =new ChannelsStrings("acountlessons");
         ChannelsStrings Editprofile=new ChannelsStrings("editprof");
         ChannelsStrings Lessons =new ChannelsStrings("lessons");
+        ChannelsStrings ChangePass=new ChannelsStrings("changepass");
 
         //server address :
 //        final String servAd = "http://192.168.1.6:8000";
@@ -494,7 +495,7 @@ public class MainActivity extends FlutterActivity {
 
                         //create require params for constructor
                         HashMap<String, String> info = new HashMap<>();
-                        String path = servAd + "/signup/";
+                        String path = servAd + "/dashboard/edit_profile/";
                         OkHttpClient client = new OkHttpClient();
                         String json = "{\"username\" : \"" + call.argument("username")
                                 + "\" ,\"first_name\" : \"" + call.argument("firstname")
@@ -567,6 +568,15 @@ public class MainActivity extends FlutterActivity {
 
                      }
                  }));
+
+         //change pass
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),ChangePass.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+
+
+
+                }));
 
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
