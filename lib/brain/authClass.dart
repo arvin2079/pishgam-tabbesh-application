@@ -98,8 +98,7 @@ class Auth extends AuthBase {
   Future<User> currentUser() async {
     final String _methodName = 'currentuser';
     final Map<dynamic, dynamic> result = await _currentUserChannel.invokeMethod(_methodName);
-    print('ssgggggggg');
-    print(result.toString());
+//    print(result.toString());
     if (result == null)
       return null;
     //todo : pass this user to homeScreen in Authbloc

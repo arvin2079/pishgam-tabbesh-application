@@ -298,15 +298,18 @@ public class MainActivity extends FlutterActivity {
 
                                     @Override
                                     public void onResponse(Call call, Response response) throws IOException {
-                                        Log.i("my response code ----> ", response.code() + "");
                                         if (response.isSuccessful()) {
-                                            String message;
-                                            switch (response.code()) {
+                                            String message = "هندل نشده";
+                                            int responseCode = response.code();
+                                            Log.i("my response code ----> ", responseCode + "");
+
+                                            switch (responseCode) {
                                                 case 200:
                                                     message = "ثبت نام با موفقیت انجام شد";
                                                     break;
                                                 case 406:
                                                     message = "کاربر با این مشخصات موجود می باشد";
+                                                    Log.i("messssaggeee", message);
                                                     break;
                                                 case 401:
                                                     message = "خطا در برقراری ارتباط با سرور";
