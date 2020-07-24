@@ -20,6 +20,7 @@ import com.demo.pishgamt3.channel_result.MainThreadResult;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -55,6 +57,7 @@ public class MainActivity extends FlutterActivity {
         ChannelsStrings Editprofile=new ChannelsStrings("editprof");
         ChannelsStrings Lessons =new ChannelsStrings("lessons");
         ChannelsStrings ChangePass=new ChannelsStrings("changepass");
+        ChannelsStrings Image=new ChannelsStrings("Image");
 
         //server address :
 //        final String servAd = "http://192.168.1.6:8000";
@@ -345,73 +348,75 @@ public class MainActivity extends FlutterActivity {
 
         //current user
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CurrentUser.getChannelsString())
-                .setMethodCallHandler((call, result) ->
-                {
-                    if (call.method.equals("currentuser")) {
-                        Log.i("TAG", "enter to currentuser");
-                        MainThreadResult mainresult = new MainThreadResult(result);
+                  .setMethodCallHandler(
+                          (call, result) ->
+                        {
+                            if (call.method.equals("currentuser")) {
+                                Log.i("TAG", "enter to currentuser");
+                                MainThreadResult mainresult = new MainThreadResult(result);
 
-                        SharePref pref = new SharePref(getApplicationContext());
-                        String token = pref.load("token");
-                        Log.i("user token :: ", token);
-                        if (token == null || token.isEmpty()) result.success(null);
-                        else {
-                            //use get method to get list of cities and grades
-                            String path = servAd + "/dashboard/app_profile/";
-                            HashMap<String, String> header = new HashMap<>();
-                            header.put(new Header().getKayheader(), "Authorization");
-                            header.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
+                                SharePref pref = new SharePref(getApplicationContext());
+                                String token = pref.load("token");
+                                Log.i("user token :: ", token);
+                                if (token == null || token.isEmpty()) result.success(null);
+                                else {
+                                    //use get method to get list of cities and grades
+                                    String path = servAd + "/dashboard/app_profile/";
+                                    HashMap<String, String> header = new HashMap<>();
+                                    header.put(new Header().getKayheader(), "Authorization");
+                                    header.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
 
 
-                            OkHttpClient client = new OkHttpClient();
-                            RequestforServer requestforServer = new RequestforServer(client, path, header);
+                                    OkHttpClient client = new OkHttpClient();
+                                    RequestforServer requestforServer = new RequestforServer(client, path, header);
 
-                            try {
-                                client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
-                                    @Override
-                                    public void onFailure(Call call, IOException e) {
-                                        mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-                                    }
-
-                                    @Override
-                                    public void onResponse(Call call, Response response) throws IOException {
-
-                                        Handler handler=new Handler(Looper.getMainLooper());
-                                        handler.post(new Runnable() {
+                                    try {
+                                        client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
                                             @Override
-                                            public void run() {
-                                                if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
+                                            public void onFailure(Call call, IOException e) {
+                                                mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                                            }
 
-                                                else
-                                                {
-                                                    try {
-                                                        String message =response.body().string();
-                                                        mainresult.success(new JsonParser().currentUser(message));
+                                            @Override
+                                            public void onResponse(Call call, Response response) throws IOException {
 
+                                                Handler handler=new Handler(Looper.getMainLooper());
+                                                handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if(response.code()==403)mainresult.error("مشکل در ارتباط با سرور" ,"خطا", null);
+
+                                                        else
+                                                        {
+                                                            try {
+                                                                String message =response.body().string();
+                                                                mainresult.success(new JsonParser().currentUser(message));
+
+                                                            }
+                                                            catch (IOException | JSONException e) {
+                                                                e.printStackTrace();
+
+                                                            }
+                                                        }
                                                     }
-                                                    catch (IOException | JSONException e) {
-                                                        e.printStackTrace();
+                                                });
 
-                                                    }
-                                                }
                                             }
                                         });
-
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                });
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                }
+
                             }
-                        }
-
-                    }
 
 
-                });
+                        });
 
         //sign out
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), Signout.getChannelsString())
-                .setMethodCallHandler((call, result) ->
+                .setMethodCallHandler(
+                        (call, result) ->
                 {
                     MainThreadResult mainresult = new MainThreadResult(result);
                     try {
@@ -636,6 +641,55 @@ public class MainActivity extends FlutterActivity {
 
                 }));
 
+        //image
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Image.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    MainThreadResult mainresult=new MainThreadResult(result);
+
+                    HashMap<String, String> info = new HashMap<>();
+                    String path = servAd + "/dashboard/edit_profile/";
+                    OkHttpClient client = new OkHttpClient();
+
+                    SharePref pref = new SharePref(getApplicationContext());
+
+                    File sourceFile = new File(call.argument("imagepath").toString());
+
+                    final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
+
+                    String filename ="";
+
+                    RequestBody requestBody = new MultipartBody.Builder()
+                            .setType(MultipartBody.FORM)
+                            .addFormDataPart("image", filename, RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url(path).addHeader("","")
+                            .header("Authorization","Token " + pref.load("token"))
+                            .post(requestBody)
+                            .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e)
+                        {
+                            mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException
+                        {
+
+
+                        }
+                    });
+
+
+
+                }));
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
 
