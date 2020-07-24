@@ -47,11 +47,12 @@ public class MainActivity extends FlutterActivity {
         //every channels need a string to indentify so we use an class to handle it
         ChannelsStrings SignIn = new ChannelsStrings("signin");
         ChannelsStrings SignUp = new ChannelsStrings("signup");
- 
         ChannelsStrings Getcities = new ChannelsStrings("cities");
         ChannelsStrings Getgrades = new ChannelsStrings("grades");
         ChannelsStrings CurrentUser = new ChannelsStrings("currentuser");
         ChannelsStrings Signout = new ChannelsStrings("signout");
+        ChannelsStrings Acountlessons =new ChannelsStrings("acountlessons");
+        ChannelsStrings Editprofile=new ChannelsStrings("editprof");
         ChannelsStrings Lessons =new ChannelsStrings("lessons");
 
         //server address :
@@ -423,10 +424,10 @@ public class MainActivity extends FlutterActivity {
 
         //lessons
 
-        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Lessons.getChannelsString())
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Acountlessons.getChannelsString())
                 .setMethodCallHandler(((call, result) ->
                 {
-                    if(call.method.equals("lessons"))
+                    if(call.method.equals("acountlessons"))
                         {
                             MainThreadResult mainresult = new MainThreadResult(result);
                             String path = servAd + "/dashboard/";
@@ -480,6 +481,37 @@ public class MainActivity extends FlutterActivity {
 
                         }
                 }));
+
+        //edit prof
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Editprofile.getChannelsString())
+                .setMethodCallHandler(((call, result) ->
+                {
+                    if(call.method.equals("editprof"))
+                    {
+                        MainThreadResult mainresult = new MainThreadResult(result);
+
+                        //create require params for constructor
+                        HashMap<String, String> info = new HashMap<>();
+                        String path = servAd + "/signup/";
+                        OkHttpClient client = new OkHttpClient();
+                        String json = "{\"username\" : \"" + call.argument("username") + "\" ,\"first_name\" : \"" + call.argument("firstname") + "\" , \"last_name\" : \"" + call.argument("lastname") + "\" ,\"gender\" : \"" + call.argument("gender") + "\" ,\"phone_number\" : \"" + call.argument("phonenumber") + "\" , \"grades\" : [\"" + call.argument("grades") + "\"] , \"city\" : \"" + call.argument("city") + "\" }";
+                        Log.i("second jasonbody--->", json);
+
+
+
+                    }
+                }));
+
+        //lessons
+         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Lessons.getChannelsString())
+                 .setMethodCallHandler(((call, result) ->
+                 {
+                     if(call.method.equals("lessons"))
+                     {
+
+                     }
+                 }));
+
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
 

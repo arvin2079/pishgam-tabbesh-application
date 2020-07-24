@@ -95,27 +95,29 @@ public class JsonParser {
         return hashMap;
     }
 
-     public Object[] lessons(String json)
+     public HashMap lessons(String json)
          {
-             Object object[]=new Object[999999999];
+             HashMap hashMap=new HashMap();
 
              try {
                  JSONObject jsonObject=new JSONObject(json);
-                 object[0]=jsonObject.get("now");
-                 object[1]=jsonObject.get("calendar_time");
+                 hashMap.put(0,jsonObject.getString("now")  );
+                 hashMap.put(1,jsonObject.getString("calendar_time"));
                  JSONArray jsonArray=(JSONArray) jsonObject.getJSONArray("course_calendars");
+                 hashMap.put(2,jsonArray.length());
                  for (int i=0; i<jsonArray.length();i++)
                  {
-                     HashMap<String,String> hashMap=new HashMap<>();
+                     HashMap<String,String> classes=new HashMap<>();
                      JSONObject jsonObject1= (JSONObject) jsonArray.get(i);
-                     hashMap.put("start_date",jsonObject1.getString("start_date"));
-                     hashMap.put("end_date",jsonObject1.getString("end_date"));
-                     hashMap.put("url",jsonObject1.getString("url"));
-                     hashMap.put("is_active",jsonObject1.getString("is_active"));
-                     hashMap.put("teacher ",jsonObject1.getString("teacher"));
-                     hashMap.put("title",jsonObject1.getString("title"));
-                     hashMap.put("image",jsonObject1.getString("image"));
-                     object[i+2]=hashMap;
+                     classes.put("start_date",jsonObject1.getString("start_date"));
+                     classes.put("end_date",jsonObject1.getString("end_date"));
+                     classes.put("url",jsonObject1.getString("url"));
+                     classes.put("is_active",jsonObject1.getString("is_active"));
+                     classes.put("teacher ",jsonObject1.getString("teacher"));
+                     classes.put("title",jsonObject1.getString("title"));
+                     classes.put("image",jsonObject1.getString("image"));
+
+                     hashMap.put(i+2,classes);
                  }
 
 
@@ -124,7 +126,7 @@ public class JsonParser {
              }
 
 
-             return  object;
+             return  hashMap;
 
          }
 
