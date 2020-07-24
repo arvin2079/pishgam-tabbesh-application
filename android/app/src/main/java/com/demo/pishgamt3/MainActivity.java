@@ -424,9 +424,10 @@ public class MainActivity extends FlutterActivity {
                     MainThreadResult mainresult = new MainThreadResult(result);
                     try {
                         if (call.method.equals("signout")) {
+
                             SharePref signout = new SharePref();
-                            signout.save("token", "");
-                            mainresult.success(true);
+                            signout.Remove("token");
+
                         }
                     } catch (Exception e) {
                         mainresult.error(e.toString(), "خطا", null);
@@ -685,7 +686,10 @@ public class MainActivity extends FlutterActivity {
                         @Override
                         public void onResponse(Call call, Response response) throws IOException
                         {
+                            if(response.isSuccessful())
+                            {
 
+                            }
 
                         }
                     });

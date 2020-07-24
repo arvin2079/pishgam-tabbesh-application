@@ -34,6 +34,12 @@ public class SharePref {
 
                     }
 
+                    public void Remove(String name)
+                    {
+                        SharedPreferences preferences = context.getSharedPreferences("mypref", 0);
+                        preferences.edit().remove(name).commit();
+                    }
+
 
 
 }
