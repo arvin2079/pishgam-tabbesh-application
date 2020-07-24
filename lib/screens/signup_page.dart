@@ -117,8 +117,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is SignUpLoadingFinished)
+        if (state is SignUpLoadingFinished) {
           Navigator.pop(context);
+          Navigator.pop(context);
+        }
         else if (state is SignUpIsLoadingSta)
           showDialog(
               context: context,

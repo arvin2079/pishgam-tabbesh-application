@@ -54,7 +54,8 @@ public class MainActivity extends FlutterActivity {
         ChannelsStrings Signout = new ChannelsStrings("signout");
 
         //server address :
-        final String servAd = "http://192.168.1.6:8000";
+//        final String servAd = "http://192.168.1.6:8000";
+        final String servAd = "http://192.168.43.139:8000";
 
 
         //signin
@@ -97,32 +98,27 @@ public class MainActivity extends FlutterActivity {
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
                                     if (response.isSuccessful()) {
-                                        MainActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
 
-                                                try {
-                                                    String message;
-                                                    switch (response.code()) {
-                                                        case 400:
-                                                            message = "اطلاعات وارد شده نامعتبر میباشد";
-                                                            break;
-                                                        case 401:
-                                                            message = "اشکال در اراباط با سرور";
-                                                            break;
-                                                        case 404:
-                                                            message = "404";
-                                                            break;
-                                                        case 200:
-                                                            saveToken(response, result);
-                                                            break;
-                                                    }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                    mainresult.error("error2", "failed", null);
-                                                }
+                                        try {
+                                            String message;
+                                            switch (response.code()) {
+                                                case 400:
+                                                    message = "اطلاعات وارد شده نامعتبر میباشد";
+                                                    break;
+                                                case 401:
+                                                    message = "اشکال در اراباط با سرور";
+                                                    break;
+                                                case 404:
+                                                    message = "404";
+                                                    break;
+                                                case 200:
+                                                    saveToken(response, result);
+                                                    break;
                                             }
-                                        });
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            mainresult.error("error2", "failed", null);
+                                        }
 
                                     } else if (response.code() == 401) {
                                         MainActivity.this.runOnUiThread(new Runnable() {
@@ -140,7 +136,6 @@ public class MainActivity extends FlutterActivity {
                         } catch (IOException e) {
                             mainresult.error("failed in sign in", e.getMessage(), null);
                         }
-
 
                     }
 
@@ -430,19 +425,22 @@ public class MainActivity extends FlutterActivity {
 
     }
 
-    private void saveToken(Response response, MethodChannel.Result result) throws JSONException{
+    private void saveToken(Response response, MethodChannel.Result result) throws Exception {
         MainThreadResult mainresult = new MainThreadResult(result);
 //        try {
-            //convert response to string
-            String token = null;
-            token = response.body().string().trim();
+        //convert response to string
+        String token = null;
+        token = response.body().string();
         Log.i("saved token ---> ", token);
-            //parse json
-            JsonParser jsonParser = new JsonParser();
-            //save token
-            SharePref pref = new SharePref(getApplicationContext());
-            pref.save("token", jsonParser.token(token));
-            mainresult.success(null);
+        //parse json
+        JsonParser jsonParser = new JsonParser();
+        //save token
+        Log.i("in saveToken))", "herere1");
+        SharePref pref = new SharePref(getApplicationContext());
+        Log.i("in saveToken))", "herere2");
+        pref.save("token", jsonParser.token(token));
+        Log.i("in saveToken))", "herere3");
+        mainresult.success(null);
 //        } catch (Exception e) {
 //            mainresult.error("error1" , "failed", null);
 //        }
