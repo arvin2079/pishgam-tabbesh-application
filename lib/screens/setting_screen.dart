@@ -44,7 +44,7 @@ class _SettingScreenState extends State<SettingScreen> {
             style: TextStyle(
               fontFamily: 'vazir',
               fontWeight: FontWeight.w100,
-              fontSize: 30,
+              fontSize: 25,
               color: Colors.black,
             ),
           ),
@@ -60,13 +60,13 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
         body: Card(
           elevation: 3.0,
-          margin: EdgeInsets.only(left: 20, right: 20, top: 30),
+          margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 10),
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(top: 10),
                   child: GestureDetector(
                     child: CircleAvatar(
                       radius: 50,
@@ -125,7 +125,6 @@ class _SettingScreenState extends State<SettingScreen> {
                 SizedBox(height: 40),
                 Row(
                   textDirection: TextDirection.rtl,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Expanded(
                       child: CustomDropDownButton(
@@ -153,6 +152,28 @@ class _SettingScreenState extends State<SettingScreen> {
                   first: 'پسر',
                   second: 'دختر',
                   controller: _radioGroupController,
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10, bottom: 20),
+                    child: SizedBox(
+                      width: 120,
+                      child: RaisedButton(
+                        color: Colors.yellowAccent[700],
+                        onPressed: (){},
+                        child: Text(
+                          'ورود',
+                          style: TextStyle(
+                            fontFamily: 'vazir',
+                            fontWeight: FontWeight.w500 ,
+                            fontSize: 20,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
