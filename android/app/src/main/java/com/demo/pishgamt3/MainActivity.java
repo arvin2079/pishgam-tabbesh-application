@@ -826,7 +826,7 @@ public class MainActivity extends FlutterActivity {
                     JsonParser jsonParser = new JsonParser();
                     //save token
                     Log.i("in saveToken))", "herere1");
-                    SharePref pref = new SharePref(getApplicationContext());
+                    SharePref pref = new SharePref(this);
                     Log.i("in saveToken))", "herere2");
                     pref.save("token", jsonParser.token(token));
                     Log.i("in saveToken))", "herere3");
