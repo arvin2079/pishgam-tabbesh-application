@@ -96,10 +96,10 @@ public class JsonParser {
                  hashMap.put(1,jsonObject.getString("calendar_time"));
                  JSONArray jsonArray=(JSONArray) jsonObject.getJSONArray("course_calendars");
                  hashMap.put(2,jsonArray.length());
-                 for (int i=0; i<jsonArray.length();i++)
-                 {
+
+
                      HashMap<String,String> classes=new HashMap<>();
-                     JSONObject jsonObject1= (JSONObject) jsonArray.get(i);
+                     JSONObject jsonObject1= (JSONObject) jsonArray.get(0);
                      classes.put("start_date",jsonObject1.getString("start_date"));
                      classes.put("end_date",jsonObject1.getString("end_date"));
                      classes.put("url",jsonObject1.getString("url"));
@@ -108,8 +108,8 @@ public class JsonParser {
                      classes.put("title",jsonObject1.getString("title"));
                      classes.put("image",jsonObject1.getString("image"));
 
-                     hashMap.put(i+3,classes);
-                 }
+                 hashMap.put(3,classes);
+
 
 
              } catch (JSONException e) {
