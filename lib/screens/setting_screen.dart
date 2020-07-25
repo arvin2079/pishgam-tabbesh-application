@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
+import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SettingScreen extends StatefulWidget {
   @override
@@ -11,6 +15,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   List<String> locations = ['اول', 'دهم', 'دوازدهم'];
   List<String> grades = ['اول', 'دهم', 'دوازدهم'];
+  Image _image;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _familyNameController = TextEditingController();
@@ -30,12 +35,12 @@ class _SettingScreenState extends State<SettingScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.grey[300],
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.grey[200],
+          backgroundColor: Colors.grey[300],
           title: Text(
-            'تنظیمات',
+            'پروفایل',
             style: TextStyle(
               fontFamily: 'vazir',
               fontWeight: FontWeight.w100,
@@ -60,6 +65,25 @@ class _SettingScreenState extends State<SettingScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.grey[300],
+                      child: CircleAvatar(
+                        radius: 47,
+                        backgroundColor: Colors.grey[50],
+                        child: _image == null
+                            ? Icon(Icons.person,
+                            color: Colors.blueGrey[600], size: 65) : null ,
+                      backgroundImage:_image == null ?
+                        null : _image.image,
+                      ),
+                    ),
+                    onTap: () => _pickImage(),
+                  ),
+                ),
                 SignupTextInput(
                   borderColor: Colors.black54,
                   labelColor: Colors.grey[500],
@@ -82,21 +106,21 @@ class _SettingScreenState extends State<SettingScreen> {
                   borderColor: Colors.black54,
                   labelColor: Colors.grey[500],
                   inputColor: Colors.black87,
+                  labelText: 'نام کاربری',
+                  focusNode: _userNameFocusNode,
+                  controller: _userNameController,
+                  textInputType: TextInputType.text,
+                ),
+                SignupTextInput(
+                  borderColor: Colors.black54,
+                  labelColor: Colors.grey[500],
+                  inputColor: Colors.black87,
                   counterColor: Colors.grey[800],
                   labelText: 'شماره موبایل',
                   focusNode: _phoneNumberFocusNode,
                   controller: _phoneNumberController,
                   textInputType: TextInputType.phone,
                   maxLength: 11,
-                ),
-                SignupTextInput(
-                  borderColor: Colors.black54,
-                  labelColor: Colors.grey[500],
-                  inputColor: Colors.black87,
-                  labelText: 'نام کاربری',
-                  focusNode: _userNameFocusNode,
-                  controller: _userNameController,
-                  textInputType: TextInputType.text,
                 ),
                 SizedBox(height: 40),
                 Row(
@@ -136,5 +160,23 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
       ),
     );
+  }
+  Future<void> _getImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: source);
+    File file = File(pickedFile.path);
+    File finalFile = await ImageUtility.compressAndGetFile(file);
+    _image = Image.file(finalFile);
+    setState(() {});
+  }
+  void _pickImage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return ImageSourceDialog(
+            onCamera: () => _getImage(ImageSource.camera),
+            onGallery: () => _getImage(ImageSource.gallery),
+          );
+        });
   }
 }
