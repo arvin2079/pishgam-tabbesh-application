@@ -7,16 +7,23 @@ class SigninPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/background.png'),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
             ),
           ),
-          child: SignInForm(),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top),
+                child: SignInForm(),
+            ),
+          ),
         ),
       ),
     );
