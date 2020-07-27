@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.demo.pishgamt3.Refrence.Path;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +74,7 @@ public class JsonParser {
         JSONObject jsonObject = new JSONObject(json);
         //fixme : check email
 //        hashMap.put("email", jsonObject.getString("email"));
+        Path path = new Path();
         hashMap.put("firstname", jsonObject.getString("first_name"));
         hashMap.put("lastname", jsonObject.getString("last_name"));
         hashMap.put("username", jsonObject.getString("username"));
@@ -80,7 +82,7 @@ public class JsonParser {
         hashMap.put("gender", jsonObject.getString("gender"));
         hashMap.put("phone_number", jsonObject.getString("phone_number"));
         hashMap.put("city", jsonObject.getString("cityTitle"));
-        hashMap.put("avatar", jsonObject.getString("avatar"));
+        hashMap.put("avatar", path.getMainpath()+jsonObject.getString("avatar"));
 
 
         return hashMap;
@@ -92,23 +94,44 @@ public class JsonParser {
 
              try {
                  JSONObject jsonObject=new JSONObject(json);
-                 hashMap.put(0,jsonObject.getString("now")  );
-                 hashMap.put(1,jsonObject.getString("calendar_time"));
-                 JSONArray jsonArray=(JSONArray) jsonObject.getJSONArray("course_calendars");
-                 hashMap.put(2,jsonArray.length());
+//                 JSONArray jsonArray = jsonObject.getJSONArray("course_calendars");
+                 hashMap.put("now",jsonObject.getString("now"));
+                 hashMap.put("timeLeft",jsonObject.getString("calendar_time"));
+
+                 JSONArray array = jsonObject.getJSONArray("course_calendars");
+
+                 hashMap.put("length", array.length());
+                 if(array.length() != 0) {
+                     JSONObject firstCourseJO = array.getJSONObject(0);
+                     hashMap.put("start_date", firstCourseJO.getString("start_date"));
+                     JSONObject coursePropertiesJO = firstCourseJO.getJSONObject("course");
+                     hashMap.put("teacher", coursePropertiesJO.getString("teacher"));
+                     hashMap.put("title", coursePropertiesJO.getString("title"));
+                     hashMap.put("image", coursePropertiesJO.getString("image"));
+                 }
+
+//                 Log.i("Karray", array.toString());
+//                 JSONObject courseObject = array.getJSONObject(0).getJSONObject("course");
+//                 Log.i("KcourseObject", courseObject.toString());
+//
+//                 Log.i("Kteacher", courseObject.getString("teacher"));
+//                 Log.i("Ktitle", courseObject.getString("title"));
+//                 Log.i("Kimage", courseObject.getString("image"));
+//                 Log.i("Kstart_date", array.getJSONObject(0).getString("start_date"));
 
 
-                     HashMap<String,String> classes=new HashMap<>();
-                     JSONObject jsonObject1= (JSONObject) jsonArray.get(0);
-                     classes.put("start_date",jsonObject1.getString("start_date"));
-                     classes.put("end_date",jsonObject1.getString("end_date"));
-                     classes.put("url",jsonObject1.getString("url"));
-                     classes.put("is_active",jsonObject1.getString("is_active"));
-                     classes.put("teacher ",jsonObject1.getString("teacher"));
-                     classes.put("title",jsonObject1.getString("title"));
-                     classes.put("image",jsonObject1.getString("image"));
 
-                 hashMap.put(3,classes);
+//                     HashMap<String,String> classes=new HashMap<>();
+//                     JSONObject jsonObject1= (JSONObject) jsonArray.get(0);
+//                     classes.put("start_date",jsonObject1.getString("start_date"));
+//                     classes.put("end_date",jsonObject1.getString("end_date"));
+//                     classes.put("url",jsonObject1.getString("url"));
+//                     classes.put("is_active",jsonObject1.getString("is_active"));
+//                     classes.put("teacher ",jsonObject1.getString("teacher"));
+//                     classes.put("title",jsonObject1.getString("title"));
+//                     classes.put("image",jsonObject1.getString("image"));
+
+//                 hashMap.put(3,classes);
 
 
 

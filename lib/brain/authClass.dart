@@ -3,6 +3,7 @@ import 'dart:io' as Io;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pishgamv2/screens/homePage.dart';
 
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
@@ -24,6 +25,8 @@ abstract class AuthBase {
   Future<void> initCitiesMap();
 
   Future<void> initGradesMap();
+
+  Future<HomeViewModel> initializeHome();
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -85,6 +88,8 @@ class Auth extends AuthBase {
   static final String _citiesChannelName = 'cities';
   static final String _gradesChannelName = 'grades';
   static final String _currentUserChannelName = 'currentuser';
+  static final String _homePropertiesName = 'acountlessons';
+  static final String _editProfName = 'editprof';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -93,6 +98,8 @@ class Auth extends AuthBase {
   static final _citiesChannel = MethodChannel(_citiesChannelName);
   static final _gradesChannel = MethodChannel(_gradesChannelName);
   static final _currentUserChannel = MethodChannel(_currentUserChannelName);
+  static final _homePropertiesChannel = MethodChannel(_homePropertiesName);
+  static final _editProfChannel = MethodChannel(_editProfName);
 
   @override
   Future<User> currentUser() async {
@@ -224,6 +231,36 @@ class Auth extends AuthBase {
       return true;
 
     return false;
+  }
+
+  @override
+  Future<HomeViewModel> initializeHome() async{
+    final String _dashboardMethodName = "acountlessons";
+    final String _curentUserMethodName = "currentuser";
+    final Map<dynamic, dynamic> dResult = await _homePropertiesChannel.invokeMethod(_dashboardMethodName);
+    final Map<dynamic, dynamic> cResult = await _currentUserChannel.invokeMethod(_curentUserMethodName);
+
+    DateTime now = DateTime.parse(dResult['now']);
+    DateTime classTime;
+    if(dResult["length"] != 0) {
+      classTime = DateTime.parse(now.toString().trim().substring(0, 11) + dResult["timeLeft"].toString().substring(3).trim());
+    }
+
+    print("dResult ------> ");
+    print(dResult.toString());
+    print("cResult ------> ");
+    print(cResult.toString());
+
+    Image avatar = Image.network(cResult["avatar"]);
+
+    return HomeViewModel(
+      title: dResult["title"],
+      teacher: dResult["teacher"],
+      name: cResult["firstname"] + " " + cResult["lastname"],
+      timeLeft: classTime == null ? null : now.difference(classTime),
+      grade: cResult["grades"],
+      avatar: avatar,
+    );
   }
 }
 
