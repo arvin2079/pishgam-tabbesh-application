@@ -9,6 +9,8 @@ import 'package:pishgamv2/components/mainMenuSliderCard.dart';
 import 'package:pishgamv2/components/round_icon_button.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:pishgamv2/screens/purchaseLessonPage.dart';
 import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,26 +36,7 @@ class _HomePageState extends State<HomePage>
 
   bool expanded = false;
 
-  List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[
-    MainMenuSliderCard(
-      icon: Icons.import_contacts,
-      labelText: 'درس های من',
-      buttonText: 'مشاهده',
-      onPressed: () {},
-    ),
-    MainMenuSliderCard(
-      icon: Icons.shopping_basket,
-      labelText: 'خرید درس',
-      buttonText: 'مشاهده',
-      onPressed: () {},
-    ),
-    MainMenuSliderCard(
-      icon: Icons.alarm,
-      labelText: 'اعلان ها',
-      buttonText: 'مشاهده',
-      onPressed: () {},
-    ),
-  ];
+  List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[];
 
   @override
   void initState() {
@@ -65,6 +48,30 @@ class _HomePageState extends State<HomePage>
         _alignment = _animation.value;
       });
     });
+    _sliderItems.add(
+      MainMenuSliderCard(
+        icon: Icons.import_contacts,
+        labelText: 'درس های من',
+        buttonText: 'مشاهده',
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (context) => MyLessons(),
+          ));
+        },
+      )
+    );
+    _sliderItems.add(
+      MainMenuSliderCard(
+        icon: Icons.shopping_basket,
+        labelText: 'خرید درس',
+        buttonText: 'مشاهده',
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (context) => PurchaseLesson(),
+          ));
+        },
+      ),
+    );
     super.initState();
   }
 

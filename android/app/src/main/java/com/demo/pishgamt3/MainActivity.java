@@ -1,9 +1,12 @@
 package com.demo.pishgamt3;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 
@@ -321,6 +324,7 @@ public class MainActivity extends FlutterActivity {
                         SharePref pref = new SharePref(getApplicationContext());
                         String token = pref.load("token");
                         //checking file for token
+                        Log.i("tokenFromCurrentUser: ", pref.load("token"));
                         if (token == null || token.isEmpty()) result.success(null);
                         else {
                             OkHttpClient client = new OkHttpClient();
@@ -380,9 +384,10 @@ public class MainActivity extends FlutterActivity {
                             try {
                                 if (call.method.equals(names[5])) {
                                     //delete token from file
-                                    SharePref signout = new SharePref();
-                                    signout.Remove("token");
-
+                                    SharedPreferences pref = getApplicationContext().getSharedPreferences("mypref", Context.MODE_MULTI_PROCESS);
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.remove("token");
+                                    editor.apply();
                                 }
                             } catch (Exception e) {
                                 mainresult.error(e.toString(), "خطا", null);
