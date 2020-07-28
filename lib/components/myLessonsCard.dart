@@ -2,32 +2,21 @@ import 'package:flutter/material.dart';
 
 class MyLessonCard extends StatefulWidget {
   MyLessonCard(
-      {@required this.imageURL,
+      {@required this.image,
       @required this.courseName,
       @required this.grade,
       @required this.explanation});
 
-  final String imageURL;
+  final ImageProvider image;
   final String courseName;
   final String grade;
   final String explanation;
 
   @override
-  _MyLessonCardState createState() => _MyLessonCardState(
-      courseName: courseName,
-      explanation: explanation,
-      grade: grade,
-      imageURL: imageURL);
+  _MyLessonCardState createState() => _MyLessonCardState();
 }
 
 class _MyLessonCardState extends State<MyLessonCard> {
-  _MyLessonCardState(
-      {this.imageURL, this.courseName, this.grade, this.explanation});
-
-  final String imageURL;
-  final String courseName;
-  final String grade;
-  final String explanation;
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +42,14 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   borderRadius: BorderRadius.circular(20),
                   child: Image(
                     fit: BoxFit.fitWidth,
-                    image: AssetImage(imageURL),
+                    image: widget.image,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15, right: 5),
                 child: Text(
-                  courseName,
+                  widget.courseName,
                   style: TextStyle(
                     fontSize: 23,
                     fontFamily: 'WeblogmaYekan',
@@ -72,7 +61,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: Text(
-                  grade,
+                  widget.grade,
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'WeblogmaYekan',
@@ -84,7 +73,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: 20, top: 10, bottom: 25),
                 child: Text(
-                  explanation,
+                  widget.explanation,
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'WeblogmaYekan',

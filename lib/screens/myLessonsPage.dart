@@ -30,7 +30,9 @@ class _MyLessonsState extends State<MyLessons> {
             IconButton(
               color: Colors.black,
               icon: Icon(Icons.close),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),
@@ -48,14 +50,14 @@ class _MyLessonsState extends State<MyLessons> {
                         explanation:
                             'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
                         courseName: 'شیمی دهم',
-                        imageURL: 'assets/images/lessons.jpg',
+                        image: 'assets/images/lessons.jpg',
                       ),
                       MyLessonCard(
                         grade: 'پایه دهم',
                         explanation:
                             'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
                         courseName: 'شیمی دهم',
-                        imageURL: 'assets/images/lessons.jpg',
+                        image: 'assets/images/lessons.jpg',
                       ),
                     ],
                   ),
@@ -72,14 +74,14 @@ class _MyLessonsState extends State<MyLessons> {
                         explanation:
                             'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
                         courseName: 'شیمی دهم',
-                        imageURL: 'assets/images/lessons.jpg',
+                        image: 'assets/images/lessons.jpg',
                       ),
                       MyLessonCard(
                         grade: 'پایه دهم',
                         explanation:
                             'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
                         courseName: 'شیمی دهم',
-                        imageURL: 'assets/images/lessons.jpg',
+                        image: 'assets/images/lessons.jpg',
                       ),
                     ],
                   ),
