@@ -92,13 +92,14 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
         appBar: AppBar(
           backgroundColor: Colors.grey[300],
           elevation: 0,
+          automaticallyImplyLeading: false,
           title: Text(
             'خريد درس',
             style: TextStyle(
               fontFamily: 'vazir',
-              fontWeight: FontWeight.w100,
+              fontWeight: FontWeight.w500,
               fontSize: 25,
-              color: Colors.black,
+              color: Colors.grey[700],
             ),
           ),
           actions: <Widget>[
@@ -108,7 +109,9 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
               builder: (_, snapshot) => BadgeIcon(
                 icon: IconButton(
                   iconSize: 25,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   icon: Icon(Icons.shopping_cart),
                   color: Colors.black,
                 ),
@@ -117,7 +120,9 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             ),
             IconButton(
               iconSize: 25,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               icon: Icon(Icons.close),
               color: Colors.black,
             ),

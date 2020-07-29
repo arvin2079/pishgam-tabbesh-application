@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage>
   Animation<Alignment> _animation;
   AnimationController _controller;
 
-  Image profilePicture;
+  bool timesUp = false;
 
   HomeBloc _homeBloc;
   AuthBloc _authbloc;
@@ -48,18 +48,17 @@ class _HomePageState extends State<HomePage>
         _alignment = _animation.value;
       });
     });
-    _sliderItems.add(
-      MainMenuSliderCard(
-        icon: Icons.import_contacts,
-        labelText: 'درس های من',
-        buttonText: 'مشاهده',
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (context) => MyLessons(),
-          ));
-        },
-      )
-    );
+    _sliderItems.add(MainMenuSliderCard(
+      icon: Icons.import_contacts,
+      labelText: 'درس های من',
+      buttonText: 'مشاهده',
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute<void>(
+          fullscreenDialog: true,
+          builder: (context) => MyLessons(),
+        ));
+      },
+    ));
     _sliderItems.add(
       MainMenuSliderCard(
         icon: Icons.shopping_basket,
@@ -122,34 +121,32 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final Radius _radius = Radius.circular(25);
-    return BlocConsumer<HomeBloc, HomeState>(
-        listener: (context, state) {},
+    return BlocBuilder<HomeBloc, HomeState>(
         // ignore: missing_return
         builder: (context, state) {
-          if (state is HomeNotInitialState) {
-            _homeBloc.add(InitializeHome());
-            return _buildLoaderScreen();
-          } else if (state is HomeInitiallized) {
-            widget.viewModel = state.ViewModel;
+      if (state is HomeNotInitialState) {
+        _homeBloc.add(InitializeHome());
+        return _buildLoaderScreen();
+      } else if (state is HomeInitiallized) {
+        widget.viewModel = state.viewModel;
+        print(widget.viewModel.title);
+        print(widget.viewModel.teacher);
+        print(widget.viewModel.timeLeft.toString());
 
-            print(widget.viewModel.title);
-            print(widget.viewModel.teacher);
-            print(widget.viewModel.timeLeft.toString());
-            //check if viewmodel is empty or not
-
-            if (widget.viewModel == null) {
-              _authbloc.add(
-                CatchError(
-                  message: 'خطا',
-                  detail: 'اطلاعات شما از سوی سرور دریافت نشد',
-                ),
-              );
-              return _buildLoaderScreen();
-            }
-            return _buildHomeBody(widget.viewModel, _radius);
-          }
+        //check if viewmodel is empty or not
+        if (widget.viewModel == null) {
+          _authbloc.add(
+            CatchError(
+              message: 'خطا',
+              detail: 'اطلاعات شما از سوی سرور دریافت نشد',
+            ),
+          );
+          return _buildLoaderScreen();
+        }
+        return _buildHomeBody(widget.viewModel, _radius);
+      }
 //          return _buildHomeBody(_radius);
-        });
+    });
   }
 
   Scaffold _buildLoaderScreen() {
@@ -188,7 +185,9 @@ class _HomePageState extends State<HomePage>
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             Text(
-                              widget.viewModel != null ? widget.viewModel.name : '',
+                              widget.viewModel != null
+                                  ? widget.viewModel.name
+                                  : '',
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 fontFamily: 'vazir',
@@ -198,7 +197,9 @@ class _HomePageState extends State<HomePage>
                               ),
                             ),
                             Text(
-                              widget.viewModel != null ? widget.viewModel.grade : '',
+                              widget.viewModel != null
+                                  ? widget.viewModel.grade
+                                  : '',
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 fontFamily: 'vazir',
@@ -213,10 +214,19 @@ class _HomePageState extends State<HomePage>
                           width: 20,
                         ),
                         CircleAvatar(
-                          child: widget.viewModel == null && widget.viewModel.avatar == null ? Icon(Icons.person,
-                              color: Colors.black45, size: 30) : Container(),
-                          backgroundColor: widget.viewModel == null && widget.viewModel.avatar == null ? Colors.grey[200] : null,
-                          backgroundImage: widget.viewModel == null && widget.viewModel.avatar == null ? null : widget.viewModel.avatar.image,
+                          child: widget.viewModel == null &&
+                                  widget.viewModel.avatar == null
+                              ? Icon(Icons.person,
+                                  color: Colors.black45, size: 30)
+                              : Container(),
+                          backgroundColor: widget.viewModel == null &&
+                                  widget.viewModel.avatar == null
+                              ? Colors.grey[200]
+                              : null,
+                          backgroundImage: widget.viewModel == null &&
+                                  widget.viewModel.avatar == null
+                              ? null
+                              : widget.viewModel.avatar.image,
                           radius: 35,
                         ),
                       ],
@@ -247,7 +257,9 @@ class _HomePageState extends State<HomePage>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          widget.viewModel.timeLeft != null ? 'مانده تا شروع کلاس' : 'امروز فردا کلاس نداری',
+                          widget.viewModel.timeLeft != null
+                              ? 'مانده تا شروع کلاس'
+                              : 'امروز فردا کلاس نداری',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'vazir',
@@ -257,7 +269,11 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                         Text(
-                          widget.viewModel.timeLeft != null ? widget.viewModel.title + " استاد " + widget.viewModel.teacher : '__________________',
+                          widget.viewModel.timeLeft != null
+                              ? widget.viewModel.title +
+                                  " استاد " +
+                                  widget.viewModel.teacher
+                              : '__________________',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'vazir',
@@ -268,8 +284,9 @@ class _HomePageState extends State<HomePage>
                         ),
                         Spacer(),
                         SlideCountdownClock(
-//                          duration: Duration(days: 10),
-                          duration: widget.viewModel.timeLeft != null ? widget.viewModel.timeLeft : Duration(minutes: 0),
+                          duration: widget.viewModel.timeLeft != null
+                              ? widget.viewModel.timeLeft
+                              : Duration(minutes: 0),
                           slideDirection: SlideDirection.Up,
                           shouldShowDays: true,
                           separator: ":",
@@ -279,6 +296,11 @@ class _HomePageState extends State<HomePage>
 //                            color: Colors.black12,
                             borderRadius: BorderRadius.all(Radius.circular(3)),
                           ),
+                          onDone: () {
+                            setState(() {
+                              timesUp = true;
+                            });
+                          },
                           textStyle: TextStyle(
                             fontSize: 40,
                             color: Colors.grey[600],
@@ -291,6 +313,7 @@ class _HomePageState extends State<HomePage>
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Column(
@@ -314,15 +337,26 @@ class _HomePageState extends State<HomePage>
                             ),
                           ],
                         ),
-//                        RoundIconButton(
-//                          backgroundColor: Colors.white,
-//                          icon: Icons.group,
-//                          iconColor: Colors.black54,
-//                          iconSize: 30,
-//                          buttonSize: 55,
-//                          elevation: 5,
-//                          onPressed: () {},
-//                        ),
+                        timesUp ? RaisedButton(
+                          child: Container(
+                            child: Text(
+                              ':)بزن بریم کلاس',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                          ),
+                          color: Colors.white,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          onPressed: () {
+                            // FIXME : get the url of class to join
+                          },
+                        ) : Container(),
                         Column(
                           children: <Widget>[
                             RoundIconButton(
@@ -430,29 +464,14 @@ class HomeViewModel {
   final String name;
   final String grade;
   final Image avatar;
+  final bool isActive;
 
-  HomeViewModel({@required this.avatar, @required this.name, @required this.grade, @required this.timeLeft, @required this.title, @required this.teacher});
-}
-
-class LessonModel {
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime firstClassStartData;
-  final Image image;
-  final String title;
-  final String code;
-  final String amount;
-  final String teacherName;
-  final String description;
-
-  LessonModel(
-      {this.startDate,
-      this.endDate,
-      this.firstClassStartData,
-      this.image,
-      this.title,
-      this.code,
-      this.amount,
-      this.teacherName,
-      this.description});
+  HomeViewModel(
+      {@required this.isActive,
+      @required this.avatar,
+      @required this.name,
+      @required this.grade,
+      @required this.timeLeft,
+      @required this.title,
+      @required this.teacher});
 }

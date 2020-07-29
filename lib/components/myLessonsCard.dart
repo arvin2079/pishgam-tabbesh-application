@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/screens/myLessonsPage.dart';
 
 class MyLessonCard extends StatefulWidget {
-  MyLessonCard(
-      {@required this.image,
-      @required this.courseName,
-      @required this.grade,
-      @required this.explanation});
+  MyLessonCard({@required this.lessonInfo});
 
-  final ImageProvider image;
-  final String courseName;
-  final String grade;
-  final String explanation;
+  final LessonModel lessonInfo;
 
   @override
   _MyLessonCardState createState() => _MyLessonCardState();
@@ -42,14 +36,14 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   borderRadius: BorderRadius.circular(20),
                   child: Image(
                     fit: BoxFit.fitWidth,
-                    image: widget.image,
+                    image: widget.lessonInfo.image != null ? widget.lessonInfo.image.image : AssetImage('assets/images/lessons.jpg'),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 15, right: 5),
                 child: Text(
-                  widget.courseName,
+                  widget.lessonInfo.title,
                   style: TextStyle(
                     fontSize: 23,
                     fontFamily: 'WeblogmaYekan',
@@ -58,22 +52,22 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: Text(
-                  widget.grade,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'WeblogmaYekan',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ),
+//              Padding(
+//                padding: const EdgeInsets.only(right: 15),
+//                child: Text(
+//                  widget.lessonInfo.grade,
+//                  style: TextStyle(
+//                    fontSize: 14,
+//                    fontFamily: 'WeblogmaYekan',
+//                    fontWeight: FontWeight.w400,
+//                    color: Colors.grey[500],
+//                  ),
+//                ),
+//              ),
               Padding(
                 padding: const EdgeInsets.only(right: 20, top: 10, bottom: 25),
                 child: Text(
-                  widget.explanation,
+                  widget.lessonInfo.description,
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'WeblogmaYekan',
@@ -134,3 +128,6 @@ class _MyLessonCardState extends State<MyLessonCard> {
     );
   }
 }
+
+//FiXME : default cover for lessons that does not have image or the image did not download imediatly
+//FIXME : description lenght must be shorten and other info opened in another page (container height)

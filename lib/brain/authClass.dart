@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/homePage.dart';
+import 'package:pishgamv2/screens/myLessonsPage.dart';
 
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
@@ -27,6 +28,8 @@ abstract class AuthBase {
   Future<void> initGradesMap();
 
   Future<HomeViewModel> initializeHome();
+
+  Future<MyLessonsViewModel> initializeMyLesson();
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -257,10 +260,16 @@ class Auth extends AuthBase {
       title: dResult["title"],
       teacher: dResult["teacher"],
       name: cResult["firstname"] + " " + cResult["lastname"],
-      timeLeft: classTime == null ? null : now.difference(classTime),
+      timeLeft: classTime == null ? null : classTime.isAfter(now) ? classTime.difference(now) : now.difference(classTime),
       grade: cResult["grades"],
+      isActive: dResult["is_active"],
       avatar: avatar,
     );
+  }
+
+  @override
+  Future<MyLessonsViewModel> initializeMyLesson() {
+
   }
 }
 
