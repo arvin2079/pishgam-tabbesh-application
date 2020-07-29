@@ -12,6 +12,12 @@ public class Path
     String lessons=mainpath+ "/dashboard/get-lessons/";
     String Shopping=mainpath + "/dashboard/get-shopping/";
 
+    public String getCategories() {
+        return categories;
+    }
+
+    String categories=mainpath + "/dashboard/shopping/";
+
 
     public String getMainpath() {
         return mainpath;

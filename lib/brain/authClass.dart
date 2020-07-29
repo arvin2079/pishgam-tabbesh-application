@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:pishgamv2/screens/purchaseLessonPage.dart';
 
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
@@ -30,6 +31,8 @@ abstract class AuthBase {
   Future<HomeViewModel> initializeHome();
 
   Future<MyLessonsViewModel> initializeMyLesson();
+
+  Future<ShoppingLessonViewModel> initializeShoppingLesson();
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -92,6 +95,8 @@ class Auth extends AuthBase {
   static final String _gradesChannelName = 'grades';
   static final String _currentUserChannelName = 'currentuser';
   static final String _homePropertiesName = 'acountlessons';
+  static final String _myLessonsChannelName = 'lessons';
+  static final String _shoppingChannelName = 'shoppinglist';
   static final String _editProfName = 'editprof';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
@@ -102,6 +107,8 @@ class Auth extends AuthBase {
   static final _gradesChannel = MethodChannel(_gradesChannelName);
   static final _currentUserChannel = MethodChannel(_currentUserChannelName);
   static final _homePropertiesChannel = MethodChannel(_homePropertiesName);
+  static final _myLessonsChannel = MethodChannel(_myLessonsChannelName);
+  static final _shoppingLessonChannel = MethodChannel(_shoppingChannelName);
   static final _editProfChannel = MethodChannel(_editProfName);
 
   @override
@@ -270,7 +277,47 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<MyLessonsViewModel> initializeMyLesson() {}
+  Future<MyLessonsViewModel> initializeMyLesson() async{
+
+  }
+
+  @override
+  Future<ShoppingLessonViewModel> initializeShoppingLesson() async{
+    final String _shoppingLessonMethodName = "shoppinglist";
+    String result = await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName);
+
+    print(result);
+    final data = jsonDecode(result);
+    List<LessonModel> lessonList = List();
+
+    for(Map m in data) {
+      print(m['parent']['id'].toString());
+      LessonModel model = LessonModel(
+        title: m['title'],
+        startDate: DateTime.parse(m['start_date'].toString().substring(0,10) + " " + m['start_date'].toString().substring(11)),
+        endDate: DateTime.parse(m['end_date'].toString().substring(0,10) + " " + m['end_date'].toString().substring(11)),
+        code: m['code'],
+        amount: m['amount'],
+        description: m['description'],
+        image: Image.network(m['image']),
+        teacherName: m['teacher'],
+        parent_name: m['parent']['title'],
+        parent_id: m['parent']['id'].toString(),
+        courseCalendar: <DateTime> [
+          m['course_calendars'][0] != null ? DateTime.parse(m['course_calendars'][0].toString().substring(0,10) + " " + m['course_calendars'][0].toString().substring(11)) : null,
+          m['course_calendars'][1] != null ? DateTime.parse(m['course_calendars'][1].toString().substring(0,10) + " " + m['course_calendars'][1].toString().substring(11)) : null,
+          m['course_calendars'][2] != null ? DateTime.parse(m['course_calendars'][2].toString().substring(0,10) + " " + m['course_calendars'][2].toString().substring(11)) : null,
+        ],
+      );
+      lessonList.add(model);
+    }
+    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+
+    return ShoppingLessonViewModel(
+      lessons: lessonList,
+    );
+  }
+
 }
 
 class User extends Equatable {

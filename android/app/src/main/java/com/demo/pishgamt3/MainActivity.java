@@ -348,8 +348,8 @@ public class MainActivity extends FlutterActivity {
                                         public void onResponse(Call call, Response response) throws IOException {
 
                                             JsonParser jsonParser = new JsonParser();
-                                            switch(response.code()) {
-                                                case 200 :
+                                            switch (response.code()) {
+                                                case 200:
                                                     try {
                                                         mainresult.success(jsonParser.currentUser(response.body().string()));
                                                     } catch (JSONException e) {
@@ -357,13 +357,13 @@ public class MainActivity extends FlutterActivity {
                                                     } finally {
                                                         break;
                                                     }
-                                                case 403 :
+                                                case 403:
                                                     mainresult.error("error", "invalid token", null);
                                                     break;
-                                                case 406 :
+                                                case 406:
                                                     mainresult.error("error", "invalid informatain in header", null);
                                                     break;
-                                                default :
+                                                default:
                                                     break;
                                             }
                                         }
@@ -704,47 +704,73 @@ public class MainActivity extends FlutterActivity {
                 .setMethodCallHandler((call, result) ->
                 {
                     if (call.method.equals(names[11])) {
+
                         MainThreadResult mainresult = new MainThreadResult(result);
-
-                        //use get method to get list of cities and grades
-
-                        HashMap<String, String> header = new HashMap<>();
-                        header.put(new Header().getKayheader(), new Header().getValueheader());
-                        header.put(new Header().getKeyvalue(), new Header().getValueval());
-
+                        SharePref pref = new SharePref(getApplicationContext());
                         OkHttpClient client = new OkHttpClient();
-                        RequestforServer requestforServer = new RequestforServer(client, path.getShopping(), header);
+
+                        Request shoppingLessonsRequest = new Request.Builder()
+                                .url(path.getShopping())
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .build();
+
+//                        Request categoriesRequest = new Request.Builder()
+//                                .url(path.getCategories())
+//                                .addHeader("Accept", "application/json")
+//                                .addHeader("Authorization", "Token " + pref.load("token"))
+//                                .build();
+
+//                        final String[] responses = new String[2];
 
                         try {
-                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                            client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-
                                 }
 
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
-                                    MainActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (response.isSuccessful()) {
-                                                String token = response.body().toString();
-                                                try {
-                                                    mainresult.success(new JsonParser().shoppingList(token));
-                                                } catch (JSONException e) {
-                                                    mainresult.error("خطا", "خطا", null);
+                                    int resCode = response.code();
+                                    String resBody = response.body().string();
 
-                                                }
+                                    Log.i("resBody@ ", resBody);
 
-                                            }
-
-                                        }
-                                    });
-
+                                    if (resCode == 200) {
+                                        mainresult.success(resBody);
+                                    } else {
+                                        mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
+                                    }
                                 }
                             });
-                        } catch (IOException e) {
+
+//                            client.newCall(categoriesRequest).enqueue(new Callback() {
+//                                @Override
+//                                public void onFailure(Call call, IOException e) {
+//                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+//                                }
+//
+//                                @Override
+//                                public void onResponse(Call call, Response response) throws IOException {
+//                                    int resCode = response.code();
+//                                    String resBody = response.body().string();
+//
+//                                    Log.i("resBody@2 ", resBody);
+//
+//                                    if(resCode == 200) {
+//                                        responses[1] = resBody;
+//                                    } else {
+//                                        mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
+//                                    }
+//                                }
+//                            });
+//                            if(responses[0] != null && responses[1] != null) {
+//                                JsonParser jsonParser = new JsonParser();
+//                                mainresult.success(jsonParser.shoppingList(responses[0], responses[1]));
+//                            }
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

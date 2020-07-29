@@ -1,10 +1,20 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/badgeIcon.dart';
 import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/purchaseLessonCard.dart';
+import 'package:pishgamv2/constants/Constants.dart';
+import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:pishgamv2/screens/shopping_cart.dart';
 
 class PurchaseLesson extends StatefulWidget {
+  ShoppingLessonViewModel viewModel;
+  HomeBloc _homeBloc;
+  AuthBloc _authbloc;
+
   @override
   _PurchaseLessonState createState() => _PurchaseLessonState();
 }
@@ -12,20 +22,14 @@ class PurchaseLesson extends StatefulWidget {
 class _PurchaseLessonState extends State<PurchaseLesson> {
   StreamController<int> _countController = StreamController<int>();
   int _count = 0;
-  List<PurchaseItem> items = <PurchaseItem>[
-    PurchaseItem(
-      courseName: 'شیمی دهم',
-      grade: 'پایه دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیشمسنیتبمنشستیبمنت شمسنت یبمنش تسیمبن تشمی نبتشمس نیتب منستش یمن بتشسمن یتباد شیمی',
-      imageURL: 'assets/images/lessons.jpg',
-    ),
-    PurchaseItem(
-      courseName: 'شیمی دهم',
-      grade: 'پایه دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
-      imageURL: 'assets/images/lessons.jpg',
-    ),
-  ];
+
+
+  @override
+  void initState() {
+    widget._authbloc = BlocProvider.of<AuthBloc>(context);
+    widget._homeBloc = BlocProvider.of<HomeBloc>(context);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -85,6 +89,32 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+        // ignore: missing_return
+        builder: (context, state) {
+      if (state is ShoppingLessonInitiallized) {
+        widget.viewModel = state.viewmodel;
+        return _buildShoppingLessonBody(context);
+      } else
+        return _buildLoaderScreen();
+    });
+  }
+
+  Scaffold _buildLoaderScreen() {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.white,
+            valueColor:
+                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShoppingLessonBody(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -110,7 +140,10 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 icon: IconButton(
                   iconSize: 25,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return ShoppingBasket();
+                    }));
                   },
                   icon: Icon(Icons.shopping_cart),
                   color: Colors.black,
@@ -137,7 +170,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: getItemsList(items).toList(),
+                    children: getItemsList(List()).toList(),
                   ),
                 ),
               ),
@@ -146,7 +179,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: getItemsList(items).toList(),
+                    children: getItemsList(List()).toList(),
                   ),
                 ),
               ),
@@ -156,4 +189,11 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
       ),
     );
   }
+
+}
+
+class ShoppingLessonViewModel {
+  final List<LessonModel> lessons;
+
+  ShoppingLessonViewModel({@required this.lessons});
 }

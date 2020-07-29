@@ -16,11 +16,10 @@ class _MyLessonsState extends State<MyLessons> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        return _buildMyLessonsBody(context);
-      }
-    );
+        listener: (context, state) {},
+        builder: (context, state) {
+          return _buildMyLessonsBody(context);
+        });
   }
 
   Scaffold _buildLoaderScreen() {
@@ -30,7 +29,7 @@ class _MyLessonsState extends State<MyLessons> {
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
             valueColor:
-            AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
           ),
         ),
       ),
@@ -39,124 +38,134 @@ class _MyLessonsState extends State<MyLessons> {
 
   Directionality _buildMyLessonsBody(BuildContext context) {
     return Directionality(
-    textDirection: TextDirection.rtl,
-    child: Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        elevation: 0,
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
         backgroundColor: Colors.grey[300],
-        title: Text(
-          'درس های من',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'vazir',
-            color: Colors.grey[700],
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.grey[300],
+          title: Text(
+            'درس های من',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'vazir',
+              color: Colors.grey[700],
+            ),
           ),
-        ),
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          IconButton(
-            color: Colors.black,
-            icon: Icon(Icons.close),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            LessonList(
-              title: 'ریاضی',
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                  ],
-                ),
-              ),
-            ),
-            LessonList(
-              title: 'فیزیک',
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                  ],
-                ),
-              ),
-            ),
-            LessonList(
-              title: 'فیزیک',
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                  ],
-                ),
-              ),
-            ),
-            LessonList(
-              title: 'فیزیک',
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                  ],
-                ),
-              ),
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            IconButton(
+              color: Colors.black,
+              icon: Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              LessonList(
+                title: 'ریاضی',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+//                    MyLessonCard(
+//                    ),
+//                    MyLessonCard(
+//                    ),
+                    ],
+                  ),
+                ),
+              ),
+              LessonList(
+                title: 'فیزیک',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+//                    MyLessonCard(
+//                    ),
+//                    MyLessonCard(
+//                    ),
+                    ],
+                  ),
+                ),
+              ),
+              LessonList(
+                title: 'فیزیک',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+//                    MyLessonCard(
+//                    ),
+//                    MyLessonCard(
+//                    ),
+                    ],
+                  ),
+                ),
+              ),
+              LessonList(
+                title: 'فیزیک',
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+//                    MyLessonCard(
+//                    ),
+//                    MyLessonCard(
+//                    ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-    ),
-  );
+    );
   }
 }
 
 class MyLessonsViewModel {
   final Map<String, List<LessonModel>> myLessons;
 
-  MyLessonsViewModel(this.myLessons);
+  MyLessonsViewModel({@required this.myLessons});
 }
 
 class LessonModel {
   final DateTime startDate;
   final DateTime endDate;
-  final DateTime firstClassStartData;
+  final List<DateTime> courseCalendar;
   final Image image;
   final String title;
   final String code;
-  final String amount;
+  final double amount;
   final String teacherName;
   final String description;
+  final String parent_id;
+  final String parent_name;
+
+
+  @override
+  String toString() {
+    return 'LessonModel{startDate: $startDate, endDate: $endDate, courseCalendar: $courseCalendar, image: $image, title: $title, code: $code, amount: $amount, teacherName: $teacherName, description: $description, parent_id: $parent_id, parent_name: $parent_name}';
+  }
 
   LessonModel(
       {this.startDate,
-        this.endDate,
-        this.firstClassStartData,
-        this.image,
-        this.title,
-        this.code,
-        this.amount,
-        this.teacherName,
-        this.description});
+      this.endDate,
+      this.courseCalendar,
+      this.image,
+      this.title,
+      this.code,
+      this.amount,
+      this.teacherName,
+      this.description,
+      this.parent_id,
+      this.parent_name});
 }

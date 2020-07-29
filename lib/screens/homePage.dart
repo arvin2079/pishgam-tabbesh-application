@@ -15,6 +15,8 @@ import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
 class HomePage extends StatefulWidget {
   HomeViewModel viewModel;
+  HomeBloc _homeBloc;
+  AuthBloc _authbloc;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -30,10 +32,6 @@ class _HomePageState extends State<HomePage>
 
   bool timesUp = false;
 
-  HomeBloc _homeBloc;
-  AuthBloc _authbloc;
-  Auth auth = Auth();
-
   bool expanded = false;
 
   List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[];
@@ -41,8 +39,8 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _authbloc = BlocProvider.of<AuthBloc>(context);
+    widget._homeBloc = BlocProvider.of<HomeBloc>(context);
+    widget._authbloc = BlocProvider.of<AuthBloc>(context);
     _controller.addListener(() {
       setState(() {
         _alignment = _animation.value;
@@ -53,6 +51,7 @@ class _HomePageState extends State<HomePage>
       labelText: 'درس های من',
       buttonText: 'مشاهده',
       onPressed: () {
+        widget._homeBloc.add(InitializeMyLesson());
         Navigator.of(context).push(MaterialPageRoute<void>(
           fullscreenDialog: true,
           builder: (context) => MyLessons(),
@@ -65,6 +64,7 @@ class _HomePageState extends State<HomePage>
         labelText: 'خرید درس',
         buttonText: 'مشاهده',
         onPressed: () {
+          widget._homeBloc.add(InitializedShoppingLesson());
           Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (context) => PurchaseLesson(),
           ));
@@ -122,20 +122,20 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     final Radius _radius = Radius.circular(25);
     return BlocBuilder<HomeBloc, HomeState>(
+      condition: (lastState, thisState) {
+        if(thisState is HomeNotInitialState || thisState is HomeInitiallized)
+          return true;
+        return false;
+      },
         // ignore: missing_return
         builder: (context, state) {
       if (state is HomeNotInitialState) {
-        _homeBloc.add(InitializeHome());
+        widget._homeBloc.add(InitializeHome());
         return _buildLoaderScreen();
       } else if (state is HomeInitiallized) {
         widget.viewModel = state.viewModel;
-        print(widget.viewModel.title);
-        print(widget.viewModel.teacher);
-        print(widget.viewModel.timeLeft.toString());
-
-        //check if viewmodel is empty or not
         if (widget.viewModel == null) {
-          _authbloc.add(
+          widget._authbloc.add(
             CatchError(
               message: 'خطا',
               detail: 'اطلاعات شما از سوی سرور دریافت نشد',
@@ -145,7 +145,6 @@ class _HomePageState extends State<HomePage>
         }
         return _buildHomeBody(widget.viewModel, _radius);
       }
-//          return _buildHomeBody(_radius);
     });
   }
 
@@ -337,26 +336,28 @@ class _HomePageState extends State<HomePage>
                             ),
                           ],
                         ),
-                        timesUp ? RaisedButton(
-                          child: Container(
-                            child: Text(
-                              ':)بزن بریم کلاس',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                          ),
-                          color: Colors.white,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)),
-                          onPressed: () {
-                            // FIXME : get the url of class to join
-                          },
-                        ) : Container(),
+                        timesUp
+                            ? RaisedButton(
+                                child: Container(
+                                  child: Text(
+                                    ':)بزن بریم کلاس',
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                color: Colors.white,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                onPressed: () {
+                                  // FIXME : get the url of class to join
+                                },
+                              )
+                            : Container(),
                         Column(
                           children: <Widget>[
                             RoundIconButton(
@@ -368,7 +369,7 @@ class _HomePageState extends State<HomePage>
                               elevation: 5,
                               onPressed: () {
                                 print('pressed');
-                                _authbloc.add(Signout());
+                                widget._authbloc.add(Signout());
                               },
                             ),
                             Text(
@@ -465,6 +466,11 @@ class HomeViewModel {
   final String grade;
   final Image avatar;
   final bool isActive;
+
+  @override
+  String toString() {
+    return 'HomeViewModel{timeLeft: $timeLeft, title: $title, teacher: $teacher, name: $name, grade: $grade, avatar: $avatar, isActive: $isActive}';
+  }
 
   HomeViewModel(
       {@required this.isActive,

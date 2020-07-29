@@ -2,6 +2,7 @@ package com.demo.pishgamt3.Json_parser;
 
 import android.os.Build;
 import android.util.Log;
+import android.webkit.HttpAuthHandler;
 
 import androidx.annotation.RequiresApi;
 
@@ -13,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.zip.ZipInputStream;
@@ -167,78 +169,101 @@ public class JsonParser {
         return hashMap;
     }
 
-    public HashMap shoppingList(String json) throws JSONException {
-        HashMap main = new HashMap();
-        JSONObject lists = new JSONObject(json);
-        JSONArray teachers = lists.getJSONArray("teachers");
-        JSONArray grades = lists.getJSONArray("grades");
-        JSONArray lessons = lists.getJSONArray("lessons");
+    public ArrayList<HashMap> shoppingList(String json) throws JSONException {
+        ArrayList<HashMap> main = new ArrayList<>();
 
-        main.put(0, teachers.length());
-        main.put(1, grades.length());
-        main.put(2, lessons);
+        JSONArray array = new JSONArray(json);
 
-        int[] length = new int[3];
-        length[0] = teachers.length();
-        length[1] = grades.length();
-        length[2] = lessons.length();
+        for(int i=0 ; i<array.length() ; i++) {
+            HashMap lesson = new HashMap();
+            lesson.put("title", array.getJSONObject(i).getString("title"));
+            lesson.put("start_date", array.getJSONObject(i).getString("start_date"));
+            lesson.put("end_date", array.getJSONObject(i).getString("end_date"));
+            lesson.put("amount", array.getJSONObject(i).getDouble("amount"));
+            lesson.put("description", array.getJSONObject(i).getString("description"));
+            lesson.put("teacher", array.getJSONObject(i).getString("teacher"));
+            lesson.put("image", array.getJSONObject(i).getString("image"));
+            lesson.put("parent_id", array.getJSONObject(i).getJSONObject("parent").getInt("id"));
+            lesson.put("parent_name", array.getJSONObject(i).getJSONObject("parent").getString("title"));
+            lesson.put("first_class_time", array.getJSONObject(i).getJSONArray("course_calendars").getString(0));
+            lesson.put("second_class_time", array.getJSONObject(i).getJSONArray("course_calendars").getString(1));
+            lesson.put("third_class_time", array.getJSONObject(i).getJSONArray("course_calendars").getString(2));
 
-        HashMap teacher = new HashMap();
-        HashMap grade = new HashMap();
-        HashMap lesson = new HashMap();
-        int i = 0;
-
-        while (i <= 2) {
-
-
-            for (int j = 0; j < length[i]; j++) {
-                switch (i) {
-                    case 0:
-                        HashMap arrays0 = new HashMap();
-                        JSONObject jsonObject0 = (JSONObject) teachers.get(j);
-
-                        arrays0.put("id", jsonObject0.getString("id"));
-                        arrays0.put("full_name", jsonObject0.getString("full_name"));
-
-                        teacher.put(j, arrays0);
-
-
-                        break;
-
-                    case 1:
-                        HashMap arrays1 = new HashMap();
-                        JSONObject jsonObject1 = (JSONObject) grades.get(j);
-
-                        arrays1.put("id", jsonObject1.getString("id"));
-                        arrays1.put("title", jsonObject1.getString("title"));
-
-                        grade.put(j, arrays1);
-
-                        break;
-
-                    case 2:
-                        HashMap arrays2 = new HashMap();
-                        JSONObject jsonObject2 = (JSONObject) lessons.get(j);
-
-                        arrays2.put("id", jsonObject2.getString("id"));
-                        arrays2.put("title", jsonObject2.getString("title"));
-
-                        lesson.put(j, arrays2);
-
-                        break;
-                }
-
-            }
-            i++;
-
+            main.add(lesson);
         }
-
-        main.put(3, teacher);
-        main.put(4, grade);
-        main.put(5, lesson);
-
+        Log.i("final ARRAY--->", main.toString());
 
         return main;
+
+//        JSONObject lists = new JSONObject(json);
+//        JSONArray teachers = lists.getJSONArray("teachers");
+//        JSONArray grades = lists.getJSONArray("grades");
+//        JSONArray lessons = lists.getJSONArray("lessons");
+//
+//        main.put(0, teachers.length());
+//        main.put(1, grades.length());
+//        main.put(2, lessons);
+//
+//        int[] length = new int[3];
+//        length[0] = teachers.length();
+//        length[1] = grades.length();
+//        length[2] = lessons.length();
+//
+//        HashMap teacher = new HashMap();
+//        HashMap grade = new HashMap();
+//        HashMap lesson = new HashMap();
+//        int i = 0;
+//
+//        while (i <= 2) {
+//
+//
+//            for (int j = 0; j < length[i]; j++) {
+//                switch (i) {
+//                    case 0:
+//                        HashMap arrays0 = new HashMap();
+//                        JSONObject jsonObject0 = (JSONObject) teachers.get(j);
+//
+//                        arrays0.put("id", jsonObject0.getString("id"));
+//                        arrays0.put("full_name", jsonObject0.getString("full_name"));
+//
+//                        teacher.put(j, arrays0);
+//
+//
+//                        break;
+//
+//                    case 1:
+//                        HashMap arrays1 = new HashMap();
+//                        JSONObject jsonObject1 = (JSONObject) grades.get(j);
+//
+//                        arrays1.put("id", jsonObject1.getString("id"));
+//                        arrays1.put("title", jsonObject1.getString("title"));
+//
+//                        grade.put(j, arrays1);
+//
+//                        break;
+//
+//                    case 2:
+//                        HashMap arrays2 = new HashMap();
+//                        JSONObject jsonObject2 = (JSONObject) lessons.get(j);
+//
+//                        arrays2.put("id", jsonObject2.getString("id"));
+//                        arrays2.put("title", jsonObject2.getString("title"));
+//
+//                        lesson.put(j, arrays2);
+//
+//                        break;
+//                }
+//
+//            }
+//            i++;
+//
+//        }
+//
+//        main.put(3, teacher);
+//        main.put(4, grade);
+//        main.put(5, lesson);
+//
+//
     }
 
 }
