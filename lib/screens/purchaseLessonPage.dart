@@ -16,7 +16,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     PurchaseItem(
       courseName: 'شیمی دهم',
       grade: 'پایه دهم',
-      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیاد شیمی',
+      explanation: 'شیمی دهم با مهدی شهبازی دارنده مدال برنز المپیشمسنیتبمنشستیبمنت شمسنت یبمنش تسیمبن تشمی نبتشمس نیتب منستش یمن بتشسمن یتباد شیمی',
       imageURL: 'assets/images/lessons.jpg',
     ),
     PurchaseItem(
@@ -136,6 +136,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: getItemsList(items).toList(),
                   ),
                 ),

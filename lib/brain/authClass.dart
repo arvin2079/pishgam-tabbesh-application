@@ -107,7 +107,8 @@ class Auth extends AuthBase {
   @override
   Future<User> currentUser() async {
     final String _methodName = 'currentuser';
-    final Map<dynamic, dynamic> result = await _currentUserChannel.invokeMethod(_methodName);
+    final Map<dynamic, dynamic> result =
+        await _currentUserChannel.invokeMethod(_methodName);
 //    print(result.toString());
     if (result == null)
       return null;
@@ -227,32 +228,33 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> signout() async{
+  Future<bool> signout() async {
     final String _methodName = "signout";
     bool result = await _gradesChannel.invokeMethod(_methodName);
-    if(result)
-      return true;
+    if (result) return true;
 
     return false;
   }
 
   @override
-  Future<HomeViewModel> initializeHome() async{
+  Future<HomeViewModel> initializeHome() async {
     final String _dashboardMethodName = "acountlessons";
     final String _curentUserMethodName = "currentuser";
-    final Map<dynamic, dynamic> dResult = await _homePropertiesChannel.invokeMethod(_dashboardMethodName);
-    final Map<dynamic, dynamic> cResult = await _currentUserChannel.invokeMethod(_curentUserMethodName);
+    final Map<dynamic, dynamic> dResult =
+        await _homePropertiesChannel.invokeMethod(_dashboardMethodName);
+    final Map<dynamic, dynamic> cResult =
+        await _currentUserChannel.invokeMethod(_curentUserMethodName);
 
-    DateTime now = DateTime.parse(dResult['now']);
-    DateTime classTime;
-    if(dResult["length"] != 0) {
-      classTime = DateTime.parse(now.toString().trim().substring(0, 11) + dResult["timeLeft"].toString().substring(3).trim());
+//    DateTime now = DateTime.parse(dResult['now']);
+    Duration timeLeft;
+    String durationString = dResult['timeLeft'];
+    if (dResult["length"] != 0) {
+      timeLeft = Duration(
+        hours: int.parse(durationString.substring(3, 5).trim()),
+        minutes: int.parse(durationString.substring(6,8).trim()),
+        seconds: int.parse(durationString.substring(9,11).trim()),
+      );
     }
-
-    print("dResult ------> ");
-    print(dResult.toString());
-    print("cResult ------> ");
-    print(cResult.toString());
 
     Image avatar = Image.network(cResult["avatar"]);
 
@@ -260,7 +262,7 @@ class Auth extends AuthBase {
       title: dResult["title"],
       teacher: dResult["teacher"],
       name: cResult["firstname"] + " " + cResult["lastname"],
-      timeLeft: classTime == null ? null : classTime.isAfter(now) ? classTime.difference(now) : now.difference(classTime),
+      timeLeft: timeLeft,
       grade: cResult["grades"],
       isActive: dResult["is_active"],
       avatar: avatar,
@@ -268,9 +270,7 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<MyLessonsViewModel> initializeMyLesson() {
-
-  }
+  Future<MyLessonsViewModel> initializeMyLesson() {}
 }
 
 class User extends Equatable {
