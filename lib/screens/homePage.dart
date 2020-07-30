@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage>
   AuthBloc _authbloc;
 
   bool timesUp = false;
-
   bool expanded = false;
 
   List<MainMenuSliderCard> _sliderItems = <MainMenuSliderCard>[];
@@ -374,6 +373,7 @@ class _HomePageState extends State<HomePage>
                               onPressed: () {
                                 print('pressed');
                                 _authbloc.add(Signout());
+                                _homeBloc.add(BreakHomeInitialization());
                               },
                             ),
                             Text(

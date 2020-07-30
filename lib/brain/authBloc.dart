@@ -6,6 +6,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:pishgamv2/screens/homePage.dart';
 import 'authClass.dart';
 
 abstract class AuthEvent extends Equatable {
@@ -72,7 +73,7 @@ class SignInIsLoadingSta extends AuthState {
 
 class InitialState extends AuthState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => null;
 }
 
 class StartAnimation extends AuthState {
@@ -82,12 +83,12 @@ class StartAnimation extends AuthState {
 
 class Home extends AuthState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => null;
 }
 
 class SignIn extends AuthState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => null;
 }
 
 class SignUpLoadingFinished extends AuthState {

@@ -11,6 +11,11 @@ abstract class HomeEvent extends Equatable{
   const HomeEvent();
 }
 
+class BreakHomeInitialization extends HomeEvent {
+  @override
+  List<Object> get props => null;
+}
+
 class InitializeHome extends HomeEvent {
   @override
   List<Object> get props => null;
@@ -86,6 +91,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     else if(event is InitializedShoppingLesson) {
       ShoppingLessonViewModel viewModel = await auth.initializeShoppingLesson();
       yield ShoppingLessonInitiallized(viewModel);
+    }
+
+    else if (event is BreakHomeInitialization) {
+      yield HomeNotInitialState();
     }
   }
 }
