@@ -64,66 +64,70 @@ class _MyLessonsState extends State<MyLessons> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              LessonList(
-                title: 'ریاضی',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                    ],
-                  ),
-                ),
-              ),
-              LessonList(
-                title: 'فیزیک',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                    ],
-                  ),
-                ),
-              ),
-              LessonList(
-                title: 'فیزیک',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                    ],
-                  ),
-                ),
-              ),
-              LessonList(
-                title: 'فیزیک',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-//                    MyLessonCard(
-//                    ),
-//                    MyLessonCard(
-//                    ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+        body: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[],
+//            children: <Widget>[
+//              LessonList(
+//                title: 'ریاضی',
+//                child: SingleChildScrollView(
+//                  scrollDirection: Axis.horizontal,
+//                  child: Row(
+//                    children: <Widget>[
+////                    MyLessonCard(
+////                    ),
+////                    MyLessonCard(
+////                    ),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//              LessonList(
+//                title: 'فیزیک',
+//                child: SingleChildScrollView(
+//                  scrollDirection: Axis.horizontal,
+//                  child: Row(
+//                    children: <Widget>[
+////                    MyLessonCard(
+////                    ),
+////                    MyLessonCard(
+////                    ),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//              LessonList(
+//                title: 'فیزیک',
+//                child: SingleChildScrollView(
+//                  scrollDirection: Axis.horizontal,
+//                  child: Row(
+//                    children: <Widget>[
+////                    MyLessonCard(
+////                    ),
+////                    MyLessonCard(
+////                    ),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//              LessonList(
+//                title: 'فیزیک',
+//                child: SingleChildScrollView(
+//                  scrollDirection: Axis.horizontal,
+//                  child: Row(
+//                    children: <Widget>[
+////                    MyLessonCard(
+////                    ),
+////                    MyLessonCard(
+////                    ),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//            ],
+            ),
           ),
         ),
       ),

@@ -131,10 +131,8 @@ class _HomePageState extends State<HomePage>
       },
         // ignore: missing_return
         builder: (context, state) {
-      if (state is HomeNotInitialState) {
-        _homeBloc.add(InitializeHome());
-        return _buildLoaderScreen();
-      } else if (state is HomeInitiallized) {
+
+      if (state is HomeInitiallized) {
         widget.viewModel = state.viewModel;
         if (widget.viewModel == null) {
           _authbloc.add(
@@ -147,6 +145,8 @@ class _HomePageState extends State<HomePage>
         }
         return _buildHomeBody(widget.viewModel, _radius);
       }
+      _homeBloc.add(InitializeHome());
+      return _buildLoaderScreen();
     });
   }
 
@@ -165,6 +165,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Scaffold _buildHomeBody(HomeViewModel viewModel, Radius _radius) {
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
@@ -285,6 +286,7 @@ class _HomePageState extends State<HomePage>
                         ),
                         Spacer(),
                         SlideCountdownClock(
+//                          duration: Duration(days: 0, minutes: 37),
                           duration: widget.viewModel.timeLeft != null
                               ? widget.viewModel.timeLeft
                               : Duration(minutes: 0),

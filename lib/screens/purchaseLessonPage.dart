@@ -12,8 +12,6 @@ import 'package:pishgamv2/screens/shopping_cart.dart';
 
 class PurchaseLesson extends StatefulWidget {
   ShoppingLessonViewModel viewModel;
-  HomeBloc _homeBloc;
-  AuthBloc _authbloc;
 
   @override
   _PurchaseLessonState createState() => _PurchaseLessonState();
@@ -21,13 +19,14 @@ class PurchaseLesson extends StatefulWidget {
 
 class _PurchaseLessonState extends State<PurchaseLesson> {
   StreamController<int> _countController = StreamController<int>();
+  HomeBloc _homeBloc;
+  AuthBloc _authbloc;
   int _count = 0;
-
 
   @override
   void initState() {
-    widget._authbloc = BlocProvider.of<AuthBloc>(context);
-    widget._homeBloc = BlocProvider.of<HomeBloc>(context);
+    _authbloc = BlocProvider.of<AuthBloc>(context);
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
     super.initState();
   }
 
@@ -37,50 +36,20 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     super.dispose();
   }
 
-  Iterable<Widget> getItemsList(List<PurchaseItem> itemsList) sync* {
-    for (PurchaseItem item in itemsList) {
+  Iterable<Widget> getItemsList(List<LessonModel> itemsList) sync* {
+    for (LessonModel item in itemsList) {
       yield PurchaseLessonCard(
         purchaseItem: item,
         onDelete: () {
           setState(() {
             _count = _count - 1;
             _countController.sink.add(_count);
-            int idx = itemsList.indexWhere((value) {
-              if (value == item) return true;
-              return false;
-            });
-            itemsList[idx].isAdded = false;
-            itemsList[idx].color = Color(0xFFCDDC39);
-            itemsList[idx].child = Text(
-              'افزودن به سبد خرید',
-              style: TextStyle(
-                fontWeight: FontWeight.w100,
-                fontFamily: 'vazir',
-                fontSize: 14,
-                color: Colors.white,
-              ),
-            );
           });
         },
         onAdd: () {
           setState(() {
             _count = _count + 1;
             _countController.sink.add(_count);
-            int idx = itemsList.indexWhere((value) {
-              if (value == item) return true;
-              return false;
-            });
-            itemsList[idx].isAdded = true;
-            itemsList[idx].color = Colors.grey[350];
-            itemsList[idx].child = Text(
-              'حذف از سبد خرید',
-              style: TextStyle(
-                fontWeight: FontWeight.w100,
-                fontFamily: 'vazir',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            );
           });
         },
       );
@@ -157,39 +126,59 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.close),
-              color: Colors.black,
+              color: Colors.black54,
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              LessonList(
-                title: 'ریاضی',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: getItemsList(List()).toList(),
-                  ),
-                ),
-              ),
-              LessonList(
-                title: 'فیزیک',
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: getItemsList(List()).toList(),
-                  ),
-                ),
-              ),
-            ],
+        body: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: _defineLists.toList(),
+            ),
           ),
         ),
       ),
     );
   }
 
+  Iterable<Widget> get _defineLists sync* {
+    List<LessonModel> items = List();
+    String lastItemParentId;
+    String lastItemParentTitle;
+    for (final LessonModel item in widget.viewModel.lessons) {
+      if (lastItemParentId == null) {
+        items.add(item);
+        lastItemParentId = item.parent_id;
+        lastItemParentTitle = item.parent_name;
+        continue;
+      }
+
+      if (lastItemParentId == item.parent_id) {
+        items.add(item);
+        continue;
+      }
+
+      if (lastItemParentId != item.parent_id) {
+        yield LessonList(
+          title: lastItemParentTitle,
+          children: getItemsList(items).toList(),
+        );
+        items.clear();
+        items.add(item);
+        lastItemParentId = item.parent_id;
+        lastItemParentTitle = item.parent_name;
+      }
+    }
+
+    if (items.isNotEmpty) {
+      yield LessonList(
+        title: items[0].parent_name,
+        children: getItemsList(items).toList(),
+      );
+      items.clear();
+    }
+  }
 }
 
 class ShoppingLessonViewModel {

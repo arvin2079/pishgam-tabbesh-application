@@ -21,4 +21,12 @@ final DialogShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.circular(9),
 );
 
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
 

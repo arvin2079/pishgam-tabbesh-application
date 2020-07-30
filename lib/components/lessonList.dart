@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LessonList extends StatelessWidget {
-  const LessonList({Key key, this.title, this.child}) : super(key: key);
+  const LessonList({Key key, this.title, this.children}) : super(key: key);
 
   final String title;
-  final Widget child;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,13 @@ class LessonList extends StatelessWidget {
             SizedBox(height: 15),
             Flexible(
               fit: FlexFit.loose,
-              child: child,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children,
+                ),
+              ),
             ),
           ],
         ),
