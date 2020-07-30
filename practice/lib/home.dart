@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:practice/choose_location.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();

@@ -286,7 +286,6 @@ class Auth extends AuthBase {
     final String _shoppingLessonMethodName = "shoppinglist";
     String result = await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName);
 
-    print(result);
     final data = jsonDecode(result);
     List<LessonModel> lessonList = List();
 
@@ -312,7 +311,6 @@ class Auth extends AuthBase {
       lessonList.add(model);
     }
     lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
-
     return ShoppingLessonViewModel(
       lessons: lessonList,
     );

@@ -15,8 +15,6 @@ import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
 class HomePage extends StatefulWidget {
   HomeViewModel viewModel;
-  HomeBloc _homeBloc;
-  AuthBloc _authbloc;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -27,8 +25,13 @@ class _HomePageState extends State<HomePage>
   Alignment _alignment = Alignment(0, 2);
   Alignment _startAlignment = Alignment(0, 2);
   Alignment _finishAlignment = Alignment(0, 10.1);
+  final Radius _radius = Radius.circular(25);
+
   Animation<Alignment> _animation;
   AnimationController _controller;
+
+  HomeBloc _homeBloc;
+  AuthBloc _authbloc;
 
   bool timesUp = false;
 
@@ -39,19 +42,19 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
-    widget._homeBloc = BlocProvider.of<HomeBloc>(context);
-    widget._authbloc = BlocProvider.of<AuthBloc>(context);
     _controller.addListener(() {
       setState(() {
         _alignment = _animation.value;
       });
     });
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _authbloc = BlocProvider.of<AuthBloc>(context);
     _sliderItems.add(MainMenuSliderCard(
       icon: Icons.import_contacts,
       labelText: 'درس های من',
       buttonText: 'مشاهده',
       onPressed: () {
-        widget._homeBloc.add(InitializeMyLesson());
+        _homeBloc.add(InitializeMyLesson());
         Navigator.of(context).push(MaterialPageRoute<void>(
           fullscreenDialog: true,
           builder: (context) => MyLessons(),
@@ -64,7 +67,7 @@ class _HomePageState extends State<HomePage>
         labelText: 'خرید درس',
         buttonText: 'مشاهده',
         onPressed: () {
-          widget._homeBloc.add(InitializedShoppingLesson());
+          _homeBloc.add(InitializedShoppingLesson());
           Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (context) => PurchaseLesson(),
           ));
@@ -120,7 +123,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final Radius _radius = Radius.circular(25);
     return BlocBuilder<HomeBloc, HomeState>(
       condition: (lastState, thisState) {
         if(thisState is HomeNotInitialState || thisState is HomeInitiallized)
@@ -130,12 +132,12 @@ class _HomePageState extends State<HomePage>
         // ignore: missing_return
         builder: (context, state) {
       if (state is HomeNotInitialState) {
-        widget._homeBloc.add(InitializeHome());
+        _homeBloc.add(InitializeHome());
         return _buildLoaderScreen();
       } else if (state is HomeInitiallized) {
         widget.viewModel = state.viewModel;
         if (widget.viewModel == null) {
-          widget._authbloc.add(
+          _authbloc.add(
             CatchError(
               message: 'خطا',
               detail: 'اطلاعات شما از سوی سرور دریافت نشد',
@@ -369,7 +371,7 @@ class _HomePageState extends State<HomePage>
                               elevation: 5,
                               onPressed: () {
                                 print('pressed');
-                                widget._authbloc.add(Signout());
+                                _authbloc.add(Signout());
                               },
                             ),
                             Text(
