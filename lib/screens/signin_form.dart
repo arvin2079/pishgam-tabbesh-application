@@ -57,8 +57,6 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   List<Widget> BodyColumn(BuildContext context) {
-    // fixme : fix the warning
-    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return <Widget>[
       Padding(
         padding: const EdgeInsets.only(top: 60),

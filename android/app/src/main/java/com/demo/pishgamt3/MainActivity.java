@@ -276,6 +276,7 @@ public class MainActivity extends FlutterActivity {
                         client.newCall(request).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
+                                Log.i("errrrror", "errror caused disconnection");
                                 mainresult.error("خطا", "انجام عملیات ثبت نام در حال حاضر ممکن نیست", null);
                             }
 
@@ -283,27 +284,24 @@ public class MainActivity extends FlutterActivity {
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
                                     String message = "هندل نشده";
+                                    Log.i("in signup", "successful");
                                     int responseCode = response.code();
                                     Log.i("my response code ----> ", responseCode + "");
 
-                                    switch (responseCode) {
-                                        case 200:
-                                            message = "ثبت نام با موفقیت انجام شد";
-                                            break;
-                                        case 406:
-                                            message = "کاربر با این مشخصات موجود می باشد";
-                                            Log.i("messssaggeee", message);
-                                            break;
-                                        case 401:
-                                            message = "خطا در برقراری ارتباط با سرور";
-                                            break;
-                                        default:
-                                            message = "اشکال در انجام عملیات ثبت نام";
-                                            break;
-                                    }
+
 
                                     mainresult.success(message);
 
+                                } else {
+                                    int code = response.code();
+                                    if(code == 406) {
+                                        String resbody = response.body().string();
+                                        try {
+                                            mainresult.error(new JsonParser().SignupOnFailed(resbody),"کاربر با این مشخصات از قبل موجود است", null);
+                                        } catch(JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
                             }
                         });

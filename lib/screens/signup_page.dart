@@ -110,7 +110,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       );
 
-    } catch (_) {}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +23,21 @@ import java.util.zip.ZipInputStream;
 public class JsonParser {
 
     public JsonParser() {
+    }
+
+
+    public String SignupOnFailed(String json) throws IOException, JSONException {
+        JSONObject JO = new JSONObject(json);
+        String result = "";
+        if(JO.has("username")) {
+            result += JO.getString("username").substring(2, JO.getString("username").length()-2) + " ";
+        }
+
+        if(JO.has("phone_number")) {
+            result += JO.getString("phone_number").substring(2, JO.getString("phone_number").length()-2) + " ";
+        }
+
+        return result;
     }
 
 

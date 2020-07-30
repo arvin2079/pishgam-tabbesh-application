@@ -174,6 +174,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield SignInIsLoadingSta();
       try {
         await auth.signin(username: event.username, password: event.password);
+        yield Home();
       } on PlatformException catch (err) {
         this.add(CatchError(
           message: err.message,
@@ -183,7 +184,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         print(err.toString());
       }
       yield SignInLoadingFinished();
-      yield Home();
     }
 
     else if (event is DoSignUp) {
@@ -191,6 +191,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String result;
       try {
         result = await auth.signup(user: event.user);
+        yield SignIn();
       } on PlatformException catch (err) {
         this.add(CatchError(
           message: err.message,
@@ -205,7 +206,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           message: 'موفق',
           detail: 'ثبت نام شما با موفقیت به پایان رسید . رمز عبور به شماره همراه شما ارسال خواهد شد',
         ));
-        yield SignIn();
       }
     }
 
