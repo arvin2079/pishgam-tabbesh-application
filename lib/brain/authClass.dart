@@ -278,7 +278,35 @@ class Auth extends AuthBase {
 
   @override
   Future<MyLessonsViewModel> initializeMyLesson() async{
+    final String _myLessonsMethodName = "lessons";
+    final result = await _myLessonsChannel.invokeMethod(_myLessonsMethodName);
 
+    final data = jsonDecode(result);
+    List<LessonModel> lessonList = List();
+
+    for(Map m in data) {
+      print(m['parent']['id'].toString());
+      LessonModel model = LessonModel(
+        code: m['code'],
+        title: m['title'],
+        startDate: DateTime.parse(m['start_date'].toString().substring(0,10) + " " + m['start_date'].toString().substring(11)),
+        endDate: DateTime.parse(m['end_date'].toString().substring(0,10) + " " + m['end_date'].toString().substring(11)),
+        firstClass: DateTime.parse(m['first_class'].toString().substring(0,10) + " " + m['first_class'].toString().substring(11)),
+        url: m['url'],
+        isActive: m['is_active'],
+        description: m['description'],
+        image: Image.network(m['image']),
+        teacherName: m['teacher'],
+        parent_name: m['parent']['title'],
+        parent_id: m['parent']['id'].toString(),
+      );
+      lessonList.add(model);
+    }
+
+    print('this is my lesson list ::');
+    print(lessonList.toString());
+    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+    return MyLessonsViewModel(lessons: lessonList);
   }
 
   @override
@@ -311,9 +339,7 @@ class Auth extends AuthBase {
       lessonList.add(model);
     }
     lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
-    return ShoppingLessonViewModel(
-      lessons: lessonList,
-    );
+    return ShoppingLessonViewModel(lessons: lessonList);
   }
 
 }

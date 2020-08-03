@@ -536,48 +536,50 @@ public class MainActivity extends FlutterActivity {
                 .setMethodCallHandler(((call, result) ->
                 {
                     if (call.method.equals(names[8])) {
-                        //class for sending feedback
                         MainThreadResult mainresult = new MainThreadResult(result);
-                        //use get method to get list of cities and grades
-                        HashMap<String, String> header = new HashMap<>();
-                        header.put(new Header().getKayheader(), new Header().getValueheader());
-                        header.put(new Header().getKeyvalue(), new Header().getValueval());
-                        //main class for request
+                        SharePref pref = new SharePref(getApplicationContext());
                         OkHttpClient client = new OkHttpClient();
-                        RequestforServer requestforServer = new RequestforServer(client, path.getLessons(), header);
 
+                        Request shoppingLessonsRequest = new Request.Builder()
+                                .url(path.getLessons())
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .build();
+
+//                        Request categoriesRequest = new Request.Builder()
+//                                .url(path.getCategories())
+//                                .addHeader("Accept", "application/json")
+//                                .addHeader("Authorization", "Token " + pref.load("token"))
+//                                .build();
+
+//                        final String[] responses = new String[2];
 
                         try {
-                            client.newCall(requestforServer.getMethod()).enqueue(new Callback() {
+                            client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-
                                 }
 
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
-                                    MainActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (response.isSuccessful()) {
-                                                String token = response.body().toString();
-                                                try {
-                                                    mainresult.success(new JsonParser().lessonslist(token));
-                                                } catch (JSONException e) {
-                                                    mainresult.error("خطا", "خطا", null);
+                                    int resCode = response.code();
+                                    String resBody = response.body().string();
 
-                                                }
+                                    Log.i("resBody@ ", resBody);
 
-                                            }
-
-                                        }
-                                    });
-
-
+                                    if (resCode == 200) {
+                                        mainresult.success(resBody);
+                                    }
+                                    else if(resCode == 400) {
+                                        mainresult.success("");
+                                    }else {
+                                        mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
+                                    }
                                 }
                             });
-                        } catch (IOException e) {
+
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -742,31 +744,6 @@ public class MainActivity extends FlutterActivity {
                                     }
                                 }
                             });
-
-//                            client.newCall(categoriesRequest).enqueue(new Callback() {
-//                                @Override
-//                                public void onFailure(Call call, IOException e) {
-//                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-//                                }
-//
-//                                @Override
-//                                public void onResponse(Call call, Response response) throws IOException {
-//                                    int resCode = response.code();
-//                                    String resBody = response.body().string();
-//
-//                                    Log.i("resBody@2 ", resBody);
-//
-//                                    if(resCode == 200) {
-//                                        responses[1] = resBody;
-//                                    } else {
-//                                        mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
-//                                    }
-//                                }
-//                            });
-//                            if(responses[0] != null && responses[1] != null) {
-//                                JsonParser jsonParser = new JsonParser();
-//                                mainresult.success(jsonParser.shoppingList(responses[0], responses[1]));
-//                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();

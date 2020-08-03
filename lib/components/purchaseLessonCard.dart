@@ -17,6 +17,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
 
   @override
   Widget build(BuildContext context) {
+  const double contentPaddingHoriz = 12;
   MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
       width: queryData.size.width - 80,
@@ -44,21 +45,21 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
+                padding: const EdgeInsets.only(top: 15, right: contentPaddingHoriz, left: contentPaddingHoriz),
                 child: Text(
                   widget.purchaseItem.title,
                   style: TextStyle(
-                    fontSize: 23,
-                    fontFamily: 'WeblogmaYekan',
+                    fontSize: 22,
+                    fontFamily: 'vazir',
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10, top: 8, left: 10),
+                padding: const EdgeInsets.only(right: contentPaddingHoriz, top: 8, left: contentPaddingHoriz),
                 child: Text(
-                  'قیمت :' + widget.purchaseItem.amount.toString(),
+                  'قیمت : ' + widget.purchaseItem.amount.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'vazir',
@@ -68,7 +69,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10, left: 10, top: 10, bottom: 20),
+                padding: const EdgeInsets.symmetric(horizontal: contentPaddingHoriz, vertical: 5),
                 child: Text(
                   widget.purchaseItem.description,
                   style: TextStyle(
@@ -79,6 +80,78 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  'زمان شروع دوره :\n' + widget.purchaseItem.startDate.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  'زمان پایان دوره :\n' + widget.purchaseItem.endDate.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  'زمان کلاس ها :',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              widget.purchaseItem.courseCalendar[0] != null ? Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  ' - ' + widget.purchaseItem.courseCalendar[0].toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ) : Container(),
+              widget.purchaseItem.courseCalendar[1] != null ? Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  ' - ' + widget.purchaseItem.courseCalendar[1].toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ) : Container,
+              widget.purchaseItem.courseCalendar[2] != null ? Padding(
+                padding: const EdgeInsets.only(right: contentPaddingHoriz),
+                child: Text(
+                  ' - ' + widget.purchaseItem.courseCalendar[2].toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ) : Container(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: SizedBox(
@@ -104,7 +177,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontFamily: 'vazir',
-                              fontSize: 14,
+                              fontSize: 16,
                               color: Colors.white,
                             ),
                           ),

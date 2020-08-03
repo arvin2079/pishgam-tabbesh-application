@@ -134,7 +134,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
           behavior: MyBehavior(),
           child: SingleChildScrollView(
             child: Column(
-              children: _defineLists.toList(),
+              children: _definePurchaseLessonLists.toList(),
             ),
           ),
         ) : Center(
@@ -151,7 +151,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     );
   }
 
-  Iterable<Widget> get _defineLists sync* {
+  Iterable<Widget> get _definePurchaseLessonLists sync* {
     List<LessonModel> items = List();
     String lastItemParentId;
     String lastItemParentTitle;
