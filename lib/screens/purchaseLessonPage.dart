@@ -130,11 +130,20 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             ),
           ],
         ),
-        body: ScrollConfiguration(
+        body: widget.viewModel.lessons.isNotEmpty ? ScrollConfiguration(
           behavior: MyBehavior(),
           child: SingleChildScrollView(
             child: Column(
               children: _defineLists.toList(),
+            ),
+          ),
+        ) : Center(
+          child: Text(
+            'هنوز هیچ درسی ارائه نشده :/',
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w100,
+              color: Colors.grey[500],
             ),
           ),
         ),

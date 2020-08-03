@@ -17,14 +17,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
 
   @override
   Widget build(BuildContext context) {
+  MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
-      width: 270,
+      width: queryData.size.width - 80,
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        margin: EdgeInsets.all(10),
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Column(
@@ -44,7 +44,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15, right: 5),
+                padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
                 child: Text(
                   widget.purchaseItem.title,
                   style: TextStyle(
@@ -56,25 +56,25 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 6),
+                padding: const EdgeInsets.only(right: 10, top: 8, left: 10),
                 child: Text(
                   'قیمت :' + widget.purchaseItem.amount.toString(),
                   style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'WeblogmaYekan',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[500],
+                    fontSize: 16,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w100,
+                    color: Colors.grey[600],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 6, top: 10, bottom: 20),
+                padding: const EdgeInsets.only(right: 10, left: 10, top: 10, bottom: 20),
                 child: Text(
                   widget.purchaseItem.description,
                   style: TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'WeblogmaYekan',
-                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w100,
                     color: Colors.grey[600],
                   ),
                 ),
@@ -102,7 +102,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                         : Text(
                             'افزودن به سبد خرید',
                             style: TextStyle(
-                              fontWeight: FontWeight.w100,
+                              fontWeight: FontWeight.w500,
                               fontFamily: 'vazir',
                               fontSize: 14,
                               color: Colors.white,
