@@ -5,6 +5,7 @@ import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
+import 'package:pishgamv2/constants/Constants.dart';
 import 'package:pishgamv2/dialogs/changePassDialog.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
@@ -57,151 +58,154 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Card(
-            elevation: 3.0,
-            margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 40),
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: GestureDetector(
-                    child: CircleAvatar(
-                      radius: 47,
-                      backgroundColor: Colors.grey[50],
-                      child: _image == null
-                          ? Icon(Icons.person,
-                              color: Colors.blueGrey[600], size: 50)
-                          : null,
-                      backgroundImage: _image == null ? null : _image.image,
+        body: ScrollConfiguration(
+          behavior: MyBehavior(),
+          child: SingleChildScrollView(
+            child: Card(
+              elevation: 3.0,
+              margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 40),
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 25),
+                    child: GestureDetector(
+                      child: CircleAvatar(
+                        radius: 47,
+                        backgroundColor: Colors.grey[50],
+                        child: _image == null
+                            ? Icon(Icons.person,
+                                color: Colors.blueGrey[600], size: 50)
+                            : null,
+                        backgroundImage: _image == null ? null : _image.image,
+                      ),
+                      onTap: () => _pickImage(),
                     ),
-                    onTap: () => _pickImage(),
                   ),
-                ),
-                SignupTextInput(
-                  borderColor: Colors.black54,
-                  labelColor: Colors.grey[500],
-                  inputColor: Colors.black87,
-                  labelText: 'نام',
-                  textInputType: TextInputType.text,
-                  controller: _nameController,
-                  onEditingComplete: () {
-                    FocusScope.of(context).nextFocus();
-                  },
-                ),
-                SignupTextInput(
-                  borderColor: Colors.black54,
-                  labelColor: Colors.grey[500],
-                  inputColor: Colors.black87,
-                  labelText: 'نام خانوادگی',
-                  controller: _familyNameController,
-                  textInputType: TextInputType.text,
-                  onEditingComplete: () {
-                    FocusScope.of(context).nextFocus();
-                  },
-                ),
-                SignupTextInput(
-                  borderColor: Colors.black54,
-                  labelColor: Colors.grey[500],
-                  inputColor: Colors.black87,
-                  labelText: 'نام کاربری',
-                  controller: _userNameController,
-                  textInputType: TextInputType.text,
-                  onEditingComplete: () {
-                    FocusScope.of(context).nextFocus();
-                  },
-                ),
-                SignupTextInput(
-                  borderColor: Colors.black54,
-                  labelColor: Colors.grey[500],
-                  inputColor: Colors.black87,
-                  counterColor: Colors.grey[800],
-                  labelText: 'شماره موبایل',
-                  controller: _phoneNumberController,
-                  textInputType: TextInputType.phone,
-                  onEditingComplete: () {
-                    FocusScope.of(context).nextFocus();
-                  },
-                  maxLength: 10,
-                ),
-                SizedBox(height: 40),
-                Row(
-                  textDirection: TextDirection.rtl,
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomDropDownButton(
-                        color: Colors.grey[600],
-                        hint: 'مقطع',
-                        items: grades,
-                        controller: _gradeDropDownController,
+                  SignupTextInput(
+                    borderColor: Colors.black54,
+                    labelColor: Colors.grey[500],
+                    inputColor: Colors.black87,
+                    labelText: 'نام',
+                    textInputType: TextInputType.text,
+                    controller: _nameController,
+                    onEditingComplete: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                  ),
+                  SignupTextInput(
+                    borderColor: Colors.black54,
+                    labelColor: Colors.grey[500],
+                    inputColor: Colors.black87,
+                    labelText: 'نام خانوادگی',
+                    controller: _familyNameController,
+                    textInputType: TextInputType.text,
+                    onEditingComplete: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                  ),
+                  SignupTextInput(
+                    borderColor: Colors.black54,
+                    labelColor: Colors.grey[500],
+                    inputColor: Colors.black87,
+                    labelText: 'نام کاربری',
+                    controller: _userNameController,
+                    textInputType: TextInputType.text,
+                    onEditingComplete: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                  ),
+                  SignupTextInput(
+                    borderColor: Colors.black54,
+                    labelColor: Colors.grey[500],
+                    inputColor: Colors.black87,
+                    counterColor: Colors.grey[800],
+                    labelText: 'شماره موبایل',
+                    controller: _phoneNumberController,
+                    textInputType: TextInputType.phone,
+                    onEditingComplete: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                    maxLength: 10,
+                  ),
+                  SizedBox(height: 40),
+                  Row(
+                    textDirection: TextDirection.rtl,
+                    children: <Widget>[
+                      Expanded(
+                        child: CustomDropDownButton(
+                          color: Colors.grey[600],
+                          hint: 'مقطع',
+                          items: grades,
+                          controller: _gradeDropDownController,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: CustomDropDownButton(
-                        color: Colors.grey[600],
-                        hint: 'شهر',
-                        items: locations,
-                        controller: _cityDropDownController,
+                      Expanded(
+                        child: CustomDropDownButton(
+                          color: Colors.grey[600],
+                          hint: 'شهر',
+                          items: locations,
+                          controller: _cityDropDownController,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                RadioButton(
-                  color: Colors.grey[600],
-                  txt: 'جنسيت',
-                  valueFirst: 1,
-                  valueSecond: 2,
-                  first: 'پسر',
-                  second: 'دختر',
-                  controller: _radioGroupController,
-                ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15, bottom: 20),
-                      child: RaisedButton(
-                        color: Colors.yellowAccent[700],
-                        onPressed: () {},
-                        child: Text(
-                          'ثبت',
-                          style: TextStyle(
-                            fontFamily: 'vazir',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 19,
-                            color: Colors.black54,
+                    ],
+                  ),
+                  RadioButton(
+                    color: Colors.grey[600],
+                    txt: 'جنسيت',
+                    valueFirst: 1,
+                    valueSecond: 2,
+                    first: 'پسر',
+                    second: 'دختر',
+                    controller: _radioGroupController,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15, bottom: 20),
+                        child: RaisedButton(
+                          color: Colors.yellowAccent[700],
+                          onPressed: () {},
+                          child: Text(
+                            'ثبت',
+                            style: TextStyle(
+                              fontFamily: 'vazir',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 19,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 20),
-                      child: FlatButton(
-                        color: Colors.transparent,
-                        onPressed: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return ChangePassDialog();
-                            },
-                          );
-                        },
-                        child: Text(
-                          'تغییر رمز عبور',
-                          style: TextStyle(
-                            fontFamily: 'vazir',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 19,
-                            color: Colors.black54,
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 15, bottom: 20),
+                        child: FlatButton(
+                          color: Colors.transparent,
+                          onPressed: () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return ChangePassDialog();
+                              },
+                            );
+                          },
+                          child: Text(
+                            'تغییر رمز عبور',
+                            style: TextStyle(
+                              fontFamily: 'vazir',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 19,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
