@@ -116,7 +116,6 @@ class Auth extends AuthBase {
     final String _methodName = 'currentuser';
     final Map<dynamic, dynamic> result =
         await _currentUserChannel.invokeMethod(_methodName);
-//    print(result.toString());
     if (result == null)
       return null;
     //todo : pass this user to homeScreen in Authbloc
@@ -279,12 +278,7 @@ class Auth extends AuthBase {
   @override
   Future<MyLessonsViewModel> initializeMyLesson() async {
     final String _myLessonsMethodName = "lessons";
-    print('in lesson1');
     final result = await _myLessonsChannel.invokeMethod(_myLessonsMethodName);
-    print('in lesson2');
-    print(result);
-    print(result != null);
-    print(result.toString().isNotEmpty);
 
     final dynamic data = result != null && result.toString().isNotEmpty
         ? jsonDecode(result)
@@ -293,7 +287,6 @@ class Auth extends AuthBase {
 
     if (data != null)
       for (Map m in data) {
-        print(m['parent']['id'].toString());
         LessonModel model = LessonModel(
           code: m['code'],
           title: m['title'],
@@ -319,10 +312,7 @@ class Auth extends AuthBase {
         lessonList.add(model);
       }
 
-    print('this is my lesson list ::');
-    print(lessonList.toString());
-    lessonList.sort(
-        (a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
     return MyLessonsViewModel(lessons: lessonList);
   }
 
@@ -336,7 +326,6 @@ class Auth extends AuthBase {
     List<LessonModel> lessonList = List();
 
     for (Map m in data) {
-      print(m['parent']['id'].toString());
       LessonModel model = LessonModel(
         title: m['title'],
         startDate: DateTime.parse(m['start_date'].toString().substring(0, 10) +
