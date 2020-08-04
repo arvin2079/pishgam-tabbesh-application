@@ -11,6 +11,7 @@ import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
+import 'package:pishgamv2/screens/setting_screen.dart';
 import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 
 class HomePage extends StatefulWidget {
@@ -327,7 +328,11 @@ class _HomePageState extends State<HomePage>
                               iconSize: 30,
                               buttonSize: 55,
                               elevation: 5,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SettingScreen(),
+                                ));
+                              },
                             ),
                             Text(
                               'پروفایل',

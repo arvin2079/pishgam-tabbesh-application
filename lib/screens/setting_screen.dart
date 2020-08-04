@@ -5,6 +5,7 @@ import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
+import 'package:pishgamv2/dialogs/changePassDialog.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -43,13 +44,16 @@ class _SettingScreenState extends State<SettingScreen> {
               color: Colors.black,
             ),
           ),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
               icon: Icon(
                 Icons.close,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
@@ -64,17 +68,13 @@ class _SettingScreenState extends State<SettingScreen> {
                   padding: const EdgeInsets.only(top: 25),
                   child: GestureDetector(
                     child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[300],
-                      child: CircleAvatar(
-                        radius: 47,
-                        backgroundColor: Colors.grey[50],
-                        child: _image == null
-                            ? Icon(Icons.person,
-                            color: Colors.blueGrey[600], size: 65) : null ,
-                      backgroundImage:_image == null ?
-                        null : _image.image,
-                      ),
+                      radius: 47,
+                      backgroundColor: Colors.grey[50],
+                      child: _image == null
+                          ? Icon(Icons.person,
+                              color: Colors.blueGrey[600], size: 50)
+                          : null,
+                      backgroundImage: _image == null ? null : _image.image,
                     ),
                     onTap: () => _pickImage(),
                   ),
@@ -162,12 +162,12 @@ class _SettingScreenState extends State<SettingScreen> {
                       padding: const EdgeInsets.only(right: 15, bottom: 20),
                       child: RaisedButton(
                         color: Colors.yellowAccent[700],
-                        onPressed: (){},
+                        onPressed: () {},
                         child: Text(
                           'ثبت',
                           style: TextStyle(
                             fontFamily: 'vazir',
-                            fontWeight: FontWeight.w500 ,
+                            fontWeight: FontWeight.w500,
                             fontSize: 19,
                             color: Colors.black54,
                           ),
@@ -177,15 +177,22 @@ class _SettingScreenState extends State<SettingScreen> {
                     Spacer(),
                     Padding(
                       padding: EdgeInsets.only(left: 15, bottom: 20),
-                      child: RaisedButton(
-                        color: Colors.white,
-                        elevation: 0,
-                        onPressed: (){},
+                      child: FlatButton(
+                        color: Colors.transparent,
+                        onPressed: () {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return ChangePassDialog();
+                            },
+                          );
+                        },
                         child: Text(
                           'تغییر رمز عبور',
                           style: TextStyle(
                             fontFamily: 'vazir',
-                            fontWeight: FontWeight.w500 ,
+                            fontWeight: FontWeight.w500,
                             fontSize: 19,
                             color: Colors.black54,
                           ),
@@ -201,14 +208,17 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
     );
   }
+
   Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: source);
     File file = File(pickedFile.path);
     File finalFile = await ImageUtility.compressAndGetFile(file);
+
     _image = Image.file(finalFile);
     setState(() {});
   }
+
   void _pickImage() {
     showDialog(
         context: context,
