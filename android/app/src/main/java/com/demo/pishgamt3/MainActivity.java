@@ -392,9 +392,6 @@ public class MainActivity extends FlutterActivity {
                             }
                         });
 
-        //arvin's code
-        final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
 
         //lessons
 
@@ -452,6 +449,8 @@ public class MainActivity extends FlutterActivity {
                                                 case 200:
                                                     mainresult.success(new JsonParser().lessons(resBody));
                                                     break;
+                                                case 406:
+                                                    mainresult.success("");
 
                                             }
                                         }
@@ -566,12 +565,15 @@ public class MainActivity extends FlutterActivity {
                                     int resCode = response.code();
                                     String resBody = response.body().string();
 
+                                    Log.i("lessons code1--- >", resCode + "");
+                                    Log.i("respose body1--- >", resBody);
+
                                     Log.i("resBody@ ", resBody);
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
                                     }
-                                    else if(resCode == 400) {
+                                    else if(resCode == 406 || resCode == 404) {
                                         mainresult.success("");
                                     }else {
                                         mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
@@ -739,7 +741,10 @@ public class MainActivity extends FlutterActivity {
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
-                                    } else {
+                                    }
+                                    else if(resCode == 406 || resCode == 404) {
+                                        mainresult.success("");
+                                    }else {
                                         mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
                                     }
                                 }

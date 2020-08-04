@@ -19,10 +19,14 @@ class _MyLessonsState extends State<MyLessons> {
       // ignore: missing_return
         builder: (context, state) {
           if (state is MyLessonsInitiallized) {
+            print('herer1');
             widget.viewModel = state.viewModel;
+            print('herer1');
             return _buildMyLessonsBody(context);
-          } else
+          } else {
+            print('herer1');
             return _buildLoaderScreen();
+          }
         });
   }
 

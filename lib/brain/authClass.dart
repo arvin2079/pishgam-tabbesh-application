@@ -258,8 +258,8 @@ class Auth extends AuthBase {
     if (dResult["length"] != 0) {
       timeLeft = Duration(
         hours: int.parse(durationString.substring(3, 5).trim()),
-        minutes: int.parse(durationString.substring(6,8).trim()),
-        seconds: int.parse(durationString.substring(9,11).trim()),
+        minutes: int.parse(durationString.substring(6, 8).trim()),
+        seconds: int.parse(durationString.substring(9, 11).trim()),
       );
     }
 
@@ -277,52 +277,74 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<MyLessonsViewModel> initializeMyLesson() async{
+  Future<MyLessonsViewModel> initializeMyLesson() async {
     final String _myLessonsMethodName = "lessons";
+    print('in lesson1');
     final result = await _myLessonsChannel.invokeMethod(_myLessonsMethodName);
+    print('in lesson2');
+    print(result);
+    print(result != null);
+    print(result.toString().isNotEmpty);
 
-    final data = jsonDecode(result);
+    final dynamic data = result != null && result.toString().isNotEmpty
+        ? jsonDecode(result)
+        : null;
     List<LessonModel> lessonList = List();
 
-    for(Map m in data) {
-      print(m['parent']['id'].toString());
-      LessonModel model = LessonModel(
-        code: m['code'],
-        title: m['title'],
-        startDate: DateTime.parse(m['start_date'].toString().substring(0,10) + " " + m['start_date'].toString().substring(11)),
-        endDate: DateTime.parse(m['end_date'].toString().substring(0,10) + " " + m['end_date'].toString().substring(11)),
-        firstClass: DateTime.parse(m['first_class'].toString().substring(0,10) + " " + m['first_class'].toString().substring(11)),
-        url: m['url'],
-        isActive: m['is_active'],
-        description: m['description'],
-        image: Image.network(m['image']),
-        teacherName: m['teacher'],
-        parent_name: m['parent']['title'],
-        parent_id: m['parent']['id'].toString(),
-      );
-      lessonList.add(model);
-    }
+    if (data != null)
+      for (Map m in data) {
+        print(m['parent']['id'].toString());
+        LessonModel model = LessonModel(
+          code: m['code'],
+          title: m['title'],
+          startDate: DateTime.parse(
+              m['start_date'].toString().substring(0, 10) +
+                  " " +
+                  m['start_date'].toString().substring(11)),
+          endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
+              " " +
+              m['end_date'].toString().substring(11)),
+          firstClass: DateTime.parse(
+              m['first_class'].toString().substring(0, 10) +
+                  " " +
+                  m['first_class'].toString().substring(11)),
+          url: m['url'],
+          isActive: m['is_active'],
+          description: m['description'],
+          image: Image.network(m['image']),
+          teacherName: m['teacher'],
+          parent_name: m['parent']['title'],
+          parent_id: m['parent']['id'].toString(),
+        );
+        lessonList.add(model);
+      }
 
     print('this is my lesson list ::');
     print(lessonList.toString());
-    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+    lessonList.sort(
+        (a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
     return MyLessonsViewModel(lessons: lessonList);
   }
 
   @override
-  Future<ShoppingLessonViewModel> initializeShoppingLesson() async{
+  Future<ShoppingLessonViewModel> initializeShoppingLesson() async {
     final String _shoppingLessonMethodName = "shoppinglist";
-    String result = await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName);
+    String result =
+        await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName);
 
     final data = jsonDecode(result);
     List<LessonModel> lessonList = List();
 
-    for(Map m in data) {
+    for (Map m in data) {
       print(m['parent']['id'].toString());
       LessonModel model = LessonModel(
         title: m['title'],
-        startDate: DateTime.parse(m['start_date'].toString().substring(0,10) + " " + m['start_date'].toString().substring(11)),
-        endDate: DateTime.parse(m['end_date'].toString().substring(0,10) + " " + m['end_date'].toString().substring(11)),
+        startDate: DateTime.parse(m['start_date'].toString().substring(0, 10) +
+            " " +
+            m['start_date'].toString().substring(11)),
+        endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
+            " " +
+            m['end_date'].toString().substring(11)),
         code: m['code'],
         amount: m['amount'],
         description: m['description'],
@@ -330,18 +352,33 @@ class Auth extends AuthBase {
         teacherName: m['teacher'],
         parent_name: m['parent']['title'],
         parent_id: m['parent']['id'].toString(),
-        courseCalendar: <DateTime> [
-          m['course_calendars'][0] != null ? DateTime.parse(m['course_calendars'][0].toString().substring(0,10) + " " + m['course_calendars'][0].toString().substring(11)) : null,
-          m['course_calendars'][1] != null ? DateTime.parse(m['course_calendars'][1].toString().substring(0,10) + " " + m['course_calendars'][1].toString().substring(11)) : null,
-          m['course_calendars'][2] != null ? DateTime.parse(m['course_calendars'][2].toString().substring(0,10) + " " + m['course_calendars'][2].toString().substring(11)) : null,
+        courseCalendar: <DateTime>[
+          m['course_calendars'][0] != null
+              ? DateTime.parse(
+                  m['course_calendars'][0].toString().substring(0, 10) +
+                      " " +
+                      m['course_calendars'][0].toString().substring(11))
+              : null,
+          m['course_calendars'][1] != null
+              ? DateTime.parse(
+                  m['course_calendars'][1].toString().substring(0, 10) +
+                      " " +
+                      m['course_calendars'][1].toString().substring(11))
+              : null,
+          m['course_calendars'][2] != null
+              ? DateTime.parse(
+                  m['course_calendars'][2].toString().substring(0, 10) +
+                      " " +
+                      m['course_calendars'][2].toString().substring(11))
+              : null,
         ],
       );
       lessonList.add(model);
     }
-    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+    lessonList.sort(
+        (a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
     return ShoppingLessonViewModel(lessons: lessonList);
   }
-
 }
 
 class User extends Equatable {

@@ -16,8 +16,10 @@ class _MyLessonCardState extends State<MyLessonCard> {
     const double contentPaddingHoriz = 12;
     MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
-      width: queryData.size.width - 80,
+      width: queryData.size.width - 50,
       child: Card(
+        margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        elevation: 5,
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),

@@ -20,8 +20,10 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
   const double contentPaddingHoriz = 12;
   MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
-      width: queryData.size.width - 80,
+      width: queryData.size.width - 50,
       child: Card(
+        margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        elevation: 5,
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -47,7 +49,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(top: 15, right: contentPaddingHoriz, left: contentPaddingHoriz),
                 child: Text(
-                  widget.purchaseItem.title,
+                  widget.purchaseItem.title + ' استاد ' + widget.purchaseItem.teacherName,
                   style: TextStyle(
                     fontSize: 22,
                     fontFamily: 'vazir',

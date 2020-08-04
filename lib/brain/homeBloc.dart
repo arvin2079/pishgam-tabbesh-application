@@ -84,8 +84,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     else if(event is InitializeMyLesson) {
-      MyLessonsViewModel viewModel = await auth.initializeMyLesson();
-      yield MyLessonsInitiallized(viewModel);
+      try {
+        MyLessonsViewModel viewModel = await auth.initializeMyLesson();
+        yield MyLessonsInitiallized(viewModel);
+      } catch(e) {
+        print(e.toString());
+      }
     }
 
     else if(event is InitializedShoppingLesson) {
