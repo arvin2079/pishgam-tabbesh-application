@@ -16,18 +16,16 @@ void main() {
 class PishgamDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SettingScreen(),
-//    return BlocProvider(
-//      create: (context) => HomeBloc(),
-//      child: BlocProvider(
-//        create: (context) => AuthBloc(),
-//        child: MaterialApp(
-//          debugShowCheckedModeBanner: false,
-//          theme: PTheme,
-//          home: LanidngPage(),
-//        ),
-//      ),
+    return BlocProvider(
+      create: (context) => HomeBloc(),
+      child: BlocProvider(
+        create: (context) => AuthBloc(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: PTheme,
+          home: LanidngPage(),
+        ),
+      ),
     );
   }
 }
