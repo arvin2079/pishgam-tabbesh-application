@@ -25,11 +25,6 @@ class _SettingScreenState extends State<SettingScreen> {
   final DropDownController _cityDropDownController = DropDownController();
   final RadioGroupController _radioGroupController = RadioGroupController();
 
-  final FocusNode _nameFocusNode = FocusNode();
-  final FocusNode _familyNameFocusNode = FocusNode();
-  final FocusNode _userNameFocusNode = FocusNode();
-  final FocusNode _phoneNumberFocusNode = FocusNode();
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -58,15 +53,15 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ],
         ),
-        body: Card(
-          elevation: 3.0,
-          margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 10),
-          color: Colors.white,
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Card(
+            elevation: 3.0,
+            margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 40),
+            color: Colors.white,
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 25),
                   child: GestureDetector(
                     child: CircleAvatar(
                       radius: 50,
@@ -91,25 +86,31 @@ class _SettingScreenState extends State<SettingScreen> {
                   labelText: 'نام',
                   textInputType: TextInputType.text,
                   controller: _nameController,
-                  focusNode: _nameFocusNode,
+                  onEditingComplete: () {
+                    FocusScope.of(context).nextFocus();
+                  },
                 ),
                 SignupTextInput(
                   borderColor: Colors.black54,
                   labelColor: Colors.grey[500],
                   inputColor: Colors.black87,
                   labelText: 'نام خانوادگی',
-                  focusNode: _familyNameFocusNode,
                   controller: _familyNameController,
                   textInputType: TextInputType.text,
+                  onEditingComplete: () {
+                    FocusScope.of(context).nextFocus();
+                  },
                 ),
                 SignupTextInput(
                   borderColor: Colors.black54,
                   labelColor: Colors.grey[500],
                   inputColor: Colors.black87,
                   labelText: 'نام کاربری',
-                  focusNode: _userNameFocusNode,
                   controller: _userNameController,
                   textInputType: TextInputType.text,
+                  onEditingComplete: () {
+                    FocusScope.of(context).nextFocus();
+                  },
                 ),
                 SignupTextInput(
                   borderColor: Colors.black54,
@@ -117,10 +118,12 @@ class _SettingScreenState extends State<SettingScreen> {
                   inputColor: Colors.black87,
                   counterColor: Colors.grey[800],
                   labelText: 'شماره موبایل',
-                  focusNode: _phoneNumberFocusNode,
                   controller: _phoneNumberController,
                   textInputType: TextInputType.phone,
-                  maxLength: 11,
+                  onEditingComplete: () {
+                    FocusScope.of(context).nextFocus();
+                  },
+                  maxLength: 10,
                 ),
                 SizedBox(height: 40),
                 Row(
@@ -153,27 +156,43 @@ class _SettingScreenState extends State<SettingScreen> {
                   second: 'دختر',
                   controller: _radioGroupController,
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10, bottom: 20),
-                    child: SizedBox(
-                      width: 120,
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15, bottom: 20),
                       child: RaisedButton(
                         color: Colors.yellowAccent[700],
                         onPressed: (){},
                         child: Text(
-                          'ورود',
+                          'ثبت',
                           style: TextStyle(
                             fontFamily: 'vazir',
                             fontWeight: FontWeight.w500 ,
-                            fontSize: 20,
+                            fontSize: 19,
                             color: Colors.black54,
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, bottom: 20),
+                      child: RaisedButton(
+                        color: Colors.white,
+                        elevation: 0,
+                        onPressed: (){},
+                        child: Text(
+                          'تغییر رمز عبور',
+                          style: TextStyle(
+                            fontFamily: 'vazir',
+                            fontWeight: FontWeight.w500 ,
+                            fontSize: 19,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
