@@ -4,9 +4,12 @@ class CustomDropDownButton extends StatefulWidget {
   CustomDropDownButton(
       {@required this.hint,
       @required this.items,
+      this.initialItem,
       this.controller,
       this.color = Colors.white});
+
   final String hint;
+  final String initialItem;
   final List<String> items;
   final DropDownController controller;
   Color color;
@@ -23,6 +26,12 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
   List<String> items;
   String selectedItem;
   Color color;
+
+  @override
+  void initState() {
+    selectedItem = widget.initialItem;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +65,14 @@ class _CustomDropDownButtonState extends State<CustomDropDownButton> {
             ),
             selectedItemBuilder: (BuildContext context) {
               return items.map<Widget>((String item) {
-                return Text(item,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontFamily: 'vazir',
-                      fontWeight: FontWeight.w100,
-                      color: color,
-                    ),
+                return Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'vazir',
+                    fontWeight: FontWeight.w100,
+                    color: color,
+                  ),
                 );
               }).toList();
             },

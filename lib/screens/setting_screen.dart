@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pishgamv2/brain/authBloc.dart';
+import 'package:pishgamv2/brain/authClass.dart';
+import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/brain/imageUtility.dart';
+import 'package:pishgamv2/brain/validator.dart';
 import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
@@ -10,15 +15,14 @@ import 'package:pishgamv2/dialogs/changePassDialog.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SettingScreen extends StatefulWidget {
+  EditProfileViewModel viewModel;
+
   @override
   _SettingScreenState createState() => _SettingScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
-  List<String> locations = ['اول', 'دهم', 'دوازدهم'];
-  List<String> grades = ['اول', 'دهم', 'دوازدهم'];
-  Image _image;
-
+class _SettingScreenState extends State<SettingScreen>
+    with SignupFieldValidator {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _familyNameController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
@@ -27,8 +31,103 @@ class _SettingScreenState extends State<SettingScreen> {
   final DropDownController _cityDropDownController = DropDownController();
   final RadioGroupController _radioGroupController = RadioGroupController();
 
+  HomeBloc _homeBloc;
+  AuthBloc _authBloc;
+
+  bool _isFirstTime = true;
+  Image _image;
+
+  @override
+  void initState() {
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _authBloc = BlocProvider.of<AuthBloc>(context);
+//    widget.result = EditProfileViewModel();
+    super.initState();
+  }
+
+  void _submit() {
+    try {
+      if (!usernameValidator.isValid(_userNameController.text) ||
+          !firstnameValidator.isValid(_nameController.text) ||
+          !lastnameValidator.isValid(_familyNameController.text) ||
+          !phoneNumberValidator.isValid(_phoneNumberController.text))
+        throw Exception;
+
+
+      if (widget.viewModel.firstname != _nameController.text ||
+          widget.viewModel.lastname != _familyNameController.text ||
+          widget.viewModel.username != _userNameController.text ||
+          widget.viewModel.phoneNumber != _phoneNumberController.text ||
+          widget.viewModel.grade != _gradeDropDownController.getValue ||
+          widget.viewModel.city != _cityDropDownController.getValue ||
+          widget.viewModel.isBoy != (_radioGroupController.getValue == 1) ||
+          _image != null) {
+        print('befor --->');
+        print(widget.viewModel.toString());
+
+        widget.viewModel.firstname = _nameController.text;
+        widget.viewModel.lastname = _familyNameController.text;
+        widget.viewModel.username = _userNameController.text;
+        widget.viewModel.phoneNumber = _phoneNumberController.text;
+        widget.viewModel.grade = _gradeDropDownController.getValue;
+        widget.viewModel.city = _cityDropDownController.getValue;
+        widget.viewModel.isBoy = (_radioGroupController.getValue == 1);
+
+        print('viewmodel --->');
+        print(widget.viewModel.toString());
+        print(widget.viewModel.city);
+
+        _homeBloc.add(DoEditeProfile(widget.viewModel));
+      } else {
+        print('sssss');
+        _homeBloc.add(ShowMessage(
+            "نا موفق", "هیچ یک از مشخصات کاربری شما تغییر نکرده است"));
+      }
+    } catch (e) {
+      setState(() {
+        print(e.toString());
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(condition: (lastState, thisState) {
+      if (thisState is EditprofileInitiallied) return true;
+      return false;
+    }, builder: (context, state) {
+      if (state is EditprofileInitiallied) {
+        widget.viewModel = state.viewModel;
+        if (_isFirstTime) {
+          _nameController.text = widget.viewModel.firstname;
+          _familyNameController.text = widget.viewModel.lastname;
+          _userNameController.text = widget.viewModel.username;
+          _phoneNumberController.text = widget.viewModel.phoneNumber;
+          _gradeDropDownController.value = widget.viewModel.grade;
+          _cityDropDownController.value =widget.viewModel.city;
+          _isFirstTime = false;
+        }
+        return _buildSettingBody(context);
+      }
+      return _buildLoaderScreen();
+    });
+  }
+
+  Scaffold _buildLoaderScreen() {
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.white,
+            valueColor:
+                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Directionality _buildSettingBody(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -53,6 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 color: Colors.black,
               ),
               onPressed: () {
+                _homeBloc.add(InitializeHome());
                 Navigator.pop(context);
               },
             ),
@@ -73,11 +173,13 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: CircleAvatar(
                         radius: 47,
                         backgroundColor: Colors.grey[50],
-                        child: _image == null
+                        child: widget.viewModel.avatar == null
                             ? Icon(Icons.person,
-                                color: Colors.blueGrey[600], size: 50)
+                                color: Colors.blueGrey[800], size: 50)
                             : null,
-                        backgroundImage: _image == null ? null : _image.image,
+                        backgroundImage: widget.viewModel.avatar == null
+                            ? null
+                            : _image == null ? widget.viewModel.avatar.image : _image.image,
                       ),
                       onTap: () => _pickImage(),
                     ),
@@ -87,6 +189,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     labelColor: Colors.grey[500],
                     inputColor: Colors.black87,
                     labelText: 'نام',
+                    errorText: !firstnameValidator.isValid(_nameController.text)
+                        ? inValidFirstnameErrorMassage
+                        : null,
                     textInputType: TextInputType.text,
                     controller: _nameController,
                     onEditingComplete: () {
@@ -98,6 +203,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     labelColor: Colors.grey[500],
                     inputColor: Colors.black87,
                     labelText: 'نام خانوادگی',
+                    errorText:
+                        !lastnameValidator.isValid(_familyNameController.text)
+                            ? inValidLastnameErrorMassage
+                            : null,
                     controller: _familyNameController,
                     textInputType: TextInputType.text,
                     onEditingComplete: () {
@@ -109,6 +218,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     labelColor: Colors.grey[500],
                     inputColor: Colors.black87,
                     labelText: 'نام کاربری',
+                    errorText:
+                        !usernameValidator.isValid(_userNameController.text)
+                            ? inValidUsernameErrorMassage
+                            : null,
                     controller: _userNameController,
                     textInputType: TextInputType.text,
                     onEditingComplete: () {
@@ -121,6 +234,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     inputColor: Colors.black87,
                     counterColor: Colors.grey[800],
                     labelText: 'شماره موبایل',
+                    errorText: !phoneNumberValidator
+                            .isValid(_phoneNumberController.text)
+                        ? inValidPhoneNumberErrorMassage
+                        : null,
                     controller: _phoneNumberController,
                     textInputType: TextInputType.phone,
                     onEditingComplete: () {
@@ -136,7 +253,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: CustomDropDownButton(
                           color: Colors.grey[600],
                           hint: 'مقطع',
-                          items: grades,
+                          initialItem: widget.viewModel.grade,
+                          items: widget.viewModel.grades,
                           controller: _gradeDropDownController,
                         ),
                       ),
@@ -144,7 +262,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: CustomDropDownButton(
                           color: Colors.grey[600],
                           hint: 'شهر',
-                          items: locations,
+                          initialItem: widget.viewModel.city,
+                          items: widget.viewModel.cities,
                           controller: _cityDropDownController,
                         ),
                       ),
@@ -155,6 +274,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     txt: 'جنسيت',
                     valueFirst: 1,
                     valueSecond: 2,
+                    groupValue: widget.viewModel.isBoy ? 1 : 2,
                     first: 'پسر',
                     second: 'دختر',
                     controller: _radioGroupController,
@@ -165,7 +285,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         padding: const EdgeInsets.only(right: 15, bottom: 20),
                         child: RaisedButton(
                           color: Colors.yellowAccent[700],
-                          onPressed: () {},
+                          onPressed: _submit,
                           child: Text(
                             'ثبت',
                             style: TextStyle(
@@ -219,7 +339,7 @@ class _SettingScreenState extends State<SettingScreen> {
     File file = File(pickedFile.path);
     File finalFile = await ImageUtility.compressAndGetFile(file);
 
-    _image = Image.file(finalFile);
+    Image _image = Image.file(finalFile);
     setState(() {});
   }
 
@@ -233,4 +353,34 @@ class _SettingScreenState extends State<SettingScreen> {
           );
         });
   }
+}
+
+class EditProfileViewModel {
+  String firstname;
+  String lastname;
+  String username;
+  String grade;
+  String city;
+  bool isBoy;
+  String phoneNumber;
+  Image avatar;
+  List<String> grades;
+  List<String> cities;
+
+  @override
+  String toString() {
+    return 'EditProfileViewModel{firstname: $firstname, lastname: $lastname, grade: $grade, isBoy: $isBoy, phoneNumber: $phoneNumber, avatar: $avatar, grades: $grades, cities: $cities}';
+  }
+
+  EditProfileViewModel(
+      {this.firstname,
+      this.lastname,
+      this.city,
+      this.username,
+      this.grade,
+      this.isBoy,
+      this.phoneNumber,
+      this.avatar,
+      this.grades,
+      this.cities});
 }

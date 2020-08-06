@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/validator.dart';
@@ -85,7 +82,6 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     try {
-      print("value of gender >> " + _radioGroupController.getValue.toString());
       if (!widget.usernameValidator.isValid(_userNameController.text) ||
           !widget.firstnameValidator.isValid(_nameController.text) ||
           !widget.lastnameValidator.isValid(_familyNameController.text) ||

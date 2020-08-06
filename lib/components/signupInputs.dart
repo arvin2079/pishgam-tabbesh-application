@@ -10,6 +10,7 @@ class SignupTextInput extends StatelessWidget {
       this.labelText,
       this.errorText,
       this.enabled,
+      this.onChange,
       this.maxLength,
       this.onEditingComplete,
       this.labelColor = lblColor,
@@ -30,6 +31,7 @@ class SignupTextInput extends StatelessWidget {
   final String errorText;
   final int maxLength;
   final Function onEditingComplete;
+  final Function(String) onChange;
   final Color labelColor;
   final Color borderColor;
   final Color inputColor;
@@ -49,6 +51,7 @@ class SignupTextInput extends StatelessWidget {
           keyboardType: textInputType,
           obscureText: obscureText,
           enabled: enabled,
+          onChanged: onChange,
           onEditingComplete: onEditingComplete,
           decoration: InputDecoration(
             errorText: errorText,

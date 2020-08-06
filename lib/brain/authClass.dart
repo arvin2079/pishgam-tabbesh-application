@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as Io;
+import 'package:pishgamv2/screens/setting_screen.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +19,9 @@ abstract class AuthBase {
 
   Future<User> currentUser();
 
-  Future<String> editProfile(@required User user);
+  Future<bool> postEditProfile(EditProfileViewModel model);
+
+  Future<EditProfileViewModel> getEditProfile();
 
   Future<bool> signOut();
 
@@ -68,6 +71,7 @@ class Auth extends AuthBase {
 
   //singleton pattern in dart
   static final Auth _instance = Auth._internalConst();
+  String mainpath="http://192.168.1.6:8000";
 
   Auth._internalConst();
 
@@ -228,9 +232,52 @@ class Auth extends AuthBase {
 //  }
 
   @override
-  Future<String> editProfile(User user) {
-    // TODO: implement editProfile
-    throw UnimplementedError();
+  Future<EditProfileViewModel> getEditProfile() async{
+    final String _getMethodName = "edit_profile_get";
+    final String result = await _editProfChannel.invokeMethod(_getMethodName);
+
+    final dynamic data = result != null && result.toString().isNotEmpty
+        ? jsonDecode(result)
+        : null;
+
+    EditProfileViewModel viewmodel;
+    await initGradesMap();
+    await initCitiesMap();
+    if(data != null) {
+      viewmodel = EditProfileViewModel(
+        firstname: data['user']['first_name'],
+        lastname: data['user']['last_name'],
+        username: data['user']['username'],
+        grade: data['user']['grade'],
+        city: data['user']['cityTitle'],
+        isBoy: data['user']['gender'],
+        phoneNumber: data['user']['phone_number'],
+        avatar: Image.network(mainpath + data['user']['avatar']),
+        grades: gradesList,
+        cities: citiesList,
+      );
+    }
+    return viewmodel;
+  }
+
+  @override
+  Future<bool> postEditProfile(EditProfileViewModel model) async{
+    final String _postMethodName = "edit_profile_post";
+
+    final bool resutl = await _editProfChannel.invokeMethod(_postMethodName, {
+      "firstname" : model.firstname,
+      "lastname" : model.lastname,
+      "username" : model.username,
+      "gender" : model.isBoy,
+      'grades': gradesMap.values.firstWhere(
+              (element) => gradesMap[model.grade.trim()] == element,
+          orElse: () => null),
+      'city': citiesMap.values.firstWhere(
+              (element) => citiesMap[model.city.trim()] == element,
+          orElse: () => null),
+    });
+
+    return resutl;
   }
 
   @override

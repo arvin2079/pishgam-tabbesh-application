@@ -289,16 +289,15 @@ public class MainActivity extends FlutterActivity {
                                     Log.i("my response code ----> ", responseCode + "");
 
 
-
                                     mainresult.success(message);
 
                                 } else {
                                     int code = response.code();
-                                    if(code == 406) {
+                                    if (code == 406) {
                                         String resbody = response.body().string();
                                         try {
-                                            mainresult.error(new JsonParser().SignupOnFailed(resbody),"کاربر با این مشخصات از قبل موجود است", null);
-                                        } catch(JSONException e) {
+                                            mainresult.error(new JsonParser().SignupOnFailed(resbody), "کاربر با این مشخصات از قبل موجود است", null);
+                                        } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
@@ -469,7 +468,7 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), names[7])
                 .setMethodCallHandler(((call, result) ->
                 {
-                    if (call.method.equals(names[7])) {
+                    if (call.method.equals("edit_profile_post")) {
                         //class for sending feedback
                         MainThreadResult mainresult = new MainThreadResult(result);
                         //create require params for constructor
@@ -481,9 +480,10 @@ public class MainActivity extends FlutterActivity {
                                 + "\" ,\"first_name\" : \"" + call.argument("firstname")
                                 + "\" , \"last_name\" : \"" + call.argument("lastname")
                                 + "\" ,\"gender\" : \"" + call.argument("gender")
-                                + "\" ,\"email\" : \"" + call.argument("email")
                                 + "\" , \"grades\" : [\"" + call.argument("grades")
                                 + "\"] , \"city\" : \"" + call.argument("city") + "\" }";
+
+                        System.out.println("json ::" + json);
 
                         //load token for header
                         SharePref pref = new SharePref(getApplicationContext());
@@ -500,33 +500,52 @@ public class MainActivity extends FlutterActivity {
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-
-
                             }
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
 
-                                Handler handler = new Handler(Looper.getMainLooper());
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (response.isSuccessful()) {
-
-                                            mainresult.success("done");
-                                        }
-                                        if (response.code() == 406) {
-                                            mainresult.error("نام کاربری درست نیست", "خطا", null);
-
-
-                                        }
-                                    }
-                                });
-
+                                if (response.isSuccessful()) {
+                                    mainresult.success(true);
+                                }
+                                if (response.code() == 406) {
+                                    mainresult.error("نام کاربری درست نیست", "خطا", null);
+                                }
                             }
+
                         });
 
 
+                    } else if (call.method.equalsIgnoreCase("edit_profile_get")) {
+                        //class for sending feedback
+                        MainThreadResult mainresult = new MainThreadResult(result);
+                        //create require params for constructor
+                        HashMap<String, String> info = new HashMap<>();
+                        //main class for request
+                        OkHttpClient client = new OkHttpClient();
+
+                        SharePref pref = new SharePref(getApplicationContext());
+                        String token = pref.load("token");
+                        //request form
+                        Request request = new Request.Builder()
+                                .header("Authorization", "Token " + pref.load("token"))
+                                .header("Accept", "application/json")
+                                .url(path.getEditprof())
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                final int resCode = response.code();
+                                final String resBody = response.body().string();
+                                Log.i("response body)", resBody);
+                                mainresult.success(resBody);
+                            }
+                        });
                     }
                 }));
 
@@ -572,10 +591,9 @@ public class MainActivity extends FlutterActivity {
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
-                                    }
-                                    else if(resCode == 406 || resCode == 404) {
+                                    } else if (resCode == 406 || resCode == 404) {
                                         mainresult.success("");
-                                    }else {
+                                    } else {
                                         mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
                                     }
                                 }
@@ -741,10 +759,9 @@ public class MainActivity extends FlutterActivity {
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
-                                    }
-                                    else if(resCode == 406 || resCode == 404) {
+                                    } else if (resCode == 406 || resCode == 404) {
                                         mainresult.success("");
-                                    }else {
+                                    } else {
                                         mainresult.error("ورود به صفحه خرید در حال حاضر ممکن نیست", "خطا", null);
                                     }
                                 }

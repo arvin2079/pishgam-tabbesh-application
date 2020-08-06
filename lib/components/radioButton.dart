@@ -8,6 +8,7 @@ class RadioButton extends StatefulWidget {
       @required this.first,
       @required this.second,
       @required this.txt,
+      this.groupValue = 0,
       this.color = Colors.white});
 
   final int valueFirst;
@@ -16,37 +17,14 @@ class RadioButton extends StatefulWidget {
   final String second;
   final RadioGroupController controller;
   final String txt;
-  Color color;
+  final Color color;
+  int groupValue;
 
   @override
-  _RadioButtonState createState() => _RadioButtonState(
-      valueFirst: valueFirst,
-      valueSecond: valueSecond,
-      first: first,
-      second: second,
-      txt: txt,
-      color: color);
+  _RadioButtonState createState() => _RadioButtonState();
 }
 
 class _RadioButtonState extends State<RadioButton> {
-  _RadioButtonState(
-      {@required this.valueFirst,
-      @required this.valueSecond,
-      @required this.first,
-      @required this.second,
-      @required this.txt,
-      this.color});
-
-  final int valueFirst;
-  int groupValue = 0;
-  final int valueSecond;
-  final String first;
-  final String second;
-  final String txt;
-  Color color;
-
-  int get value => groupValue;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -56,41 +34,41 @@ class _RadioButtonState extends State<RadioButton> {
           textDirection: TextDirection.rtl,
           children: <Widget>[
             Text(
-              txt,
+              widget.txt,
               textAlign: TextAlign.right,
               textDirection: TextDirection.rtl,
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: 'IranianSans',
-                color: color,
+                color: widget.color,
               ),
             ),
             Spacer(),
             Text(
-              first,
+              widget.first,
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: 'IranianSans',
-                color: color,
+                color: widget.color,
               ),
             ),
             Radio(
-              value: valueFirst,
-              groupValue: groupValue,
+              value: widget.valueFirst,
+              groupValue: widget.groupValue,
               activeColor: Colors.yellowAccent[700],
               onChanged: (int value) => radioButtonChecked(value),
             ),
             Text(
-              second,
+              widget.second,
               style: TextStyle(
                 fontSize: 17,
                 fontFamily: 'IranianSans',
-                color: color,
+                color: widget.color,
               ),
             ),
             Radio(
-              value: valueSecond,
-              groupValue: groupValue,
+              value: widget.valueSecond,
+              groupValue: widget.groupValue,
               activeColor: Colors.yellowAccent[700],
               onChanged: (int value) => radioButtonChecked(value),
             ),
@@ -103,7 +81,7 @@ class _RadioButtonState extends State<RadioButton> {
   void radioButtonChecked(int value) {
     setState(() {
       widget.controller.value = value;
-      groupValue = value;
+      widget.groupValue = value;
     });
   }
 }

@@ -9,6 +9,9 @@ import 'package:pishgamv2/components/mainMenuSliderCard.dart';
 import 'package:pishgamv2/components/round_icon_button.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pishgamv2/dialogs/alertDialogs.dart';
+import 'package:pishgamv2/dialogs/changePassDialog.dart';
+import 'package:pishgamv2/dialogs/waiterDialog.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
 import 'package:pishgamv2/screens/setting_screen.dart';
@@ -123,15 +126,40 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      condition: (lastState, thisState) {
-        if(thisState is HomeNotInitialState || thisState is HomeInitiallized)
-          return true;
-        return false;
-      },
+    return BlocConsumer<HomeBloc, HomeState>(
+        listenWhen: (lastState, thisState) {
+      if (thisState is ShowMessageState ||
+          thisState is EditProfLoadingFinish ||
+          thisState is EditProfLoadingStart) return true;
+      return false;
+    }, listener: (context, state) {
+      if (state is ShowMessageState) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleAlertDialog(
+              title: state.message,
+              content: state.detail,
+            );
+          },
+        );
+      } else if (state is EditProfLoadingStart) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return WaiterDialog();
+            });
+      } else if (state is EditProfLoadingFinish) {
+        Navigator.pop(context);
+      }
+    }, buildWhen: (lastState, thisState) {
+      if (thisState is HomeNotInitialState || thisState is HomeInitiallized)
+        return true;
+      return false;
+    },
         // ignore: missing_return
         builder: (context, state) {
-
       if (state is HomeInitiallized) {
         widget.viewModel = state.viewModel;
         if (widget.viewModel == null) {
@@ -165,7 +193,6 @@ class _HomePageState extends State<HomePage>
   }
 
   Scaffold _buildHomeBody(HomeViewModel viewModel, Radius _radius) {
-
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
@@ -329,6 +356,7 @@ class _HomePageState extends State<HomePage>
                               buttonSize: 55,
                               elevation: 5,
                               onPressed: () {
+                                _homeBloc.add(InitializeEditProfile());
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SettingScreen(),
                                 ));

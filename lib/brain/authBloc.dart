@@ -25,7 +25,6 @@ class CheckIfSignedInBefor extends AuthEvent {
 
 class DoSignIn extends AuthEvent {
   const DoSignIn({@required this.username, @required this.password});
-
   final String username;
   final String password;
 
@@ -63,12 +62,12 @@ abstract class AuthState extends Equatable {
 
 class SignUpIsLoadingSta extends AuthState {
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class SignInIsLoadingSta extends AuthState {
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class InitialState extends AuthState {
@@ -94,13 +93,13 @@ class SignIn extends AuthState {
 class SignUpLoadingFinished extends AuthState {
   @override
   // TODO: implement props
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class SignInLoadingFinished extends AuthState {
   @override
   // TODO: implement props
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class AuthenticationError extends AuthState {
@@ -111,7 +110,7 @@ class AuthenticationError extends AuthState {
   final Function onPressed;
 
   @override
-  List<Object> get props => [Random().nextInt(1000)];
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 // todo : platform Exception
