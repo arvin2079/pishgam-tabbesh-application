@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyLessonCard extends StatefulWidget {
   MyLessonCard({@required this.lessonInfo});
@@ -11,6 +14,14 @@ class MyLessonCard extends StatefulWidget {
 }
 
 class _MyLessonCardState extends State<MyLessonCard> {
+  HomeBloc _homeBloc;
+
+  @override
+  void initState() {
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     const double contentPaddingHoriz = 12;
@@ -50,7 +61,9 @@ class _MyLessonCardState extends State<MyLessonCard> {
                     right: contentPaddingHoriz,
                     left: contentPaddingHoriz),
                 child: Text(
-                  widget.lessonInfo.title + " استاد " + widget.lessonInfo.teacherName,
+                  widget.lessonInfo.title +
+                      " استاد " +
+                      widget.lessonInfo.teacherName,
                   style: TextStyle(
                     fontSize: 22,
                     fontFamily: 'vazir',
@@ -60,7 +73,8 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: contentPaddingHoriz),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 5, horizontal: contentPaddingHoriz),
                 child: Text(
                   widget.lessonInfo.description,
                   style: TextStyle(
@@ -98,7 +112,8 @@ class _MyLessonCardState extends State<MyLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
-                  'زمان شروع اولین کلاس :\n' + widget.lessonInfo.firstClass.toString(),
+                  'زمان شروع اولین کلاس :\n' +
+                      widget.lessonInfo.firstClass.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -109,7 +124,10 @@ class _MyLessonCardState extends State<MyLessonCard> {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    bottom: 10, top: 15, right: contentPaddingHoriz, left: contentPaddingHoriz),
+                    bottom: 10,
+                    top: 15,
+                    right: contentPaddingHoriz,
+                    left: contentPaddingHoriz),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -135,7 +153,17 @@ class _MyLessonCardState extends State<MyLessonCard> {
                     SizedBox(width: 10),
                     Expanded(
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: widget.lessonInfo.isActive &&
+                                widget.lessonInfo.url != null &&
+                                widget.lessonInfo.url.isNotEmpty
+                            ? () async{
+                                if(await canLaunch(widget.lessonInfo.url)) {
+                                  await launch(widget.lessonInfo.url);
+                                } else {
+                                  _homeBloc.add(ShowMessage('خطا', 'امکان دسترسی به لینک کلاس در حال حاضر وجود ندارد'));
+                                }
+                              }
+                            : null,
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: Text(
                           'شروع کلاس',
