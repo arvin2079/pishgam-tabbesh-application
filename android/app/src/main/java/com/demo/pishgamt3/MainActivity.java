@@ -127,7 +127,6 @@ public class MainActivity extends FlutterActivity {
                                             }
                                         });
                                     } else {
-                                        Log.i("response code :", "" + response.code());
                                         mainresult.error("رمز عبور نادرست", "خطا", null);
                                     }
                                 }
@@ -276,7 +275,6 @@ public class MainActivity extends FlutterActivity {
                         client.newCall(request).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                Log.i("errrrror", "errror caused disconnection");
                                 mainresult.error("خطا", "انجام عملیات ثبت نام در حال حاضر ممکن نیست", null);
                             }
 
@@ -284,9 +282,7 @@ public class MainActivity extends FlutterActivity {
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
                                     String message = "هندل نشده";
-                                    Log.i("in signup", "successful");
                                     int responseCode = response.code();
-                                    Log.i("my response code ----> ", responseCode + "");
 
 
                                     mainresult.success(message);
@@ -321,7 +317,6 @@ public class MainActivity extends FlutterActivity {
                         SharePref pref = new SharePref(getApplicationContext());
                         String token = pref.load("token");
                         //checking file for token
-                        Log.i("tokenFromCurrentUser: ", pref.load("token"));
                         if (token == null || token.isEmpty()) result.success(null);
                         else {
                             OkHttpClient client = new OkHttpClient();
@@ -416,7 +411,6 @@ public class MainActivity extends FlutterActivity {
                                 .url(path.getAcountlesson())
                                 .build();
 
-                        Log.i("requestt:", request.toString());
 
                         try {
                             client.newCall(request).enqueue(new Callback() {
@@ -434,8 +428,6 @@ public class MainActivity extends FlutterActivity {
                                 public void onResponse(Call call, Response response) throws IOException {
                                     int code = response.code();
                                     String resBody = response.body().string();
-                                    Log.i("lessons code --- >", code + "");
-                                    Log.i("respose body --- >", resBody);
                                     MainActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -542,7 +534,6 @@ public class MainActivity extends FlutterActivity {
                             public void onResponse(Call call, Response response) throws IOException {
                                 final int resCode = response.code();
                                 final String resBody = response.body().string();
-                                Log.i("response body)", resBody);
                                 mainresult.success(resBody);
                             }
                         });
@@ -584,10 +575,6 @@ public class MainActivity extends FlutterActivity {
                                     int resCode = response.code();
                                     String resBody = response.body().string();
 
-                                    Log.i("lessons code1--- >", resCode + "");
-                                    Log.i("respose body1--- >", resBody);
-
-                                    Log.i("resBody@ ", resBody);
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
@@ -652,8 +639,6 @@ public class MainActivity extends FlutterActivity {
                                     final int resCode = response.code();
                                     final String resBody = response.body().string();
 
-                                    Log.i("rescodeeee", resCode + "");
-                                    Log.i("resBodyyyy", resBody + "");
 
                                     if (resCode == 200) {
                                         mainresult.success(true);
@@ -750,8 +735,6 @@ public class MainActivity extends FlutterActivity {
                                     int resCode = response.code();
                                     String resBody = response.body().string();
 
-                                    Log.i("codeeeedd", resCode + "");
-                                    Log.i("bodyyyeee", resBody + "");
 
                                     if(resCode == 200) {
                                         mainresult.success(resBody);
@@ -806,7 +789,6 @@ public class MainActivity extends FlutterActivity {
                                     int resCode = response.code();
                                     String resBody = response.body().string();
 
-                                    Log.i("resBody@ ", resBody);
 
                                     if (resCode == 200) {
                                         mainresult.success(resBody);
@@ -837,15 +819,11 @@ public class MainActivity extends FlutterActivity {
         //convert response to string
         String token = null;
         token = response.body().string();
-        Log.i("saved token ---> ", token);
         //parse json
         JsonParser jsonParser = new JsonParser();
         //save token
-        Log.i("in saveToken))", "herere1");
         SharePref pref = new SharePref(this);
-        Log.i("in saveToken))", "herere2");
         pref.save("token", jsonParser.token(token));
-        Log.i("in saveToken))", "herere3");
         mainresult.success(null);
         //        } catch (Exception e) {
         //            mainresult.error("error1" , "failed", null);
