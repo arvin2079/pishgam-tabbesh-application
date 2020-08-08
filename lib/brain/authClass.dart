@@ -71,7 +71,7 @@ class Auth extends AuthBase {
 
   //singleton pattern in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath="http://192.168.1.6:8000";
+  String mainpath = "http://192.168.1.5:8000";
 
   Auth._internalConst();
 
@@ -232,7 +232,7 @@ class Auth extends AuthBase {
 //  }
 
   @override
-  Future<EditProfileViewModel> getEditProfile() async{
+  Future<EditProfileViewModel> getEditProfile() async {
     final String _getMethodName = "edit_profile_get";
     final String result = await _editProfChannel.invokeMethod(_getMethodName);
 
@@ -243,7 +243,7 @@ class Auth extends AuthBase {
     EditProfileViewModel viewmodel;
     await initGradesMap();
     await initCitiesMap();
-    if(data != null) {
+    if (data != null) {
       viewmodel = EditProfileViewModel(
         firstname: data['user']['first_name'],
         lastname: data['user']['last_name'],
@@ -261,19 +261,19 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> postEditProfile(EditProfileViewModel model) async{
+  Future<bool> postEditProfile(EditProfileViewModel model) async {
     final String _postMethodName = "edit_profile_post";
 
     final bool resutl = await _editProfChannel.invokeMethod(_postMethodName, {
-      "firstname" : model.firstname,
-      "lastname" : model.lastname,
-      "username" : model.username,
-      "gender" : model.isBoy,
+      "firstname": model.firstname,
+      "lastname": model.lastname,
+      "username": model.username,
+      "gender": model.isBoy,
       'grades': gradesMap.values.firstWhere(
-              (element) => gradesMap[model.grade.trim()] == element,
+          (element) => gradesMap[model.grade.trim()] == element,
           orElse: () => null),
       'city': citiesMap.values.firstWhere(
-              (element) => citiesMap[model.city.trim()] == element,
+          (element) => citiesMap[model.city.trim()] == element,
           orElse: () => null),
     });
 
@@ -300,12 +300,13 @@ class Auth extends AuthBase {
 
 //    DateTime now = DateTime.parse(dResult['now']);
     Duration timeLeft;
-    String durationString = dResult['timeLeft'];
+    String durationString = dResult['timeLeft'].toString().substring(2).trim();
+    List<String> parts = durationString.split(':');
     if (dResult["length"] != 0) {
       timeLeft = Duration(
-        hours: int.parse(durationString.substring(3, 5).trim()),
-        minutes: int.parse(durationString.substring(6, 8).trim()),
-        seconds: int.parse(durationString.substring(9, 11).trim()),
+        hours: int.parse(parts[0]),
+        minutes: int.parse(parts[1]),
+        seconds: int.parse(parts[2].substring(0, 2)),
       );
     }
 
@@ -359,7 +360,8 @@ class Auth extends AuthBase {
         lessonList.add(model);
       }
 
-    lessonList.sort((a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
+    lessonList.sort(
+        (a, b) => int.parse(a.parent_id).compareTo(int.parse(b.parent_id)));
     return MyLessonsViewModel(lessons: lessonList);
   }
 

@@ -153,14 +153,13 @@ class _MyLessonCardState extends State<MyLessonCard> {
                     SizedBox(width: 10),
                     Expanded(
                       child: RaisedButton(
-                        onPressed: widget.lessonInfo.isActive &&
-                                widget.lessonInfo.url != null &&
-                                widget.lessonInfo.url.isNotEmpty
-                            ? () async{
-                                if(await canLaunch(widget.lessonInfo.url)) {
+                        onPressed: _checkStartTime()
+                            ? () async {
+                                if (await canLaunch(widget.lessonInfo.url)) {
                                   await launch(widget.lessonInfo.url);
                                 } else {
-                                  _homeBloc.add(ShowMessage('خطا', 'امکان دسترسی به لینک کلاس در حال حاضر وجود ندارد'));
+                                  _homeBloc.add(ShowMessage('خطا',
+                                      'امکان دسترسی به لینک کلاس در حال حاضر وجود ندارد'));
                                 }
                               }
                             : null,
@@ -189,6 +188,23 @@ class _MyLessonCardState extends State<MyLessonCard> {
         ),
       ),
     );
+  }
+
+  bool _checkStartTime() {
+    if (widget.lessonInfo.isActive &&
+        widget.lessonInfo.url != null &&
+        widget.lessonInfo.url.isNotEmpty)
+      return true;
+    else {
+      if (widget.lessonInfo.firstClass.difference(DateTime.now()) < Duration(days: 1)) {
+        Future.delayed(widget.lessonInfo.firstClass.difference(DateTime.now()))
+            .whenComplete(() {
+          _homeBloc.add(InitializeMyLesson());
+        });
+      } else {
+        return false;
+      }
+    }
   }
 }
 

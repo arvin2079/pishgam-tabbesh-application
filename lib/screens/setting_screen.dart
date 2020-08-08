@@ -53,7 +53,6 @@ class _SettingScreenState extends State<SettingScreen>
           !phoneNumberValidator.isValid(_phoneNumberController.text))
         throw Exception;
 
-
       if (widget.viewModel.firstname != _nameController.text ||
           widget.viewModel.lastname != _familyNameController.text ||
           widget.viewModel.username != _userNameController.text ||
@@ -62,8 +61,6 @@ class _SettingScreenState extends State<SettingScreen>
           widget.viewModel.city != _cityDropDownController.getValue ||
           widget.viewModel.isBoy != (_radioGroupController.getValue == 1) ||
           _image != null) {
-        print('befor --->');
-        print(widget.viewModel.toString());
 
         widget.viewModel.firstname = _nameController.text;
         widget.viewModel.lastname = _familyNameController.text;
@@ -73,15 +70,9 @@ class _SettingScreenState extends State<SettingScreen>
         widget.viewModel.city = _cityDropDownController.getValue;
         widget.viewModel.isBoy = (_radioGroupController.getValue == 1);
 
-        print('viewmodel --->');
-        print(widget.viewModel.toString());
-        print(widget.viewModel.city);
-
         _homeBloc.add(DoEditeProfile(widget.viewModel));
       } else {
-        print('sssss');
-        _homeBloc.add(ShowMessage(
-            "نا موفق", "هیچ یک از مشخصات کاربری شما تغییر نکرده است"));
+        _homeBloc.add(ShowMessage("نا موفق", "هیچ یک از مشخصات کاربری شما تغییر نکرده است"));
       }
     } catch (e) {
       setState(() {
