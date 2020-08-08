@@ -201,6 +201,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
             .whenComplete(() {
           _homeBloc.add(InitializeMyLesson());
         });
+        return false;
       } else {
         return false;
       }

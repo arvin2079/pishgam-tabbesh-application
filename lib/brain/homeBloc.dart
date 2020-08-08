@@ -69,7 +69,7 @@ class HomeInitiallized extends HomeState {
   final HomeViewModel viewModel;
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class EditprofileInitiallied extends HomeState {
@@ -87,7 +87,7 @@ class MyLessonsInitiallized extends HomeState {
   final MyLessonsViewModel viewModel;
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class ShoppingLessonInitiallized extends HomeState {

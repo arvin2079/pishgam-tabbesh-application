@@ -123,6 +123,7 @@ public class JsonParser {
                 hashMap.put("start_date", firstCourseJO.getString("start_date"));
                 hashMap.put("title", firstCourseJO.getString("title"));
                 hashMap.put("teacher", firstCourseJO.getString("teacher"));
+                hashMap.put("url", firstCourseJO.getString("url"));
                 hashMap.put("is_active", firstCourseJO.getBoolean("is_active"));
                 hashMap.put("describtion", firstCourseJO.getString("description"));
             }

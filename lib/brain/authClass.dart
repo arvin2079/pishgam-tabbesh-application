@@ -300,7 +300,14 @@ class Auth extends AuthBase {
 
 //    DateTime now = DateTime.parse(dResult['now']);
     Duration timeLeft;
-    String durationString = dResult['timeLeft'].toString().substring(2).trim();
+    String durationString;
+    if (dResult['timeLeft'].toString().substring(0, 2) == "1 " ||
+        dResult['timeLeft'].toString().substring(0, 2) == "-1")
+      durationString = dResult['timeLeft'].toString().substring(2).trim();
+    else
+      durationString = dResult['timeLeft'].toString();
+
+    print(durationString);
     List<String> parts = durationString.split(':');
     if (dResult["length"] != 0) {
       timeLeft = Duration(
@@ -317,6 +324,7 @@ class Auth extends AuthBase {
       teacher: dResult["teacher"],
       name: cResult["firstname"] + " " + cResult["lastname"],
       timeLeft: timeLeft,
+      url: dResult["url"],
       grade: cResult["grades"],
       isActive: dResult["is_active"],
       avatar: avatar,
