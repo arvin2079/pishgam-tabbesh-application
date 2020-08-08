@@ -708,11 +708,10 @@ public class MainActivity extends FlutterActivity {
                 ));
 
 
-
         //files
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), "lessonFiles")
                 .setMethodCallHandler(((call, result) -> {
-                    if(call.method.equalsIgnoreCase("lessonFiles")) {
+                    if (call.method.equalsIgnoreCase("lessonFiles")) {
                         MainThreadResult mainresult = new MainThreadResult(result);
                         SharePref pref = new SharePref(getApplicationContext());
                         OkHttpClient client = new OkHttpClient();
@@ -736,7 +735,7 @@ public class MainActivity extends FlutterActivity {
                                     String resBody = response.body().string();
 
 
-                                    if(resCode == 200) {
+                                    if (resCode == 200) {
                                         mainresult.success(resBody);
                                     } else {
                                         mainresult.error("گرفتن فایل مربوط به این درس در حال حاضر ممکن نیست", "خطا", null);
@@ -745,12 +744,11 @@ public class MainActivity extends FlutterActivity {
                             });
 
 
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 }));
-
 
 
         //shopping list
