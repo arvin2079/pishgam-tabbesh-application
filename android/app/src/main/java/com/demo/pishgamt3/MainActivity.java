@@ -631,8 +631,8 @@ public class MainActivity extends FlutterActivity {
 
                         String json = "{\"old_password\": \"" + call.argument("old_password") + "\",\"password\" : \"" + call.argument("new_passwrod") + "\"}";
 
-                        Request shoppingLessonsRequest = new Request.Builder()
-                                .url(path.getLessons())
+                        Request request = new Request.Builder()
+                                .url(path.getEditprof() + "?method=changePassword")
                                 .addHeader("Accept", "application/json")
                                 .addHeader("Authorization", "Token " + pref.load("token"))
                                 .post(RequestBody
@@ -641,7 +641,7 @@ public class MainActivity extends FlutterActivity {
                                 .build();
 
                         try {
-                            client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
+                            client.newCall(request).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
@@ -651,6 +651,9 @@ public class MainActivity extends FlutterActivity {
                                 public void onResponse(Call call, Response response) throws IOException {
                                     final int resCode = response.code();
                                     final String resBody = response.body().string();
+
+                                    Log.i("rescodeeee", resCode + "");
+                                    Log.i("resBodyyyy", resBody + "");
 
                                     if (resCode == 200) {
                                         mainresult.success(true);

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
@@ -142,22 +143,37 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Stream<HomeState> mapEventToState(event) async* {
     if (event is InitializeHome) {
-      HomeViewModel viewModel = await auth.initializeHome();
-      yield HomeInitiallized(viewModel);
+      try {
+        HomeViewModel viewModel = await auth.initializeHome();
+        yield HomeInitiallized(viewModel);
+      } on PlatformException catch(e) {
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
     }
 
     else if (event is InitializeMyLesson) {
       try {
         MyLessonsViewModel viewModel = await auth.initializeMyLesson();
         yield MyLessonsInitiallized(viewModel);
+      } on PlatformException catch(e) {
+        yield ShowMessageState(e.message, e.code);
       } catch (e) {
         print(e.toString());
       }
     }
 
     else if (event is InitializedShoppingLesson) {
-      ShoppingLessonViewModel viewModel = await auth.initializeShoppingLesson();
-      yield ShoppingLessonInitiallized(viewModel);
+      try {
+        ShoppingLessonViewModel viewModel = await auth
+            .initializeShoppingLesson();
+        yield ShoppingLessonInitiallized(viewModel);
+      } on PlatformException catch(e) {
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
     }
 
     else if (event is BreakHomeInitialization) {
@@ -165,17 +181,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     else if (event is InitializeEditProfile) {
-      EditProfileViewModel viewModel = await auth.getEditProfile();
-      yield EditprofileInitiallied(viewModel);
+      try {
+        EditProfileViewModel viewModel = await auth.getEditProfile();
+        yield EditprofileInitiallied(viewModel);
+      } on PlatformException catch(e) {
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
     }
 
     else if (event is DoEditeProfile) {
-      yield EditProfLoadingStart();
-      bool result = await auth.postEditProfile(event.result);
-      await Future.delayed(Duration(milliseconds: 500));
-      yield EditProfLoadingFinish();
-      if(result)
-        yield ShowMessageState("موفق", "عملیات تصحیح مشخصات کاربری شما با موفقیت انجام شد");
+      try {
+        yield EditProfLoadingStart();
+        bool result = await auth.postEditProfile(event.result);
+        await Future.delayed(Duration(milliseconds: 500));
+        yield EditProfLoadingFinish();
+        if (result)
+          yield ShowMessageState(
+              "موفق", "عملیات تصحیح مشخصات کاربری شما با موفقیت انجام شد");
+      } on PlatformException catch(e) {
+        yield EditProfLoadingFinish();
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
     }
 
     else if (event is ShowMessage) {
@@ -183,12 +213,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     else if (event is DoChangePassword) {
-      yield EditProfLoadingStart();
-      bool result = await auth.changePass(oldPass: event.oldPassword, newPass: event.newPassword);
-      await Future.delayed(Duration(milliseconds: 500));
-      yield EditProfLoadingFinish();
-      if(result)
-        yield ShowMessageState("موفق", "عملیات تغییر رمز عبور شما با موفقیت انجام شد");
+      try {
+        yield EditProfLoadingStart();
+        bool result = await auth.changePass(
+            oldPass: event.oldPassword, newPass: event.newPassword);
+        print('sdfsdf2');
+        await Future.delayed(Duration(milliseconds: 500));
+        yield EditProfLoadingFinish();
+        print('sdfsdf3');
+        if (result)
+          yield ShowMessageState(
+              "موفق", "عملیات تغییر رمز عبور شما با موفقیت انجام شد");
+      } on PlatformException catch(e) {
+        yield EditProfLoadingFinish();
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 }

@@ -103,7 +103,7 @@ class Auth extends AuthBase {
   static final String _myLessonsChannelName = 'lessons';
   static final String _shoppingChannelName = 'shoppinglist';
   static final String _editProfName = 'editprof';
-  static final String _changePassName = 'editprof';
+  static final String _changePassName = 'changepass';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -436,6 +436,7 @@ class Auth extends AuthBase {
       "old_password" : oldPass.trim(),
       "new_passwrod" : newPass.trim(),
     });
+    print(result);
 
     return result;
   }

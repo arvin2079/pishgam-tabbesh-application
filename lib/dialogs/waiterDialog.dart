@@ -7,12 +7,10 @@ class WaiterDialog extends StatelessWidget {
     return AlertDialog(
       elevation: 500,
       backgroundColor: Colors.transparent,
-      content: Expanded(
-        child: Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.white,
-            valueColor: AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
-          ),
+      content: Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.white,
+          valueColor: AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
         ),
       ),
     );

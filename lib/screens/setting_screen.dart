@@ -89,6 +89,7 @@ class _SettingScreenState extends State<SettingScreen>
           !passwordValidator.isValid(_newPassController.text))
         throw Exception();
 
+
       if (_newPassController.text.trim() != _passRepController.text.trim()) {
         _homeBloc
             .add(ShowMessage("خطا", "رمز وارد شده با تکرار آن مطابقت ندارد"));
@@ -396,6 +397,7 @@ class _SettingScreenState extends State<SettingScreen>
                                 !passwordValidator.isValid(_passRepController.text)
                             ? notValidPasswordError
                             : null,
+                        onEditingComplete: _onChangePassSubmit,
                         textInputType: TextInputType.text,
                         controller: _passRepController,
                       ),
