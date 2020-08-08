@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
-import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/brain/validator.dart';
@@ -11,7 +10,6 @@ import 'package:pishgamv2/components/customDropDownButton.dart';
 import 'package:pishgamv2/components/radioButton.dart';
 import 'package:pishgamv2/components/signupInputs.dart';
 import 'package:pishgamv2/constants/Constants.dart';
-import 'package:pishgamv2/dialogs/changePassDialog.dart';
 import 'package:pishgamv2/dialogs/imageSourceDialog.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -22,7 +20,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen>
-    with SignupFieldValidator {
+    with EditProfileValidator {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _familyNameController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
@@ -31,21 +29,23 @@ class _SettingScreenState extends State<SettingScreen>
   final DropDownController _cityDropDownController = DropDownController();
   final RadioGroupController _radioGroupController = RadioGroupController();
 
-  HomeBloc _homeBloc;
-  AuthBloc _authBloc;
+  final TextEditingController _newPassController = TextEditingController();
+  final TextEditingController _lastPassController = TextEditingController();
+  final TextEditingController _passRepController = TextEditingController();
 
-  bool _isFirstTime = true;
+  HomeBloc _homeBloc;
+
+  bool _propertiesIsFirstTime = true;
+  bool _passwordIsFirtstTime = true;
   Image _image;
 
   @override
   void initState() {
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _authBloc = BlocProvider.of<AuthBloc>(context);
-//    widget.result = EditProfileViewModel();
     super.initState();
   }
 
-  void _submit() {
+  void _propertiesSubmit() {
     try {
       if (!usernameValidator.isValid(_userNameController.text) ||
           !firstnameValidator.isValid(_nameController.text) ||
@@ -61,7 +61,6 @@ class _SettingScreenState extends State<SettingScreen>
           widget.viewModel.city != _cityDropDownController.getValue ||
           widget.viewModel.isBoy != (_radioGroupController.getValue == 1) ||
           _image != null) {
-
         widget.viewModel.firstname = _nameController.text;
         widget.viewModel.lastname = _familyNameController.text;
         widget.viewModel.username = _userNameController.text;
@@ -72,8 +71,33 @@ class _SettingScreenState extends State<SettingScreen>
 
         _homeBloc.add(DoEditeProfile(widget.viewModel));
       } else {
-        _homeBloc.add(ShowMessage("نا موفق", "هیچ یک از مشخصات کاربری شما تغییر نکرده است"));
+        _homeBloc.add(ShowMessage(
+            "نا موفق", "هیچ یک از مشخصات کاربری شما تغییر نکرده است"));
       }
+    } catch (e) {
+      setState(() {
+        print(e.toString());
+      });
+    }
+  }
+
+  void _onChangePassSubmit() {
+    try {
+      _passwordIsFirtstTime = false;
+      if (!passwordValidator.isValid(_passRepController.text) ||
+          !passwordValidator.isValid(_lastPassController.text) ||
+          !passwordValidator.isValid(_newPassController.text))
+        throw Exception();
+
+      if (_newPassController.text.trim() != _passRepController.text.trim()) {
+        _homeBloc
+            .add(ShowMessage("خطا", "رمز وارد شده با تکرار آن مطابقت ندارد"));
+        throw Exception();
+      }
+
+      _homeBloc.add(DoChangePassword(
+          oldPassword: _lastPassController.text,
+          newPassword: _newPassController.text));
     } catch (e) {
       setState(() {
         print(e.toString());
@@ -89,14 +113,14 @@ class _SettingScreenState extends State<SettingScreen>
     }, builder: (context, state) {
       if (state is EditprofileInitiallied) {
         widget.viewModel = state.viewModel;
-        if (_isFirstTime) {
+        if (_propertiesIsFirstTime) {
           _nameController.text = widget.viewModel.firstname;
           _familyNameController.text = widget.viewModel.lastname;
           _userNameController.text = widget.viewModel.username;
           _phoneNumberController.text = widget.viewModel.phoneNumber;
           _gradeDropDownController.value = widget.viewModel.grade;
-          _cityDropDownController.value =widget.viewModel.city;
-          _isFirstTime = false;
+          _cityDropDownController.value = widget.viewModel.city;
+          _propertiesIsFirstTime = false;
         }
         return _buildSettingBody(context);
       }
@@ -127,12 +151,12 @@ class _SettingScreenState extends State<SettingScreen>
           elevation: 0,
           backgroundColor: Colors.grey[300],
           title: Text(
-            'پروفایل',
+            'تنظیمات',
             style: TextStyle(
               fontFamily: 'vazir',
-              fontWeight: FontWeight.w100,
+              fontWeight: FontWeight.w500,
               fontSize: 25,
-              color: Colors.black,
+              color: Colors.grey[800],
             ),
           ),
           automaticallyImplyLeading: false,
@@ -152,171 +176,253 @@ class _SettingScreenState extends State<SettingScreen>
         body: ScrollConfiguration(
           behavior: MyBehavior(),
           child: SingleChildScrollView(
-            child: Card(
-              elevation: 3.0,
-              margin: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 40),
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: GestureDetector(
-                      child: CircleAvatar(
-                        radius: 47,
-                        backgroundColor: Colors.grey[50],
-                        child: widget.viewModel.avatar == null
-                            ? Icon(Icons.person,
-                                color: Colors.blueGrey[800], size: 50)
-                            : null,
-                        backgroundImage: widget.viewModel.avatar == null
-                            ? null
-                            : _image == null ? widget.viewModel.avatar.image : _image.image,
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'مشخصات',
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 23,
+                        color: Colors.grey[700],
                       ),
-                      onTap: () => _pickImage(),
                     ),
                   ),
-                  SignupTextInput(
-                    borderColor: Colors.black54,
-                    labelColor: Colors.grey[500],
-                    inputColor: Colors.black87,
-                    labelText: 'نام',
-                    errorText: !firstnameValidator.isValid(_nameController.text)
-                        ? inValidFirstnameErrorMassage
-                        : null,
-                    textInputType: TextInputType.text,
-                    controller: _nameController,
-                    onEditingComplete: () {
-                      FocusScope.of(context).nextFocus();
-                    },
-                  ),
-                  SignupTextInput(
-                    borderColor: Colors.black54,
-                    labelColor: Colors.grey[500],
-                    inputColor: Colors.black87,
-                    labelText: 'نام خانوادگی',
-                    errorText:
-                        !lastnameValidator.isValid(_familyNameController.text)
+                ),
+                Card(
+                  elevation: 3.0,
+                  margin:
+                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 40),
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: GestureDetector(
+                          child: CircleAvatar(
+                            radius: 47,
+                            backgroundColor: Colors.grey[50],
+                            child: widget.viewModel.avatar == null
+                                ? Icon(Icons.person,
+                                    color: Colors.blueGrey[800], size: 50)
+                                : null,
+                            backgroundImage: widget.viewModel.avatar == null
+                                ? null
+                                : _image == null
+                                    ? widget.viewModel.avatar.image
+                                    : _image.image,
+                          ),
+                          onTap: () => _pickImage(),
+                        ),
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'نام',
+                        errorText:
+                            !firstnameValidator.isValid(_nameController.text)
+                                ? inValidFirstnameErrorMassage
+                                : null,
+                        textInputType: TextInputType.text,
+                        controller: _nameController,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'نام خانوادگی',
+                        errorText: !lastnameValidator
+                                .isValid(_familyNameController.text)
                             ? inValidLastnameErrorMassage
                             : null,
-                    controller: _familyNameController,
-                    textInputType: TextInputType.text,
-                    onEditingComplete: () {
-                      FocusScope.of(context).nextFocus();
-                    },
-                  ),
-                  SignupTextInput(
-                    borderColor: Colors.black54,
-                    labelColor: Colors.grey[500],
-                    inputColor: Colors.black87,
-                    labelText: 'نام کاربری',
-                    errorText:
-                        !usernameValidator.isValid(_userNameController.text)
-                            ? inValidUsernameErrorMassage
+                        controller: _familyNameController,
+                        textInputType: TextInputType.text,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'نام کاربری',
+                        errorText:
+                            !usernameValidator.isValid(_userNameController.text)
+                                ? inValidUsernameErrorMassage
+                                : null,
+                        controller: _userNameController,
+                        textInputType: TextInputType.text,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        counterColor: Colors.grey[800],
+                        labelText: 'شماره موبایل',
+                        errorText: !phoneNumberValidator
+                                .isValid(_phoneNumberController.text)
+                            ? inValidPhoneNumberErrorMassage
                             : null,
-                    controller: _userNameController,
-                    textInputType: TextInputType.text,
-                    onEditingComplete: () {
-                      FocusScope.of(context).nextFocus();
-                    },
-                  ),
-                  SignupTextInput(
-                    borderColor: Colors.black54,
-                    labelColor: Colors.grey[500],
-                    inputColor: Colors.black87,
-                    counterColor: Colors.grey[800],
-                    labelText: 'شماره موبایل',
-                    errorText: !phoneNumberValidator
-                            .isValid(_phoneNumberController.text)
-                        ? inValidPhoneNumberErrorMassage
-                        : null,
-                    controller: _phoneNumberController,
-                    textInputType: TextInputType.phone,
-                    onEditingComplete: () {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    maxLength: 10,
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    textDirection: TextDirection.rtl,
-                    children: <Widget>[
-                      Expanded(
-                        child: CustomDropDownButton(
-                          color: Colors.grey[600],
-                          hint: 'مقطع',
-                          initialItem: widget.viewModel.grade,
-                          items: widget.viewModel.grades,
-                          controller: _gradeDropDownController,
-                        ),
+                        controller: _phoneNumberController,
+                        textInputType: TextInputType.phone,
+                        maxLength: 10,
                       ),
-                      Expanded(
-                        child: CustomDropDownButton(
-                          color: Colors.grey[600],
-                          hint: 'شهر',
-                          initialItem: widget.viewModel.city,
-                          items: widget.viewModel.cities,
-                          controller: _cityDropDownController,
-                        ),
-                      ),
-                    ],
-                  ),
-                  RadioButton(
-                    color: Colors.grey[600],
-                    txt: 'جنسيت',
-                    valueFirst: 1,
-                    valueSecond: 2,
-                    groupValue: widget.viewModel.isBoy ? 1 : 2,
-                    first: 'پسر',
-                    second: 'دختر',
-                    controller: _radioGroupController,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15, bottom: 20),
-                        child: RaisedButton(
-                          color: Colors.yellowAccent[700],
-                          onPressed: _submit,
-                          child: Text(
-                            'ثبت',
-                            style: TextStyle(
-                              fontFamily: 'vazir',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 19,
-                              color: Colors.black54,
+                      SizedBox(height: 40),
+                      Row(
+                        textDirection: TextDirection.rtl,
+                        children: <Widget>[
+                          Expanded(
+                            child: CustomDropDownButton(
+                              color: Colors.grey[600],
+                              hint: 'مقطع',
+                              initialItem: widget.viewModel.grade,
+                              items: widget.viewModel.grades,
+                              controller: _gradeDropDownController,
                             ),
                           ),
-                        ),
+                          Expanded(
+                            child: CustomDropDownButton(
+                              color: Colors.grey[600],
+                              hint: 'شهر',
+                              initialItem: widget.viewModel.city,
+                              items: widget.viewModel.cities,
+                              controller: _cityDropDownController,
+                            ),
+                          ),
+                        ],
                       ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 15, bottom: 20),
-                        child: FlatButton(
-                          color: Colors.transparent,
-                          onPressed: () {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return ChangePassDialog();
-                              },
-                            );
-                          },
-                          child: Text(
-                            'تغییر رمز عبور',
-                            style: TextStyle(
-                              fontFamily: 'vazir',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 19,
-                              color: Colors.black54,
+                      RadioButton(
+                        color: Colors.grey[600],
+                        txt: 'جنسيت',
+                        valueFirst: 1,
+                        valueSecond: 2,
+                        groupValue: widget.viewModel.isBoy ? 1 : 2,
+                        first: 'پسر',
+                        second: 'دختر',
+                        controller: _radioGroupController,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15, bottom: 20),
+                          child: RaisedButton(
+                            color: Colors.yellowAccent[700],
+                            onPressed: _propertiesSubmit,
+                            child: Text(
+                              'ثبت',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 19,
+                                color: Colors.black54,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'رمز عبور',
+                      style: TextStyle(
+                        fontFamily: 'vazir',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 23,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 3.0,
+                  margin:
+                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 40),
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'رمز قبلی',
+                        errorText: !_passwordIsFirtstTime &&
+                                !passwordValidator.isValid(_lastPassController.text)
+                            ? notValidPasswordError
+                            : null,
+                        textInputType: TextInputType.text,
+                        controller: _lastPassController,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'رمز جدید',
+                        errorText: !_passwordIsFirtstTime &&
+                                !passwordValidator.isValid(_newPassController.text)
+                            ? notValidPasswordError
+                            : null,
+                        textInputType: TextInputType.text,
+                        controller: _newPassController,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                      ),
+                      SignupTextInput(
+                        borderColor: Colors.black54,
+                        labelColor: Colors.grey[500],
+                        inputColor: Colors.black87,
+                        labelText: 'تکرار',
+                        errorText: !_passwordIsFirtstTime &&
+                                !passwordValidator.isValid(_passRepController.text)
+                            ? notValidPasswordError
+                            : null,
+                        textInputType: TextInputType.text,
+                        controller: _passRepController,
+                      ),
+                      SizedBox(height: 40),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15, bottom: 20),
+                          child: RaisedButton(
+                            color: Colors.yellowAccent[700],
+                            onPressed: _onChangePassSubmit,
+                            child: Text(
+                              'تغییر رمز عبور',
+                              style: TextStyle(
+                                fontFamily: 'vazir',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 19,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),

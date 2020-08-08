@@ -34,3 +34,5 @@ class ImageUtility {
   }
 
 }
+
+// TODO : convert to base64

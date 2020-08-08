@@ -31,6 +31,15 @@ class DoEditeProfile extends HomeEvent {
   List<Object> get props => null;
 }
 
+class DoChangePassword extends HomeEvent {
+  DoChangePassword({this.newPassword, this.oldPassword});
+  final String oldPassword;
+  final String newPassword;
+
+  @override
+  List<Object> get props => null;
+}
+
 class BreakHomeInitialization extends HomeEvent {
   @override
   List<Object> get props => null;
@@ -171,6 +180,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     else if (event is ShowMessage) {
       yield ShowMessageState(event.message, event.detail);
+    }
+
+    else if (event is DoChangePassword) {
+      yield EditProfLoadingStart();
+      bool result = await auth.changePass(oldPass: event.oldPassword, newPass: event.newPassword);
+      await Future.delayed(Duration(milliseconds: 500));
+      yield EditProfLoadingFinish();
+      if(result)
+        yield ShowMessageState("موفق", "عملیات تغییر رمز عبور شما با موفقیت انجام شد");
     }
   }
 }

@@ -3,14 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authBloc.dart';
-import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/mainMenuSliderCard.dart';
 import 'package:pishgamv2/components/round_icon_button.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
-import 'package:pishgamv2/dialogs/changePassDialog.dart';
 import 'package:pishgamv2/dialogs/waiterDialog.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
@@ -364,7 +362,7 @@ class _HomePageState extends State<HomePage>
                               },
                             ),
                             Text(
-                              'پروفایل',
+                              'تنظیمات',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w100,

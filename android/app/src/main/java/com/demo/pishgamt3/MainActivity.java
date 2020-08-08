@@ -620,46 +620,46 @@ public class MainActivity extends FlutterActivity {
                         //load token for header
                         SharePref pref = new SharePref(getApplicationContext());
                         //set params to hashmap
-                        info.put("username", call.argument("username"));
-                        info.put("password", call.argument("password"));
-                        //Each request requires a header, the key and value of which must be
-                        // defined in the hash map with the following strings.
-                        info.put(new Header().getKayheader(), "Authorization");
-                        info.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
+//                        info.put("username", call.argument("username"));
+//                        info.put("password", call.argument("password"));
+//                        //Each request requires a header, the key and value of which must be
+//                        // defined in the hash map with the following strings.
+//                        info.put(new Header().getKayheader(), "Authorization");
+//                        info.put(new Header().getKeyvalue(), "Token " + pref.load("token"));
+//
+//                        RequestforServer requestforServer = new RequestforServer(client, path.getEditprof() + "?method=changeAvatar/", info);
 
-                        RequestforServer requestforServer = new RequestforServer(client, path.getEditprof(), info);
+                        String json = "{\"old_password\": \"" + call.argument("old_password") + "\",\"password\" : \"" + call.argument("new_passwrod") + "\"}";
+
+                        Request shoppingLessonsRequest = new Request.Builder()
+                                .url(path.getLessons())
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .post(RequestBody
+                                        .create(MediaType
+                                                .parse("application/json"), json))
+                                .build();
 
                         try {
-                            client.newCall(requestforServer.postMethod()).enqueue(new Callback() {
+                            client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
-
-
                                 }
 
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
-                                    Handler handler = new Handler(Looper.getMainLooper());
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (response.isSuccessful()) {
+                                    final int resCode = response.code();
+                                    final String resBody = response.body().string();
 
-                                                mainresult.success("done");
-                                            }
-                                            if (response.code() == 406) {
-                                                mainresult.error("نام کاربری درست نیست", "خطا", null);
-
-
-                                            }
-                                        }
-                                    });
-
-
+                                    if (resCode == 200) {
+                                        mainresult.success(true);
+                                    } else if (resCode == 406) {
+                                        mainresult.error("رمز وارد شده اشتباه است", "خطا", null);
+                                    }
                                 }
                             });
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
