@@ -722,6 +722,54 @@ public class MainActivity extends FlutterActivity {
                 }
                 ));
 
+
+
+        //files
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), "lessonFiles")
+                .setMethodCallHandler(((call, result) -> {
+                    if(call.method.equalsIgnoreCase("lessonFiles")) {
+                        MainThreadResult mainresult = new MainThreadResult(result);
+                        SharePref pref = new SharePref(getApplicationContext());
+                        OkHttpClient client = new OkHttpClient();
+
+                        Request request = new Request.Builder()
+                                .url(path.getFilesPath(call.argument("course_id")))
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .build();
+
+                        try {
+                            client.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    int resCode = response.code();
+                                    String resBody = response.body().string();
+
+                                    Log.i("codeeeedd", resCode + "");
+                                    Log.i("bodyyyeee", resBody + "");
+
+                                    if(resCode == 200) {
+                                        mainresult.success(resBody);
+                                    } else {
+                                        mainresult.error("گرفتن فایل مربوط به این درس در حال حاضر ممکن نیست", "خطا", null);
+                                    }
+                                }
+                            });
+
+
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
+
+
+
         //shopping list
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), names[11])
                 .setMethodCallHandler((call, result) ->

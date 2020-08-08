@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
+import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -133,7 +134,10 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _homeBloc.add(InitializeLessonFiles(widget.lessonInfo.code));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MylessonFiles()));
+                      },
                       padding: EdgeInsets.fromLTRB(30, 5, 30, 5),
                       child: Text(
                         'دانلود جزوات',

@@ -16,7 +16,11 @@ class _MyLessonsState extends State<MyLessons> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      // ignore: missing_return
+      condition: (lastState, thisState) {
+        if(thisState is MyLessonsInitiallized)
+          return true;
+        return false;
+      },
         builder: (context, state) {
           if (state is MyLessonsInitiallized) {
             widget.viewModel = state.viewModel;
@@ -29,12 +33,13 @@ class _MyLessonsState extends State<MyLessons> {
 
   Scaffold _buildLoaderScreen() {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
             valueColor:
-                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+            AlwaysStoppedAnimation<Color>(Colors.grey[300]),
           ),
         ),
       ),

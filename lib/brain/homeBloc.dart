@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
+import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
@@ -13,6 +14,14 @@ import 'authClass.dart';
 //home events
 abstract class HomeEvent extends Equatable {
   const HomeEvent();
+}
+
+class InitializeLessonFiles extends HomeEvent{
+  final String courseId;
+  InitializeLessonFiles(this.courseId);
+
+  @override
+  List<Object> get props => null;
 }
 
 class ShowMessage extends HomeEvent {
@@ -73,9 +82,16 @@ abstract class HomeState extends Equatable {
   const HomeState();
 }
 
+class LessonFilesInitiallized extends HomeState {
+  const LessonFilesInitiallized(this.viewModel);
+  final MyLessonFilesViewModel viewModel;
+
+  @override
+  List<Object> get props => [Random().nextInt(10000)];
+}
+
 class HomeInitiallized extends HomeState {
   const HomeInitiallized(this.viewModel);
-
   final HomeViewModel viewModel;
 
   @override
@@ -224,6 +240,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (result)
           yield ShowMessageState(
               "موفق", "عملیات تغییر رمز عبور شما با موفقیت انجام شد");
+      } on PlatformException catch(e) {
+        yield EditProfLoadingFinish();
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
+    else if (event is InitializeLessonFiles) {
+      try {
+        MyLessonFilesViewModel viewModel = await auth.initializeMyLessonFiles(event.courseId);
+        yield LessonFilesInitiallized(viewModel);
       } on PlatformException catch(e) {
         yield EditProfLoadingFinish();
         yield ShowMessageState(e.message, e.code);

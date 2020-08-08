@@ -59,7 +59,11 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-        // ignore: missing_return
+      condition: (lastState, thisState) {
+        if(thisState is ShoppingLessonInitiallized)
+          return true;
+        return false;
+      },
         builder: (context, state) {
       if (state is ShoppingLessonInitiallized) {
         widget.viewModel = state.viewmodel;
@@ -71,12 +75,13 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
 
   Scaffold _buildLoaderScreen() {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
             valueColor:
-                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+            AlwaysStoppedAnimation<Color>(Colors.grey[300]),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/setting_screen.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ abstract class AuthBase {
   Future<MyLessonsViewModel> initializeMyLesson();
 
   Future<ShoppingLessonViewModel> initializeShoppingLesson();
+
+  Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId);
 
   Future<bool> changePass({@required String oldPass, @required String newPass});
 }
@@ -104,6 +107,7 @@ class Auth extends AuthBase {
   static final String _shoppingChannelName = 'shoppinglist';
   static final String _editProfName = 'editprof';
   static final String _changePassName = 'changepass';
+  static final String _lessonFilesName = 'lessonFiles';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -117,6 +121,7 @@ class Auth extends AuthBase {
   static final _shoppingLessonChannel = MethodChannel(_shoppingChannelName);
   static final _editProfChannel = MethodChannel(_editProfName);
   static final _changePassChannel = MethodChannel(_changePassName);
+  static final _lessonFilesChannel = MethodChannel(_lessonFilesName);
 
   @override
   Future<User> currentUser() async {
@@ -436,9 +441,35 @@ class Auth extends AuthBase {
       "old_password" : oldPass.trim(),
       "new_passwrod" : newPass.trim(),
     });
-    print(result);
 
     return result;
+  }
+
+  @override
+  Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId)async {
+    final String _lessonFilesMethodName = "lessonFiles";
+    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+      "course_id" : courseId,
+    });
+
+    List<DocumentModel> docs = List();
+    final data = jsonDecode(result);
+
+    for(Map m in data["documents"]) {
+      DocumentModel model = DocumentModel(
+        title: m["title"],
+        sender: m["sender"],
+        description: m["description"],
+        url: mainpath + m["upload_document"],
+      );
+      docs.add(model);
+    }
+
+    return MyLessonFilesViewModel(
+      courseTitle: data["title"],
+      teacher: data["teacher"],
+      docs: docs,
+    );
   }
 }
 
