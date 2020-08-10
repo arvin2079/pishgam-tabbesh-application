@@ -169,7 +169,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
                             : null,
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                         child: Text(
-                          'شروع کلاس',
+                          'شروع',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

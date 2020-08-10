@@ -265,20 +265,20 @@ class _SettingScreenState extends State<SettingScreen>
                           FocusScope.of(context).nextFocus();
                         },
                       ),
-                      SignupTextInput(
-                        borderColor: Colors.black54,
-                        labelColor: Colors.grey[500],
-                        inputColor: Colors.black87,
-                        counterColor: Colors.grey[800],
-                        labelText: 'شماره موبایل',
-                        errorText: !phoneNumberValidator
-                                .isValid(_phoneNumberController.text)
-                            ? inValidPhoneNumberErrorMassage
-                            : null,
-                        controller: _phoneNumberController,
-                        textInputType: TextInputType.phone,
-                        maxLength: 10,
-                      ),
+//                      SignupTextInput(
+//                        borderColor: Colors.black54,
+//                        labelColor: Colors.grey[500],
+//                        inputColor: Colors.black87,
+//                        counterColor: Colors.grey[800],
+//                        labelText: 'شماره موبایل',
+//                        errorText: !phoneNumberValidator
+//                                .isValid(_phoneNumberController.text)
+//                            ? inValidPhoneNumberErrorMassage
+//                            : null,
+//                        controller: _phoneNumberController,
+//                        textInputType: TextInputType.phone,
+//                        maxLength: 10,
+//                      ),
                       SizedBox(height: 40),
                       Row(
                         textDirection: TextDirection.rtl,

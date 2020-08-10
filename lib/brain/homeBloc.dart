@@ -233,10 +233,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield EditProfLoadingStart();
         bool result = await auth.changePass(
             oldPass: event.oldPassword, newPass: event.newPassword);
-        print('sdfsdf2');
         await Future.delayed(Duration(milliseconds: 500));
         yield EditProfLoadingFinish();
-        print('sdfsdf3');
         if (result)
           yield ShowMessageState(
               "موفق", "عملیات تغییر رمز عبور شما با موفقیت انجام شد");

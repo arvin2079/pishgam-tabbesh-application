@@ -815,11 +815,13 @@ public class MainActivity extends FlutterActivity {
         MainThreadResult mainresult = new MainThreadResult(result);
         //        try {
         //convert response to string
-        String token = null;
+        String token;
         token = response.body().string();
+        Log.i("tokkken", token);
         //parse json
         JsonParser jsonParser = new JsonParser();
         //save token
+        Log.i("tokkken in j", jsonParser.token(token));
         SharePref pref = new SharePref(this);
         pref.save("token", jsonParser.token(token));
         mainresult.success(null);
