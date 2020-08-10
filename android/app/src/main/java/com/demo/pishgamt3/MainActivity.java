@@ -501,7 +501,7 @@ public class MainActivity extends FlutterActivity {
                                     mainresult.success(true);
                                 }
                                 if (response.code() == 406) {
-                                    mainresult.error("نام کاربری درست نیست", "خطا", null);
+                                    mainresult.error("نام کاربری تکراری نیست", "خطا", null);
                                 }
                             }
 

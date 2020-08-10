@@ -73,7 +73,7 @@ class Auth extends AuthBase {
   Map gradesMap = Map();
   User _currentUser = new User();
 
-  //singleton pattern in dart
+  //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
 //  String mainpath = "http://192.168.1.5:8000";
   String mainpath="http://192.168.43.159:8000";
@@ -334,7 +334,7 @@ class Auth extends AuthBase {
       teacher: dResult["teacher"],
       name: cResult["firstname"] + " " + cResult["lastname"],
       timeLeft: timeLeft,
-      url: dResult["url"],
+      url: dResult["url"] == "null" ? null : dResult["url"],
       grade: cResult["grades"],
       isActive: dResult["is_active"],
       avatar: avatar,

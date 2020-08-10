@@ -161,6 +161,7 @@ class _HomePageState extends State<HomePage>
         builder: (context, state) {
           if (state is HomeInitiallized) {
             widget.viewModel = state.viewModel;
+
             if (widget.viewModel == null) {
               _authbloc.add(
                 CatchError(
@@ -319,9 +320,9 @@ class _HomePageState extends State<HomePage>
                               ? widget.viewModel.timeLeft
                               : Duration(minutes: 0),
                           slideDirection: SlideDirection.Up,
-                          shouldShowDays: true,
+                          shouldShowDays: false,
                           separator: ":",
-                          tightLabel: true,
+//                          tightLabel: true,
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
 //                            color: Colors.black12,
