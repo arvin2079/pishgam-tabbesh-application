@@ -371,7 +371,7 @@ class _HomePageState extends State<HomePage>
                             ),
                           ],
                         ),
-                        widget.viewModel.isActive ? RaisedButton(
+                        widget.viewModel.isActive != null && widget.viewModel.isActive ? RaisedButton(
                           child: Container(
                             child: Text(
                               ':)بزن بریم کلاس',
