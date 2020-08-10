@@ -24,6 +24,14 @@ class InitializeLessonFiles extends HomeEvent{
   List<Object> get props => null;
 }
 
+class UploadImage extends HomeEvent{
+  final String base64;
+  UploadImage(this.base64);
+
+  @override
+  List<Object> get props => [Random().nextInt(10000)];
+}
+
 class ShowMessage extends HomeEvent {
   ShowMessage(this.message, this.detail);
   final String message;
@@ -250,6 +258,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         MyLessonFilesViewModel viewModel = await auth.initializeMyLessonFiles(event.courseId);
         yield LessonFilesInitiallized(viewModel);
+      } on PlatformException catch(e) {
+        yield ShowMessageState(e.message, e.code);
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
+    else if (event is UploadImage) {
+      try {
+        yield EditProfLoadingStart();
+        await auth.uploadProfilePic(event.base64);
+        yield EditProfLoadingFinish();
       } on PlatformException catch(e) {
         yield EditProfLoadingFinish();
         yield ShowMessageState(e.message, e.code);

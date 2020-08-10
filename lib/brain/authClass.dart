@@ -40,6 +40,8 @@ abstract class AuthBase {
   Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId);
 
   Future<bool> changePass({@required String oldPass, @required String newPass});
+
+  Future<void> uploadProfilePic(String base64);
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -468,10 +470,15 @@ class Auth extends AuthBase {
     }
 
     return MyLessonFilesViewModel(
-      courseTitle: data["title"],
-      teacher: data["teacher"],
+      courseTitle: data["course"]["title"],
+      teacher: data["course"]["teacher"],
       docs: docs,
     );
+  }
+
+  @override
+  Future<void> uploadProfilePic(String base64) {
+    //TODO
   }
 }
 

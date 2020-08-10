@@ -1,73 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 
-class MylessonFiles extends StatelessWidget {
+class MylessonFiles extends StatefulWidget {
+  @override
+  _MylessonFilesState createState() => _MylessonFilesState();
+}
+
+class _MylessonFilesState extends State<MylessonFiles> {
   MyLessonFilesViewModel viewModel = MyLessonFilesViewModel();
 
-//  MyLessonFilesViewModel mock = MyLessonFilesViewModel(
-//      courseTitle: 'شیمی دوم دبیرستان',
-//      teacher: 'مصطفی رحیم صفوی',
-//      docs: <DocumentModel>[
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسه اول تا بیستم",
-//            description:
-//                "اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسها بیستم",
-//            description: "اینجا پاره ای از توضیحات خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "ججلسه اول تا بیستم",
-//            description:
-//                "اینجا پاره ای از توضیحات داده خواهدجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسه اول تا بیستم",
-//            description:
-//            "اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسها بیستم",
-//            description: "اینجا پاره ای از توضیحات خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "ججلسه اول تا بیستم",
-//            description:
-//            "اینجا پاره ای از توضیحات داده خواهدجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسه اول تا بیستم",
-//            description:
-//            "اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد اینجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "جزوه مربوط به جلسها بیستم",
-//            description: "اینجا پاره ای از توضیحات خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//        DocumentModel(
-//            title: "ججلسه اول تا بیستم",
-//            description:
-//            "اینجا پاره ای از توضیحات داده خواهدجا پاره ای از توضیحات داده خواهد شد ",
-//            sender: "استاد مصطفی رحیمی",
-//            url: "http://192.168.1.5:8000/media/documents/000/setting.png"),
-//      ]);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    FlutterDownloader.cancelAll();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+    return BlocBuilder<HomeBloc, HomeState>(condition: (lastState, thisState) {
+      if (thisState is LessonFilesInitiallized) return true;
+      return false;
+    }, builder: (context, state) {
       if (state is LessonFilesInitiallized) {
         viewModel = state.viewModel;
         return _buildFilesScreenBody(context);
@@ -83,8 +44,7 @@ class MylessonFiles extends StatelessWidget {
         child: Center(
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
-            valueColor:
-                AlwaysStoppedAnimation<Color>(Colors.grey[300]),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[300]),
           ),
         ),
       ),
@@ -208,12 +168,29 @@ class MylessonFiles extends StatelessWidget {
             icon: Icon(Icons.file_download),
             label: Text("دانلود"),
             color: Colors.white.withOpacity(0.92),
-            onPressed: () {},
+            onPressed: () async {
+
+//              final taskId = await FlutterDownloader.enqueue(
+//                url: item.url,
+//                savedDir: StorageDirectory.downloads.toString(),
+//                showNotification: true,
+//                // show download progress in status bar (for Android)
+//                openFileFromNotification:
+//                true, // click on notification to open downloaded file (for Android)
+//              );
+            },
           ),
           Divider(thickness: 2),
         ],
       );
     }
+  }
+
+  Future<String> _findLocalPath() async {
+    final directory = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 }
 

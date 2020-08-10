@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/brain/imageUtility.dart';
 import 'package:pishgamv2/brain/validator.dart';
@@ -438,7 +438,9 @@ class _SettingScreenState extends State<SettingScreen>
     File file = File(pickedFile.path);
     File finalFile = await ImageUtility.compressAndGetFile(file);
 
-    Image _image = Image.file(finalFile);
+    _image = Image.file(finalFile);
+    List<int> imageBytes = await finalFile.readAsBytes();
+//    _homeBloc.add(UploadImage(base64Encode(imageBytes)));
     setState(() {});
   }
 
