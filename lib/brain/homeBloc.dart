@@ -26,7 +26,8 @@ class InitializeLessonFiles extends HomeEvent{
 
 class UploadImage extends HomeEvent{
   final String base64;
-  UploadImage(this.base64);
+  final String fileName;
+  UploadImage(this.base64, this.fileName);
 
   @override
   List<Object> get props => [Random().nextInt(10000)];
@@ -268,7 +269,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     else if (event is UploadImage) {
       try {
         yield EditProfLoadingStart();
-        await auth.uploadProfilePic(event.base64);
+        await auth.uploadProfilePic(event.base64, event.fileName);
         yield EditProfLoadingFinish();
       } on PlatformException catch(e) {
         yield EditProfLoadingFinish();

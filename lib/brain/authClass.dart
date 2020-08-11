@@ -41,7 +41,7 @@ abstract class AuthBase {
 
   Future<bool> changePass({@required String oldPass, @required String newPass});
 
-  Future<void> uploadProfilePic(String base64);
+  Future<void> uploadProfilePic(String base64, String filename);
 }
 
 // fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
@@ -112,6 +112,7 @@ class Auth extends AuthBase {
   static final String _editProfName = 'editprof';
   static final String _changePassName = 'changepass';
   static final String _lessonFilesName = 'lessonFiles';
+  static final String _changeAvatarName = 'changeAvatar';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -126,6 +127,7 @@ class Auth extends AuthBase {
   static final _editProfChannel = MethodChannel(_editProfName);
   static final _changePassChannel = MethodChannel(_changePassName);
   static final _lessonFilesChannel = MethodChannel(_lessonFilesName);
+  static final _changeAvatarChannel = MethodChannel(_changeAvatarName);
 
   @override
   Future<User> currentUser() async {
@@ -477,8 +479,12 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<void> uploadProfilePic(String base64) {
-    //TODO
+  Future<void> uploadProfilePic(String base64, String filename) async{
+    final String _lessonFilesMethodName = "changeAvatar";
+    await _changeAvatarChannel.invokeMethod(_lessonFilesMethodName , {
+      "file_name" : filename,
+      "file" : base64,
+    });
   }
 }
 

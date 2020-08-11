@@ -89,7 +89,6 @@ class _SettingScreenState extends State<SettingScreen>
           !passwordValidator.isValid(_newPassController.text))
         throw Exception();
 
-
       if (_newPassController.text.trim() != _passRepController.text.trim()) {
         _homeBloc
             .add(ShowMessage("خطا", "رمز وارد شده با تکرار آن مطابقت ندارد"));
@@ -364,7 +363,8 @@ class _SettingScreenState extends State<SettingScreen>
                         inputColor: Colors.black87,
                         labelText: 'رمز قبلی',
                         errorText: !_passwordIsFirtstTime &&
-                                !passwordValidator.isValid(_lastPassController.text)
+                                !passwordValidator
+                                    .isValid(_lastPassController.text)
                             ? notValidPasswordError
                             : null,
                         textInputType: TextInputType.text,
@@ -379,7 +379,8 @@ class _SettingScreenState extends State<SettingScreen>
                         inputColor: Colors.black87,
                         labelText: 'رمز جدید',
                         errorText: !_passwordIsFirtstTime &&
-                                !passwordValidator.isValid(_newPassController.text)
+                                !passwordValidator
+                                    .isValid(_newPassController.text)
                             ? notValidPasswordError
                             : null,
                         textInputType: TextInputType.text,
@@ -394,7 +395,8 @@ class _SettingScreenState extends State<SettingScreen>
                         inputColor: Colors.black87,
                         labelText: 'تکرار',
                         errorText: !_passwordIsFirtstTime &&
-                                !passwordValidator.isValid(_passRepController.text)
+                                !passwordValidator
+                                    .isValid(_passRepController.text)
                             ? notValidPasswordError
                             : null,
                         onEditingComplete: _onChangePassSubmit,
@@ -435,13 +437,16 @@ class _SettingScreenState extends State<SettingScreen>
   Future<void> _getImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: source);
-    File file = File(pickedFile.path);
-    File finalFile = await ImageUtility.compressAndGetFile(file);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      File finalFile = await ImageUtility.compressAndGetFile(file);
 
-    _image = Image.file(finalFile);
-    List<int> imageBytes = await finalFile.readAsBytes();
-//    _homeBloc.add(UploadImage(base64Encode(imageBytes)));
-    setState(() {});
+      _image = Image.file(finalFile);
+      List<int> imageBytes = await finalFile.readAsBytes();
+      _homeBloc.add(UploadImage(base64Encode(imageBytes),
+          file.path.split("/").last.split(".").first));
+      setState(() {});
+    }
   }
 
   void _pickImage() {
