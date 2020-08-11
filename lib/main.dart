@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 import 'brain/authBloc.dart';
 import 'constants/PishgamTheme.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(debug: true);
+void main() {
+//  WidgetsFlutterBinding.ensureInitialized();
+//  await FlutterDownloader.initialize(debug: true);
   runApp(PishgamDemo());
 }
 
