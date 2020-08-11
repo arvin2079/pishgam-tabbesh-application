@@ -78,7 +78,7 @@ class Auth extends AuthBase {
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
 //  String mainpath = "http://192.168.1.5:8000";
-  String mainpath="http://192.168.43.159:8000";
+  String mainpath="http://192.168.43.139:8000";
 
 
   Auth._internalConst();

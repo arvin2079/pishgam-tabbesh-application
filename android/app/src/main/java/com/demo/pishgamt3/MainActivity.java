@@ -262,6 +262,8 @@ public class MainActivity extends FlutterActivity {
                                 + "\"] , \"city\" : \"" + call.argument("city")
                                 + "\" }";
 
+                        Log.i("requestbody-->", json);
+
                         //The registration class needs a body made of Jason because the bases must be submitted in the form of a presentation
                         Request request = new Request.Builder()
                                 .header(new Header().getValueheader(), new Header().getValueval())
@@ -280,24 +282,30 @@ public class MainActivity extends FlutterActivity {
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                if (response.isSuccessful()) {
-                                    String message = "هندل نشده";
                                     int responseCode = response.code();
-
-
-                                    mainresult.success(message);
-
-                                } else {
-                                    int code = response.code();
-                                    if (code == 406) {
-                                        String resbody = response.body().string();
-                                        try {
-                                            mainresult.error(new JsonParser().SignupOnFailed(resbody), "کاربر با این مشخصات از قبل موجود است", null);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                    String resBody = response.body().string();
+                                    if(responseCode == 200) {
+                                        mainresult.success("ثبت نام با موفقیت انجام شد");
+                                    } else if(responseCode == 406) {
+                                        mainresult.error("یوزر با اطلاعات شما در سیستم موجود می باشد", "خطا", null);
+                                    } else {
+                                        mainresult.error("انجام عملیات ثبت نام با خطا مواجه شد", "خطا", null);
                                     }
-                                }
+//                                if (response.isSuccessful()) {
+//                                    String message = "هندل نشده";
+//
+//
+//                                    mainresult.success(message);
+//
+//                                } else {
+//                                    if (code == 406) {
+//                                        try {
+//                                            mainresult.error(new JsonParser().SignupOnFailed(resBody), "کاربر با این مشخصات از قبل موجود است", null);
+//                                        } catch (JSONException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                }
                             }
                         });
 
