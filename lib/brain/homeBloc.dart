@@ -180,12 +180,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     else if (event is InitializeMyLesson) {
       try {
+        print('hser1');
         MyLessonsViewModel viewModel = await auth.initializeMyLesson();
+        print('hser2');
         yield MyLessonsInitiallized(viewModel);
+        print('hser');
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);
+        print('sdfsdfsdf');
       } catch (e) {
+        print('sdfsdfsdf3');
         print(e.toString());
+        print('sdfsdfsdf2');
       }
     }
 

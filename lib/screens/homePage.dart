@@ -314,13 +314,14 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                         Spacer(),
+                        Spacer(),
                         SlideCountdownClock(
 //                          duration: Duration(days: 0, minutes: 37),
                           duration: widget.viewModel.timeLeft != null
                               ? widget.viewModel.timeLeft
                               : Duration(minutes: 0),
                           slideDirection: SlideDirection.Up,
-                          shouldShowDays: false,
+                          shouldShowDays: true,
                           separator: ":",
 //                          tightLabel: true,
                           padding: EdgeInsets.all(4),
@@ -332,11 +333,12 @@ class _HomePageState extends State<HomePage>
                             _homeBloc.add(InitializeHome());
                           },
                           textStyle: TextStyle(
-                            fontSize: 37,
+                            fontSize: 33,
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w100,
                           ),
                         ),
+                        Spacer(),
                       ],
                     ),
                   ),

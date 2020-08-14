@@ -90,12 +90,15 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                 color: Colors.black87,
               ),
             ),
+            automaticallyImplyLeading: false,
             actions: <Widget>[
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
                 icon: Icon(Icons.close),
                 color: Colors.black87,
-                iconSize: 18,
+                iconSize: 25,
               ),
             ],
           ),

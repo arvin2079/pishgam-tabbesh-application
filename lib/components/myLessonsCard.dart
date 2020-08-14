@@ -110,7 +110,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   ),
                 ),
               ),
-              Padding(
+              widget.lessonInfo.firstClass != null ? Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
                   'زمان شروع اولین کلاس :\n' +
@@ -122,7 +122,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
                     color: Colors.grey[600],
                   ),
                 ),
-              ),
+              ) : Container(),
               Padding(
                 padding: const EdgeInsets.only(
                     bottom: 10,
@@ -195,12 +195,15 @@ class _MyLessonCardState extends State<MyLessonCard> {
   }
 
   bool _checkStartTime() {
+    if(widget.lessonInfo.firstClass == null) {
+      return false;
+    }
     if (widget.lessonInfo.isActive &&
         widget.lessonInfo.url != null &&
         widget.lessonInfo.url.isNotEmpty)
       return true;
     else {
-      if (widget.lessonInfo.firstClass.difference(DateTime.now()) < Duration(days: 1)) {
+      if (widget.lessonInfo.firstClass.difference(DateTime.now()) < Duration(days: 2)) {
         Future.delayed(widget.lessonInfo.firstClass.difference(DateTime.now()))
             .whenComplete(() {
           _homeBloc.add(InitializeMyLesson());

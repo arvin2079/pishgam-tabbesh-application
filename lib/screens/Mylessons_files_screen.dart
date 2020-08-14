@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,33 @@ class MylessonFiles extends StatefulWidget {
 
 class _MylessonFilesState extends State<MylessonFiles> {
   MyLessonFilesViewModel viewModel = MyLessonFilesViewModel();
+  ReceivePort _port = ReceivePort();
 
+  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
+  }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    FlutterDownloader.cancelAll();
+  void initState() {
+    super.initState();
+    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      setState(() {
+        // TODO : do something with data of listen isolate
+      });
+    });
+
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
   }
 
   @override
@@ -169,15 +192,14 @@ class _MylessonFilesState extends State<MylessonFiles> {
             label: Text("دانلود"),
             color: Colors.white.withOpacity(0.92),
             onPressed: () async {
-
-//              final taskId = await FlutterDownloader.enqueue(
-//                url: item.url,
-//                savedDir: StorageDirectory.downloads.toString(),
-//                showNotification: true,
-//                // show download progress in status bar (for Android)
-//                openFileFromNotification:
-//                true, // click on notification to open downloaded file (for Android)
-//              );
+              print(await _findLocalPath());
+              final taskId = await FlutterDownloader.enqueue(
+                url: item.url,
+                savedDir: await _findLocalPath() + item.title,
+                showNotification: true, // show download progress in status bar (for Android)
+                openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+              );
+              print(taskId);
             },
           ),
           Divider(thickness: 2),

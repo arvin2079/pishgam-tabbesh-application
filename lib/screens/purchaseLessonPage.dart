@@ -8,6 +8,7 @@ import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/purchaseLessonCard.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:pishgamv2/screens/search_purchase_lesson_screen.dart';
 import 'package:pishgamv2/screens/shopping_cart.dart';
 
 class PurchaseLesson extends StatefulWidget {
@@ -107,6 +108,12 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             ),
           ),
           actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.black87),
+              onPressed: () {
+                showSearch(context: context, delegate: PurchaseLessonSearchDeligate());
+              },
+            ),
             StreamBuilder(
               initialData: _count,
               stream: _countController.stream,

@@ -77,8 +77,9 @@ class Auth extends AuthBase {
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-//  String mainpath = "http://192.168.1.5:8000";
-  String mainpath="http://192.168.43.139:8000";
+  String mainpath = "http://192.168.1.6:8000";
+//  String mainpath="http://192.168.43.139:8000";
+//  String mainpath="http://192.168.43.159:8000";
 
 
   Auth._internalConst();
@@ -315,6 +316,7 @@ class Auth extends AuthBase {
 //    DateTime now = DateTime.parse(dResult['now']);
     Duration timeLeft;
     String durationString;
+    bool remainOneDay = dResult['timeLeft'].toString().substring(0, 2) == "1 ";
     if (dResult['timeLeft'].toString().substring(0, 2) == "1 " ||
         dResult['timeLeft'].toString().substring(0, 2) == "-1")
       durationString = dResult['timeLeft'].toString().substring(2).trim();
@@ -325,6 +327,7 @@ class Auth extends AuthBase {
     List<String> parts = durationString.split(':');
     if (dResult["length"] != 0) {
       timeLeft = Duration(
+        days: remainOneDay ? 1 : 0,
         hours: int.parse(parts[0]),
         minutes: int.parse(parts[1]),
         seconds: int.parse(parts[2].substring(0, 2)),
@@ -353,9 +356,12 @@ class Auth extends AuthBase {
     final dynamic data = result != null && result.toString().isNotEmpty
         ? jsonDecode(result)
         : null;
+
     List<LessonModel> lessonList = List();
 
     if (data != null)
+
+
       for (Map m in data) {
         LessonModel model = LessonModel(
           code: m['code'],
@@ -367,10 +373,10 @@ class Auth extends AuthBase {
           endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
               " " +
               m['end_date'].toString().substring(11)),
-          firstClass: DateTime.parse(
+          firstClass: m['first_class'] != null ? DateTime.parse(
               m['first_class'].toString().substring(0, 10) +
                   " " +
-                  m['first_class'].toString().substring(11)),
+                  m['first_class'].toString().substring(11)) : null,
           url: m['url'],
           isActive: m['is_active'],
           description: m['description'],
@@ -489,7 +495,6 @@ class Auth extends AuthBase {
 }
 
 class User extends Equatable {
-  //fixme: address!!
   User(
       {this.username,
       this.firstname,
