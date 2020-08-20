@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage>
         labelText: 'خرید درس',
         buttonText: 'مشاهده',
         onPressed: () {
-          _homeBloc.add(InitializedShoppingLesson());
+          _homeBloc.add(InitializeShoppingLesson());
           Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (context) => PurchaseLesson(),
           ));

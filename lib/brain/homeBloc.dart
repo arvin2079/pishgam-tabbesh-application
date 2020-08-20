@@ -79,11 +79,14 @@ class InitializeMyLesson extends HomeEvent {
   List<Object> get props => null;
 }
 
-class InitializedShoppingLesson extends HomeEvent {
-  InitializedShoppingLesson();
+class InitializeShoppingLesson extends HomeEvent {
+  InitializeShoppingLesson({this.teacher, this.grade, this.parentLesson});
+  final String teacher;
+  final String grade;
+  final String parentLesson;
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 //home states
@@ -127,11 +130,10 @@ class MyLessonsInitiallized extends HomeState {
 
 class ShoppingLessonInitiallized extends HomeState {
   ShoppingLessonInitiallized(this.viewmodel);
-
   final ShoppingLessonViewModel viewmodel;
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [Random().nextInt(10000)];
 }
 
 class HomeNotInitialState extends HomeState {
@@ -180,25 +182,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     else if (event is InitializeMyLesson) {
       try {
-        print('hser1');
         MyLessonsViewModel viewModel = await auth.initializeMyLesson();
-        print('hser2');
         yield MyLessonsInitiallized(viewModel);
-        print('hser');
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);
-        print('sdfsdfsdf');
       } catch (e) {
-        print('sdfsdfsdf3');
         print(e.toString());
-        print('sdfsdfsdf2');
       }
     }
 
-    else if (event is InitializedShoppingLesson) {
+    else if (event is InitializeShoppingLesson) {
       try {
-        ShoppingLessonViewModel viewModel = await auth
-            .initializeShoppingLesson();
+        ShoppingLessonViewModel viewModel = await auth.initializeShoppingLesson(
+          grade: event.grade,
+          teacher: event.teacher,
+          parentLesson: event.parentLesson,
+        );
+        await auth.initSearchFilters();
         yield ShoppingLessonInitiallized(viewModel);
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);

@@ -100,6 +100,9 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
             RaisedButton(
               disabledColor: Colors.grey[300],
               color: Colors.grey[700],
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
               elevation: 2,
               onPressed: widget.isValid(_controller.text)
                   ? () {
@@ -107,9 +110,7 @@ class _PhoneNumGetterDialogState extends State<PhoneNumGetterDialog> {
                       Navigator.pop(context);
                     }
                   : null,
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0),
-              ),
+
               child: Text(
                 'تاييد',
                 textAlign: TextAlign.center,

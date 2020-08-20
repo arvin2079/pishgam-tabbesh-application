@@ -5,7 +5,7 @@ import android.util.Log;
 public class Path {
 //        String mainpath="http://192.168.43.139:8000";
 //        String mainpath="http://192.168.43.159:8000";
-    String mainpath = "http://192.168.1.6:8000";
+    String mainpath = "http://192.168.1.5:8000";
     String signin = mainpath + "/api/token/";
     String signup = mainpath + "/signup/";
     String currentuser = mainpath + "/dashboard/app_profile/";
@@ -14,6 +14,11 @@ public class Path {
     String lessons = mainpath + "/dashboard/get-lessons/";
     String Shopping = mainpath + "/dashboard/get-shopping/";
     String files = mainpath + "/dashboard/lessons/files/";
+    String searchShopping = mainpath + "/dashboard/shopping/";
+
+    public String getSearchShopping() {
+        return searchShopping;
+    }
 
     public String getFilesPath(String id) {
         Log.i("pathshshshhs", files + id.trim() + "/");

@@ -31,11 +31,14 @@ abstract class AuthBase {
 
   Future<void> initGradesMap();
 
+  Future<void> initSearchFilters();
+
   Future<HomeViewModel> initializeHome();
 
   Future<MyLessonsViewModel> initializeMyLesson();
 
-  Future<ShoppingLessonViewModel> initializeShoppingLesson();
+  Future<ShoppingLessonViewModel> initializeShoppingLesson(
+      {String grade, String teacher, String parentLesson});
 
   Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId);
 
@@ -44,43 +47,21 @@ abstract class AuthBase {
   Future<void> uploadProfilePic(String base64, String filename);
 }
 
-// fixme : handeling open bloc stream warning (e.g. ref signup_page.dart , splashScreen).
-// fixme : phone number validation (10 digit).
-// fixme : remove useless class from testable demo version.
-// fixme : if my lessons was empty , my lessons card should not be shown.
-// fixme : handeling sign in in progress and sign up in progress with authbloc.
-
-// fixme : sending code of city or grade to the server not String.
-// fixme : remove address and socialnumber.
-// fixme : sending profile pic in sign up.
-// fixme : name and user properties for home page and other parts of app.
-// fixme : adding lesson that is purchased to user lessons.
-// todo : getting list of grades and city from server.
-// todo : change profile pic in setting.
-// todo : getting error messages from server and use theme in ui state management when error occured.
-// todo : method channel for download lesson files.
-// todo : method channel for remaining time to class.
-// todo : method channel for myLessons.
-// todo : method channel for lessons to purchase.
-// todo(optional or in future versoins) : messages for internet low speed or disconnection.
-// todo(optional or in future versoins) : refresh option for my lessons and purchase lessons pages.
-// todo(optional or in future versoins) : theme (dark and light)
-// todo(optional or in future versoins) : language.
-// todo(optional or in future versoins) : Azmoon online.
-
 //switched to singleton
 
 class Auth extends AuthBase {
-  Map citiesMap = Map();
-  Map gradesMap = Map();
+  Map<String, int> citiesMap = Map();
+  Map<String, int> gradesMap = Map();
+  Map<String, int> teachersMap = Map();
+  Map<String, int> parentLessonsMap = Map();
   User _currentUser = new User();
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.6:8000";
+  String mainpath = "http://192.168.1.2:8000";
+
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
-
 
   Auth._internalConst();
 
@@ -100,6 +81,18 @@ class Auth extends AuthBase {
     return gradesList;
   }
 
+  List<String> get teahcersList {
+    List<String> gradesList = List<String>();
+    teachersMap.forEach((key, value) => gradesList.add(key));
+    return gradesList;
+  }
+
+  List<String> get parentLessonsList {
+    List<String> gradesList = List<String>();
+    parentLessonsMap.forEach((key, value) => gradesList.add(key));
+    return gradesList;
+  }
+
   static final String _signInChannelName = 'signin';
   static final String _signUpChannelName = 'signup';
   static final String _signoutChannelName = 'signout';
@@ -114,6 +107,7 @@ class Auth extends AuthBase {
   static final String _changePassName = 'changepass';
   static final String _lessonFilesName = 'lessonFiles';
   static final String _changeAvatarName = 'changeAvatar';
+  static final String _searchFilterName = 'searchFilter';
 
   static final _signInChannel = MethodChannel(_signInChannelName);
   static final _signUpChannel = MethodChannel(_signUpChannelName);
@@ -129,6 +123,7 @@ class Auth extends AuthBase {
   static final _changePassChannel = MethodChannel(_changePassName);
   static final _lessonFilesChannel = MethodChannel(_lessonFilesName);
   static final _changeAvatarChannel = MethodChannel(_changeAvatarName);
+  static final _searchFilterChannel = MethodChannel(_searchFilterName);
 
   @override
   Future<User> currentUser() async {
@@ -360,8 +355,6 @@ class Auth extends AuthBase {
     List<LessonModel> lessonList = List();
 
     if (data != null)
-
-
       for (Map m in data) {
         LessonModel model = LessonModel(
           code: m['code'],
@@ -373,10 +366,11 @@ class Auth extends AuthBase {
           endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
               " " +
               m['end_date'].toString().substring(11)),
-          firstClass: m['first_class'] != null ? DateTime.parse(
-              m['first_class'].toString().substring(0, 10) +
+          firstClass: m['first_class'] != null
+              ? DateTime.parse(m['first_class'].toString().substring(0, 10) +
                   " " +
-                  m['first_class'].toString().substring(11)) : null,
+                  m['first_class'].toString().substring(11))
+              : null,
           url: m['url'],
           isActive: m['is_active'],
           description: m['description'],
@@ -394,10 +388,35 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<ShoppingLessonViewModel> initializeShoppingLesson() async {
+  Future<ShoppingLessonViewModel> initializeShoppingLesson({String grade, String teacher, String parentLesson}) async {
     final String _shoppingLessonMethodName = "shoppinglist";
+
+    print('here');
+    print(gradesMap.values.firstWhere(
+        (element) => grade != null && gradesMap[grade.trim()] == element,
+        orElse: () => null));
+    print(teachersMap.values.firstWhere(
+        (element) => teacher != null && teachersMap[teacher.trim()] == element,
+        orElse: () => null));
+    print(parentLessonsMap.values.firstWhere(
+        (element) =>
+            parentLesson != null && parentLessonsMap[parentLesson.trim()] == element,
+        orElse: () => null));
+    print('finish');
+
     String result =
-        await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName);
+        await _shoppingLessonChannel.invokeMethod(_shoppingLessonMethodName, {
+      "grade": gradesMap.values.firstWhere(
+          (element) => grade != null && gradesMap[grade.trim()] == element,
+          orElse: () => null),
+      "teacher": teachersMap.values.firstWhere(
+          (element) => teacher != null && teachersMap[teacher.trim()] == element,
+          orElse: () => null),
+      "parentLesson": parentLessonsMap.values.firstWhere(
+          (element) =>
+              parentLesson != null && parentLessonsMap[parentLesson.trim()] == element,
+          orElse: () => null),
+    });
 
     final data = jsonDecode(result);
     List<LessonModel> lessonList = List();
@@ -447,27 +466,30 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> changePass({oldPass, newPass})async {
+  Future<bool> changePass({oldPass, newPass}) async {
     final String _changePassMethodName = "changepass";
-    final bool result = await _changePassChannel.invokeMethod(_changePassMethodName, {
-      "old_password" : oldPass.trim(),
-      "new_passwrod" : newPass.trim(),
+    final bool result =
+        await _changePassChannel.invokeMethod(_changePassMethodName, {
+      "old_password": oldPass.trim(),
+      "new_passwrod": newPass.trim(),
     });
 
     return result;
   }
 
   @override
-  Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId)async {
+  Future<MyLessonFilesViewModel> initializeMyLessonFiles(
+      String courseId) async {
     final String _lessonFilesMethodName = "lessonFiles";
-    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
-      "course_id" : courseId,
+    String result =
+        await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+      "course_id": courseId,
     });
 
     List<DocumentModel> docs = List();
     final data = jsonDecode(result);
 
-    for(Map m in data["documents"]) {
+    for (Map m in data["documents"]) {
       DocumentModel model = DocumentModel(
         title: m["title"],
         sender: m["sender"],
@@ -485,12 +507,44 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<void> uploadProfilePic(String base64, String filename) async{
+  Future<void> uploadProfilePic(String base64, String filename) async {
     final String _lessonFilesMethodName = "changeAvatar";
-    await _changeAvatarChannel.invokeMethod(_lessonFilesMethodName , {
-      "file_name" : filename,
-      "file" : base64,
+    await _changeAvatarChannel.invokeMethod(_lessonFilesMethodName, {
+      "file_name": filename,
+      "file": base64,
     });
+  }
+
+  @override
+  Future<void> initSearchFilters() async {
+    final String _searchFilterMethodName = "getSearchFilter";
+    final String result =
+        await _searchFilterChannel.invokeMethod(_searchFilterMethodName);
+
+    if (result == null || result.isEmpty) return;
+    print(result);
+    final data = jsonDecode(result);
+
+    gradesMap.clear();
+    for (Map m in data['grades']) {
+      print(m['id']);
+      print(int.parse(m['id'].toString().trim()).toString());
+      gradesMap[m['title']] = int.parse(m['id'].toString().trim());
+    }
+
+    teachersMap.clear();
+    for (Map m in data['teachers']) {
+      teachersMap[m['full_name']] = int.parse(m['id'].toString().trim());
+    }
+
+    parentLessonsMap.clear();
+    for (Map m in data['lessons']) {
+      parentLessonsMap[m['title']] = int.parse(m['id'].toString().trim());
+    }
+    print('shopping dropdown items maps');
+    print(parentLessonsMap.toString());
+    print(gradesMap.toString());
+    print(teachersMap.toString());
   }
 }
 

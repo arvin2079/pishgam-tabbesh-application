@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/badgeIcon.dart';
 import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/purchaseLessonCard.dart';
 import 'package:pishgamv2/constants/Constants.dart';
+import 'package:pishgamv2/dialogs/searchFilterDialoge.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
-import 'package:pishgamv2/screens/search_purchase_lesson_screen.dart';
 import 'package:pishgamv2/screens/shopping_cart.dart';
 
 class PurchaseLesson extends StatefulWidget {
@@ -20,14 +19,10 @@ class PurchaseLesson extends StatefulWidget {
 
 class _PurchaseLessonState extends State<PurchaseLesson> {
   StreamController<int> _countController = StreamController<int>();
-  HomeBloc _homeBloc;
-  AuthBloc _authbloc;
   int _count = 0;
 
   @override
   void initState() {
-    _authbloc = BlocProvider.of<AuthBloc>(context);
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
     super.initState();
   }
 
@@ -109,9 +104,9 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search, color: Colors.black87),
+              icon: Icon(Icons.filter_list, color: Colors.black87),
               onPressed: () {
-                showSearch(context: context, delegate: PurchaseLessonSearchDeligate());
+                showDialog(context: context, builder: (context) => SearchFilterDialog());
               },
             ),
             StreamBuilder(
@@ -127,7 +122,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
                     }));
                   },
                   icon: Icon(Icons.shopping_cart),
-                  color: Colors.black,
+                  color: Colors.grey[700],
                 ),
                 badgeCount: snapshot.data,
               ),
@@ -151,7 +146,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
           ),
         ) : Center(
           child: Text(
-            'هنوز هیچ درسی ارائه نشده :/',
+            'درسی موجود نیست :/',
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.w100,

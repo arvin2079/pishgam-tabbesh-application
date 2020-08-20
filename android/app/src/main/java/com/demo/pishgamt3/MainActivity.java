@@ -2,10 +2,8 @@ package com.demo.pishgamt3;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -35,6 +33,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -282,15 +281,15 @@ public class MainActivity extends FlutterActivity {
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                    int responseCode = response.code();
-                                    String resBody = response.body().string();
-                                    if(responseCode == 200) {
-                                        mainresult.success("ثبت نام با موفقیت انجام شد");
-                                    } else if(responseCode == 406) {
-                                        mainresult.error("یوزر با اطلاعات شما در سیستم موجود می باشد", "خطا", null);
-                                    } else {
-                                        mainresult.error("انجام عملیات ثبت نام با خطا مواجه شد", "خطا", null);
-                                    }
+                                int responseCode = response.code();
+                                String resBody = response.body().string();
+                                if (responseCode == 200) {
+                                    mainresult.success("ثبت نام با موفقیت انجام شد");
+                                } else if (responseCode == 406) {
+                                    mainresult.error("یوزر با اطلاعات شما در سیستم موجود می باشد", "خطا", null);
+                                } else {
+                                    mainresult.error("انجام عملیات ثبت نام با خطا مواجه شد", "خطا", null);
+                                }
 //                                if (response.isSuccessful()) {
 //                                    String message = "هندل نشده";
 //
@@ -812,19 +811,34 @@ public class MainActivity extends FlutterActivity {
                         SharePref pref = new SharePref(getApplicationContext());
                         OkHttpClient client = new OkHttpClient();
 
+                        String url = path.getShopping();
+//                        if(call.argument("teacher") != null || call.argument("parentLesson") != null || call.argument("grade") != null) {
+//
+//                            if(call.argument("teacher") != null)
+//                                url += "?teacher=" + call.argument("teacher") + "&";
+//
+//                            if(call.argument("parentLesson") != null)
+//                                url += "?lesson=" + call.argument("parentLesson") + "&";
+//
+//                            if(call.argument("grade") != null)
+//                                url += "?grade=" + call.argument("grade");
+//                        }
+
+                        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+                        if (call.argument("teacher") != null)
+                            httpBuilder.addQueryParameter("teacher", call.argument("teacher").toString());
+
+                        if (call.argument("grade") != null)
+                            httpBuilder.addQueryParameter("grade", call.argument("grade").toString());
+
+                        if (call.argument("parentLesson") != null)
+                            httpBuilder.addQueryParameter("lesson", call.argument("parentLesson").toString());
+
                         Request shoppingLessonsRequest = new Request.Builder()
-                                .url(path.getShopping())
+                                .url(httpBuilder.build())
                                 .addHeader("Accept", "application/json")
                                 .addHeader("Authorization", "Token " + pref.load("token"))
                                 .build();
-
-//                        Request categoriesRequest = new Request.Builder()
-//                                .url(path.getCategories())
-//                                .addHeader("Accept", "application/json")
-//                                .addHeader("Authorization", "Token " + pref.load("token"))
-//                                .build();
-
-//                        final String[] responses = new String[2];
 
                         try {
                             client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
@@ -855,6 +869,50 @@ public class MainActivity extends FlutterActivity {
 
                     }
                 });
+
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), "searchFilter")
+                .setMethodCallHandler(((call, result) -> {
+
+
+                    if (call.method.equalsIgnoreCase("getSearchFilter")) {
+                        MainThreadResult mainresult = new MainThreadResult(result);
+                        SharePref pref = new SharePref(getApplicationContext());
+                        OkHttpClient client = new OkHttpClient();
+
+                        Request shoppingLessonsRequest = new Request.Builder()
+                                .url(path.getSearchShopping())
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .build();
+
+                        try {
+                            client.newCall(shoppingLessonsRequest).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    int resCode = response.code();
+                                    String resBody = response.body().string();
+
+                                    Log.i("rescode--> ", resCode + "");
+                                    Log.i("resbody--> ", resBody);
+
+                                    if (resCode == 200) {
+                                        mainresult.success(resBody);
+                                    } else {
+                                        mainresult.error("در حال خاضر دریافت لیست مربوط به فیلتر های جستجو مقدور نمی باشد", "خطا", null);
+                                    }
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
 
 
         GeneratedPluginRegistrant.registerWith(flutterEngine);
