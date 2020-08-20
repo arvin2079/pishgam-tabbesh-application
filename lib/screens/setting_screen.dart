@@ -214,7 +214,8 @@ class _SettingScreenState extends State<SettingScreen>
                             backgroundColor: Colors.grey[50],
                             child: Icon(
                                     Icons.add_a_photo,
-                                    color: Colors.blueGrey[800],
+                                    size: 31,
+                                    color: widget.viewModel.avatar == null ? Colors.grey[800] : Colors.white,
                                   ),
                             backgroundImage: widget.viewModel.avatar == null
                                 ? null
