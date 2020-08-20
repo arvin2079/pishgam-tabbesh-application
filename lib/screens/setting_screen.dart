@@ -49,14 +49,21 @@ class _SettingScreenState extends State<SettingScreen>
     try {
       if (!usernameValidator.isValid(_userNameController.text) ||
           !firstnameValidator.isValid(_nameController.text) ||
-          !lastnameValidator.isValid(_familyNameController.text) ||
-          !phoneNumberValidator.isValid(_phoneNumberController.text))
+          !lastnameValidator.isValid(_familyNameController.text))
         throw Exception;
+
+      if (_gradeDropDownController.getValue == null ||
+          _gradeDropDownController.getValue.isEmpty ||
+          _cityDropDownController.getValue == null ||
+          _cityDropDownController.getValue.isEmpty) {
+        _homeBloc.add(ShowMessage("توجه",
+            "ابتدا از تکمیل بودن تمام مشخصات فرم مشخصات خود اطمینان حاصل کرده و سپس دکمه ثبت را فشار دهید"));
+        return;
+      }
 
       if (widget.viewModel.firstname != _nameController.text ||
           widget.viewModel.lastname != _familyNameController.text ||
           widget.viewModel.username != _userNameController.text ||
-          widget.viewModel.phoneNumber != _phoneNumberController.text ||
           widget.viewModel.grade != _gradeDropDownController.getValue ||
           widget.viewModel.city != _cityDropDownController.getValue ||
           widget.viewModel.isBoy != (_radioGroupController.getValue == 1) ||
@@ -64,7 +71,6 @@ class _SettingScreenState extends State<SettingScreen>
         widget.viewModel.firstname = _nameController.text;
         widget.viewModel.lastname = _familyNameController.text;
         widget.viewModel.username = _userNameController.text;
-        widget.viewModel.phoneNumber = _phoneNumberController.text;
         widget.viewModel.grade = _gradeDropDownController.getValue;
         widget.viewModel.city = _cityDropDownController.getValue;
         widget.viewModel.isBoy = (_radioGroupController.getValue == 1);
@@ -113,11 +119,11 @@ class _SettingScreenState extends State<SettingScreen>
     }, builder: (context, state) {
       if (state is EditprofileInitiallied) {
         widget.viewModel = state.viewModel;
+
         if (_propertiesIsFirstTime) {
           _nameController.text = widget.viewModel.firstname;
           _familyNameController.text = widget.viewModel.lastname;
           _userNameController.text = widget.viewModel.username;
-          _phoneNumberController.text = widget.viewModel.phoneNumber;
           _gradeDropDownController.value = widget.viewModel.grade;
           _cityDropDownController.value = widget.viewModel.city;
           _propertiesIsFirstTime = false;
@@ -206,10 +212,10 @@ class _SettingScreenState extends State<SettingScreen>
                           child: CircleAvatar(
                             radius: 47,
                             backgroundColor: Colors.grey[50],
-                            child: widget.viewModel.avatar == null
-                                ? Icon(Icons.person,
-                                    color: Colors.blueGrey[800], size: 50)
-                                : null,
+                            child: Icon(
+                                    Icons.add_a_photo,
+                                    color: Colors.blueGrey[800],
+                                  ),
                             backgroundImage: widget.viewModel.avatar == null
                                 ? null
                                 : _image == null

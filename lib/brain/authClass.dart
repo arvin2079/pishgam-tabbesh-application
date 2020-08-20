@@ -50,15 +50,15 @@ abstract class AuthBase {
 //switched to singleton
 
 class Auth extends AuthBase {
-  Map<String, int> citiesMap = Map();
-  Map<String, int> gradesMap = Map();
-  Map<String, int> teachersMap = Map();
-  Map<String, int> parentLessonsMap = Map();
+  Map citiesMap = Map();
+  Map gradesMap = Map();
+  Map teachersMap = Map();
+  Map parentLessonsMap = Map();
   User _currentUser = new User();
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.2:8000";
+  String mainpath = "http://192.168.1.5:8000";
 
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
@@ -258,8 +258,8 @@ class Auth extends AuthBase {
         firstname: data['user']['first_name'],
         lastname: data['user']['last_name'],
         username: data['user']['username'],
-        grade: data['user']['grade'],
-        city: data['user']['cityTitle'],
+        grade: data['user']['grade'] != null && data['user']['grade'].toString().isNotEmpty ? data['user']['grade'] : null,
+        city: data['user']['cityTitle'] != null && data['user']['cityTitle'].toString().isNotEmpty ? data['user']['cityTitle'] : null,
         isBoy: data['user']['gender'],
         phoneNumber: data['user']['phone_number'],
         avatar: Image.network(mainpath + data['user']['avatar']),
