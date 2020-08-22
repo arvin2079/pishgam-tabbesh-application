@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pishgamv2/components/shoppingCard.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
+import 'package:pishgamv2/screens/shopping_basket.dart';
+import 'package:provider/provider.dart';
 
 class PurchaseLessonCard extends StatefulWidget {
   final Function onAdd;
@@ -13,12 +16,13 @@ class PurchaseLessonCard extends StatefulWidget {
 }
 
 class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
-  bool isAdded = false;
-
   @override
   Widget build(BuildContext context) {
-  const double contentPaddingHoriz = 12;
-  MediaQueryData queryData = MediaQuery.of(context);
+    ShoppingBasketViewModel shoppingBasketViewModel =
+        Provider.of<ShoppingBasketViewModel>(context);
+
+    const double contentPaddingHoriz = 12;
+    MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
       width: queryData.size.width - 50,
       child: Card(
@@ -47,9 +51,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15, right: contentPaddingHoriz, left: contentPaddingHoriz),
+                padding: const EdgeInsets.only(
+                    top: 15,
+                    right: contentPaddingHoriz,
+                    left: contentPaddingHoriz),
                 child: Text(
-                  widget.purchaseItem.title + ' استاد ' + widget.purchaseItem.teacherName,
+                  widget.purchaseItem.title +
+                      ' استاد ' +
+                      widget.purchaseItem.teacherName,
                   style: TextStyle(
                     fontSize: 22,
                     fontFamily: 'vazir',
@@ -59,7 +68,10 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: contentPaddingHoriz, top: 8, left: contentPaddingHoriz),
+                padding: const EdgeInsets.only(
+                    right: contentPaddingHoriz,
+                    top: 8,
+                    left: contentPaddingHoriz),
                 child: Text(
                   'قیمت : ' + widget.purchaseItem.amount.toString(),
                   style: TextStyle(
@@ -71,7 +83,8 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: contentPaddingHoriz, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: contentPaddingHoriz, vertical: 5),
                 child: Text(
                   widget.purchaseItem.description,
                   style: TextStyle(
@@ -85,7 +98,8 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
-                  'زمان شروع دوره :\n' + widget.purchaseItem.startDate.toString(),
+                  'زمان شروع دوره :\n' +
+                      widget.purchaseItem.startDate.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -97,7 +111,8 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
-                  'زمان پایان دوره :\n' + widget.purchaseItem.endDate.toString(),
+                  'زمان پایان دوره :\n' +
+                      widget.purchaseItem.endDate.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -118,71 +133,97 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   ),
                 ),
               ),
-              widget.purchaseItem.courseCalendar[0] != null ? Padding(
-                padding: const EdgeInsets.only(right: contentPaddingHoriz),
-                child: Text(
-                  ' - ' + widget.purchaseItem.courseCalendar[0].toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ) : Container(),
-              widget.purchaseItem.courseCalendar[1] != null ? Padding(
-                padding: const EdgeInsets.only(right: contentPaddingHoriz),
-                child: Text(
-                  ' - ' + widget.purchaseItem.courseCalendar[1].toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ) : Container,
-              widget.purchaseItem.courseCalendar[2] != null ? Padding(
-                padding: const EdgeInsets.only(right: contentPaddingHoriz),
-                child: Text(
-                  ' - ' + widget.purchaseItem.courseCalendar[2].toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ) : Container(),
+              widget.purchaseItem.courseCalendar[0] != null
+                  ? Padding(
+                      padding:
+                          const EdgeInsets.only(right: contentPaddingHoriz),
+                      child: Text(
+                        ' - ' +
+                            widget.purchaseItem.courseCalendar[0].toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    )
+                  : Container(),
+              widget.purchaseItem.courseCalendar[1] != null
+                  ? Padding(
+                      padding:
+                          const EdgeInsets.only(right: contentPaddingHoriz),
+                      child: Text(
+                        ' - ' +
+                            widget.purchaseItem.courseCalendar[1].toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    )
+                  : Container,
+              widget.purchaseItem.courseCalendar[2] != null
+                  ? Padding(
+                      padding:
+                          const EdgeInsets.only(right: contentPaddingHoriz),
+                      child: Text(
+                        ' - ' +
+                            widget.purchaseItem.courseCalendar[2].toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    )
+                  : Container(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: SizedBox(
                   width: double.infinity,
-                  child: FlatButton(
-                    onPressed: () {
-                      isAdded ? widget.onDelete() : widget.onAdd();
-                      isAdded = !isAdded;
+                  child: Consumer<ShoppingBasketViewModel>(
+                    builder: (context, viewmodel, child) {
+                      bool isAdded = false;
+                      for (BasketItem item
+                          in shoppingBasketViewModel.basketItems) {
+                        if (item.courseName == widget.purchaseItem.title &&
+                            item.explanation == widget.purchaseItem.description)
+                          isAdded = true;
+                      }
+
+                      return FlatButton(
+                        onPressed: () {
+                          isAdded ? widget.onDelete() : widget.onAdd();
+                          setState(() {
+                            isAdded = !isAdded;
+                          });
+                        },
+                        color: isAdded ? Colors.grey[350] : Color(0xFFCDDC39),
+                        child: isAdded
+                            ? Text(
+                                'حذف از سبد خرید',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w100,
+                                  fontFamily: 'vazir',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              )
+                            : Text(
+                                'افزودن به سبد خرید',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'vazir',
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      );
                     },
-                    color: isAdded ? Colors.grey[350] : Color(0xFFCDDC39),
-                    child: isAdded
-                        ? Text(
-                            'حذف از سبد خرید',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w100,
-                              fontFamily: 'vazir',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            'افزودن به سبد خرید',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'vazir',
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
                   ),
                 ),
               ),

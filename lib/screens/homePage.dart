@@ -6,6 +6,7 @@ import 'package:pishgamv2/brain/authBloc.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/mainMenuSliderCard.dart';
 import 'package:pishgamv2/components/round_icon_button.dart';
+import 'package:pishgamv2/components/shoppingCard.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
@@ -13,6 +14,8 @@ import 'package:pishgamv2/dialogs/waiterDialog.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/purchaseLessonPage.dart';
 import 'package:pishgamv2/screens/setting_screen.dart';
+import 'package:pishgamv2/screens/shopping_basket.dart';
+import 'package:provider/provider.dart';
 import 'package:slide_countdown_clock/slide_countdown_clock.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -71,7 +74,10 @@ class _HomePageState extends State<HomePage>
         onPressed: () {
           _homeBloc.add(InitializeShoppingLesson());
           Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (context) => PurchaseLesson(),
+            builder: (context) => ChangeNotifierProvider<ShoppingBasketViewModel>(
+              create: (context) => ShoppingBasketViewModel(List<BasketItem>()),
+              child: PurchaseLesson(),
+            ),
           ));
         },
       ),
@@ -127,11 +133,11 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
         listenWhen: (lastState, thisState) {
-          if (thisState is ShowMessageState ||
-              thisState is EditProfLoadingFinish ||
-              thisState is EditProfLoadingStart) return true;
-          return false;
-        }, listener: (context, state) {
+      if (thisState is ShowMessageState ||
+          thisState is EditProfLoadingFinish ||
+          thisState is EditProfLoadingStart) return true;
+      return false;
+    }, listener: (context, state) {
       if (state is ShowMessageState) {
         showDialog(
           context: context,
@@ -159,23 +165,23 @@ class _HomePageState extends State<HomePage>
     },
         // ignore: missing_return
         builder: (context, state) {
-          if (state is HomeInitiallized) {
-            widget.viewModel = state.viewModel;
+      if (state is HomeInitiallized) {
+        widget.viewModel = state.viewModel;
 
-            if (widget.viewModel == null) {
-              _authbloc.add(
-                CatchError(
-                  message: 'خطا',
-                  detail: 'اطلاعات شما از سوی سرور دریافت نشد',
-                ),
-              );
-              return _buildLoaderScreen();
-            }
-            return _buildHomeBody(widget.viewModel, _radius);
-          }
-          _homeBloc.add(InitializeHome());
+        if (widget.viewModel == null) {
+          _authbloc.add(
+            CatchError(
+              message: 'خطا',
+              detail: 'اطلاعات شما از سوی سرور دریافت نشد',
+            ),
+          );
           return _buildLoaderScreen();
-        });
+        }
+        return _buildHomeBody(widget.viewModel, _radius);
+      }
+      _homeBloc.add(InitializeHome());
+      return _buildLoaderScreen();
+    });
   }
 
   Scaffold _buildLoaderScreen() {
@@ -185,7 +191,7 @@ class _HomePageState extends State<HomePage>
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
             valueColor:
-            AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
+                AlwaysStoppedAnimation<Color>(scaffoldDefaultBackgroundColor),
           ),
         ),
       ),
@@ -193,9 +199,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Scaffold _buildHomeBody(HomeViewModel viewModel, Radius _radius) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -246,16 +250,16 @@ class _HomePageState extends State<HomePage>
                         ),
                         CircleAvatar(
                           child: widget.viewModel == null &&
-                              widget.viewModel.avatar == null
+                                  widget.viewModel.avatar == null
                               ? Icon(Icons.person,
-                              color: Colors.black45, size: 30)
+                                  color: Colors.black45, size: 30)
                               : Container(),
                           backgroundColor: widget.viewModel == null &&
-                              widget.viewModel.avatar == null
+                                  widget.viewModel.avatar == null
                               ? Colors.grey[200]
                               : null,
                           backgroundImage: widget.viewModel == null &&
-                              widget.viewModel.avatar == null
+                                  widget.viewModel.avatar == null
                               ? null
                               : widget.viewModel.avatar.image,
                           radius: 35,
@@ -302,8 +306,8 @@ class _HomePageState extends State<HomePage>
                         Text(
                           widget.viewModel.timeLeft != null
                               ? widget.viewModel.title +
-                              " استاد " +
-                              widget.viewModel.teacher
+                                  " استاد " +
+                                  widget.viewModel.teacher
                               : '__________________',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -374,29 +378,36 @@ class _HomePageState extends State<HomePage>
                             ),
                           ],
                         ),
-                        widget.viewModel.isActive != null && widget.viewModel.isActive ? RaisedButton(
-                          child: Container(
-                            child: Text(
-                              ':)بزن بریم کلاس',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                          ),
-                          color: Colors.white,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)),
-                          onPressed: widget.viewModel.url != null && widget.viewModel.url.isNotEmpty ? ()async {
-                            if(await canLaunch(widget.viewModel.url))
-                              launch(widget.viewModel.url);
-                          } : () {
-                            _homeBloc.add(ShowMessage(':(' , 'این کلاس متسفانه هنوز فعال نشده'));
-                          },
-                        )
+                        widget.viewModel.isActive != null &&
+                                widget.viewModel.isActive
+                            ? RaisedButton(
+                                child: Container(
+                                  child: Text(
+                                    ':)بزن بریم کلاس',
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                color: Colors.white,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                onPressed: widget.viewModel.url != null &&
+                                        widget.viewModel.url.isNotEmpty
+                                    ? () async {
+                                        if (await canLaunch(
+                                            widget.viewModel.url))
+                                          launch(widget.viewModel.url);
+                                      }
+                                    : () {
+                                        _homeBloc.add(ShowMessage(':(',
+                                            'این کلاس متسفانه هنوز فعال نشده'));
+                                      },
+                              )
                             : Container(),
                         Column(
                           children: <Widget>[
@@ -461,7 +472,7 @@ class _HomePageState extends State<HomePage>
                     border: Border.all(color: Colors.grey[400]),
                     color: cardBackgroudColor,
                     borderRadius:
-                    BorderRadius.only(topLeft: _radius, topRight: _radius),
+                        BorderRadius.only(topLeft: _radius, topRight: _radius),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -508,18 +519,18 @@ class HomeViewModel {
   final bool isActive;
   final String url;
 
-
   @override
   String toString() {
     return 'HomeViewModel{timeLeft: $timeLeft, title: $title, teacher: $teacher, name: $name, grade: $grade, avatar: $avatar, isActive: $isActive, url: $url}';
   }
 
-  HomeViewModel({@required this.isActive,
-    @required this.avatar,
-    @required this.url,
-    @required this.name,
-    @required this.grade,
-    @required this.timeLeft,
-    @required this.title,
-    @required this.teacher});
+  HomeViewModel(
+      {@required this.isActive,
+      @required this.avatar,
+      @required this.url,
+      @required this.name,
+      @required this.grade,
+      @required this.timeLeft,
+      @required this.title,
+      @required this.teacher});
 }

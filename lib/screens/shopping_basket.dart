@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/components/shoppingCard.dart';
+import 'package:provider/provider.dart';
 
-class ShoppingBasket extends StatefulWidget {
-  @override
-  _ShoppingBasketState createState() => _ShoppingBasketState();
-}
+class ShoppingBasket extends StatelessWidget {
+  ShoppingBasketViewModel viewModel;
 
-class _ShoppingBasketState extends State<ShoppingBasket> {
-  int totalPrice;
-  int count;
-  List<BasketItem> items = List<BasketItem>();
 //  List<BasketItem> items = <BasketItem>[
 //    BasketItem(
 //      courseName: 'اولین کورس',
@@ -48,18 +43,12 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
 //      price: 18000,
 //    ),
 //  ];
-
   Iterable<Widget> get _basketWidgets sync* {
-    for (BasketItem item in items) {
+    for (BasketItem item in viewModel.basketItems) {
       yield ShoppingItemCard(
         item: item,
         onDelete: () {
-          setState(() {
-            items.removeWhere((value) {
-              if (value == item) return true;
-              return false;
-            });
-          });
+          viewModel.removeItem(item);
         },
       );
     }
@@ -67,11 +56,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
 
   @override
   Widget build(BuildContext context) {
-    count = items.length;
-    totalPrice = 0;
-    for (int i = 0; i < count; i++) {
-      totalPrice = totalPrice + items[i].price;
-    }
+    viewModel = Provider.of<ShoppingBasketViewModel>(context, listen: false);
 
     return SafeArea(
       child: Directionality(
@@ -118,13 +103,15 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                         color: Colors.black54,
                       ),
                     ),
-                    Text(
-                      totalPrice.toString(),
-                      style: TextStyle(
-                        fontFamily: 'WeblogmaYekan',
-                        fontWeight: FontWeight.w100,
-                        fontSize: 20,
-                        color: Colors.black54,
+                    Consumer<ShoppingBasketViewModel>(
+                      builder: (context, shoppingBasketViewModel, child) => Text(
+                        viewModel.totalPrice.toString(),
+                        style: TextStyle(
+                          fontFamily: 'WeblogmaYekan',
+                          fontWeight: FontWeight.w100,
+                          fontSize: 20,
+                          color: Colors.black54,
+                        ),
                       ),
                     ),
                   ],
@@ -141,13 +128,15 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                         color: Colors.black54,
                       ),
                     ),
-                    Text(
-                      count.toString(),
-                      style: TextStyle(
-                        fontFamily: 'WeblogmaYekan',
-                        fontWeight: FontWeight.w100,
-                        fontSize: 20,
-                        color: Colors.black54,
+                    Consumer<ShoppingBasketViewModel>(
+                      builder: (context, shoppingBasketViewModel, child) => Text(
+                        viewModel.count.toString(),
+                        style: TextStyle(
+                          fontFamily: 'WeblogmaYekan',
+                          fontWeight: FontWeight.w100,
+                          fontSize: 20,
+                          color: Colors.black54,
+                        ),
                       ),
                     ),
                   ],
@@ -189,16 +178,16 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                         ),
                       ),
                       onPressed: () {
-                        setState(() {
-                          items.clear();
-                        });
+                        viewModel.clearBasket();
                       }),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: _basketWidgets.toList(),
+                  child: Consumer<ShoppingBasketViewModel>(
+                    builder: (context, shoppingBasketViewModel, child) => SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _basketWidgets.toList(),
+                      ),
                     ),
                   ),
                 ),
@@ -208,5 +197,38 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
         ),
       ),
     );
+  }
+}
+
+class ShoppingBasketViewModel extends ChangeNotifier {
+  final List<BasketItem> basketItems;
+  double totalPrice = 0.0;
+  int count = 0;
+
+  ShoppingBasketViewModel(this.basketItems);
+
+  void removeItem(BasketItem item) {
+    print('remove');
+    if (basketItems.isEmpty) return;
+    print('remove2');
+    basketItems.removeWhere((element) => element.courseName == item.courseName);
+    totalPrice -= item.price;
+    count--;
+    notifyListeners();
+  }
+
+  void addItem(BasketItem item) {
+    print('addd');
+    basketItems.add(item);
+    totalPrice += item.price;
+    count++;
+    notifyListeners();
+  }
+
+  void clearBasket() {
+    basketItems.clear();
+    totalPrice = 0;
+    count = 0;
+    notifyListeners();
   }
 }

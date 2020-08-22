@@ -5,48 +5,34 @@ import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/badgeIcon.dart';
 import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/purchaseLessonCard.dart';
+import 'package:pishgamv2/components/shoppingCard.dart';
 import 'package:pishgamv2/constants/Constants.dart';
 import 'package:pishgamv2/dialogs/searchFilterDialoge.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
-import 'package:pishgamv2/screens/shopping_cart.dart';
+import 'package:pishgamv2/screens/shopping_basket.dart';
+import 'package:provider/provider.dart';
 
-class PurchaseLesson extends StatefulWidget {
+class PurchaseLesson extends StatelessWidget {
   ShoppingLessonViewModel viewModel;
-
-  @override
-  _PurchaseLessonState createState() => _PurchaseLessonState();
-}
-
-class _PurchaseLessonState extends State<PurchaseLesson> {
-  StreamController<int> _countController = StreamController<int>();
-  int _count = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _countController.close();
-    super.dispose();
-  }
+  ShoppingBasketViewModel shoppingBasketViewModel;
 
   Iterable<Widget> getItemsList(List<LessonModel> itemsList) sync* {
     for (LessonModel item in itemsList) {
       yield PurchaseLessonCard(
         purchaseItem: item,
         onDelete: () {
-          setState(() {
-            _count = _count - 1;
-            _countController.sink.add(_count);
-          });
+          shoppingBasketViewModel.removeItem(BasketItem(
+            courseName: item.title,
+            price: item.amount,
+            explanation: item.description,
+          ));
         },
         onAdd: () {
-          setState(() {
-            _count = _count + 1;
-            _countController.sink.add(_count);
-          });
+          shoppingBasketViewModel.addItem(BasketItem(
+            courseName: item.title,
+            price: item.amount,
+            explanation: item.description,
+          ));
         },
       );
     }
@@ -54,15 +40,13 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      condition: (lastState, thisState) {
-        if(thisState is ShoppingLessonInitiallized)
-          return true;
-        return false;
-      },
-        builder: (context, state) {
+    shoppingBasketViewModel = Provider.of<ShoppingBasketViewModel>(context, listen: false);
+    return BlocBuilder<HomeBloc, HomeState>(condition: (lastState, thisState) {
+      if (thisState is ShoppingLessonInitiallized) return true;
+      return false;
+    }, builder: (context, state) {
       if (state is ShoppingLessonInitiallized) {
-        widget.viewModel = state.viewmodel;
+        viewModel = state.viewmodel;
         return _buildShoppingLessonBody(context);
       } else
         return _buildLoaderScreen();
@@ -76,8 +60,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
         child: Center(
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
-            valueColor:
-            AlwaysStoppedAnimation<Color>(Colors.grey[300]),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[300]),
           ),
         ),
       ),
@@ -106,26 +89,32 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             IconButton(
               icon: Icon(Icons.filter_list, color: Colors.black87),
               onPressed: () {
-                showDialog(context: context, builder: (context) => SearchFilterDialog());
+                showDialog(
+                    context: context,
+                    builder: (context) => SearchFilterDialog());
               },
             ),
-            StreamBuilder(
-              initialData: _count,
-              stream: _countController.stream,
-              builder: (_, snapshot) => BadgeIcon(
+            Consumer<ShoppingBasketViewModel>(
+              builder: (context, sbviewModel, child) {
+                print('in badge consumer');
+                return BadgeIcon(
                 icon: IconButton(
                   iconSize: 25,
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return ShoppingBasket();
+                      return ChangeNotifierProvider<ShoppingBasketViewModel>.value(
+                        value: shoppingBasketViewModel,
+                        child: ShoppingBasket(),
+                      );
                     }));
                   },
                   icon: Icon(Icons.shopping_cart),
                   color: Colors.grey[700],
                 ),
-                badgeCount: snapshot.data,
-              ),
+                badgeCount: sbviewModel.count,
+              );
+              },
             ),
             IconButton(
               iconSize: 25,
@@ -137,23 +126,25 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
             ),
           ],
         ),
-        body: widget.viewModel.lessons.isNotEmpty ? ScrollConfiguration(
-          behavior: MyBehavior(),
-          child: SingleChildScrollView(
-            child: Column(
-              children: _definePurchaseLessonLists.toList(),
-            ),
-          ),
-        ) : Center(
-          child: Text(
-            'درسی موجود نیست :/',
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w100,
-              color: Colors.grey[500],
-            ),
-          ),
-        ),
+        body: viewModel.lessons.isNotEmpty
+            ? ScrollConfiguration(
+                behavior: MyBehavior(),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: _definePurchaseLessonLists.toList(),
+                  ),
+                ),
+              )
+            : Center(
+                child: Text(
+                  'درسی موجود نیست :/',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w100,
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -162,7 +153,7 @@ class _PurchaseLessonState extends State<PurchaseLesson> {
     List<LessonModel> items = List();
     String lastItemParentId;
     String lastItemParentTitle;
-    for (final LessonModel item in widget.viewModel.lessons) {
+    for (final LessonModel item in viewModel.lessons) {
       if (lastItemParentId == null) {
         items.add(item);
         lastItemParentId = item.parent_id;

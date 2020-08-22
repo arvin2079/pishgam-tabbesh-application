@@ -45,18 +45,18 @@ class ShoppingItemCard extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(right: 15, bottom: 18),
-              child: Text(
-                item.grade,
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 14,
-                  fontFamily: 'WeblogmaYekan',
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
+//            Padding(
+//              padding: EdgeInsets.only(right: 15, bottom: 18),
+//              child: Text(
+//                item.grade,
+//                style: TextStyle(
+//                  color: Colors.grey[700],
+//                  fontSize: 14,
+//                  fontFamily: 'WeblogmaYekan',
+//                  fontWeight: FontWeight.w400,
+//                ),
+//              ),
+//            ),
             Padding(
               padding: EdgeInsets.only(right: 15),
               child: Text(
@@ -103,12 +103,11 @@ class ShoppingItemCard extends StatelessWidget {
 }
 
 class BasketItem {
-  const BasketItem({this.courseName, this.grade, this.explanation, this.price});
+  const BasketItem({this.courseName, this.explanation, this.price});
 
   final String courseName;
-  final String grade;
   final String explanation;
-  final int price;
+  final double price;
 }
 
 // fixme : grades must be gotten from database
