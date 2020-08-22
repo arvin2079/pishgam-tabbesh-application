@@ -478,11 +478,9 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<MyLessonFilesViewModel> initializeMyLessonFiles(
-      String courseId) async {
+  Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId) async {
     final String _lessonFilesMethodName = "lessonFiles";
-    String result =
-        await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
       "course_id": courseId,
     });
 
@@ -491,7 +489,7 @@ class Auth extends AuthBase {
 
     for (Map m in data["documents"]) {
       DocumentModel model = DocumentModel(
-        title: m["title"],
+        title: m["title"] + "." + m["upload_document"].toString().split('.').last,
         sender: m["sender"],
         description: m["description"],
         url: mainpath + m["upload_document"],

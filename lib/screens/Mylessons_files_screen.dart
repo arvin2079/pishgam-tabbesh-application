@@ -192,10 +192,17 @@ class _MylessonFilesState extends State<MylessonFiles> {
             label: Text("دانلود"),
             color: Colors.white.withOpacity(0.92),
             onPressed: () async {
-              print(await _findLocalPath());
+
+              String localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
+              final savedDir = Directory(localPath);
+              bool hasExisted = await savedDir.exists();
+              if (!hasExisted) {
+                savedDir.create();
+              }
+
               final taskId = await FlutterDownloader.enqueue(
                 url: item.url,
-                savedDir: await _findLocalPath() + item.title,
+                savedDir: savedDir.path,
                 showNotification: true, // show download progress in status bar (for Android)
                 openFileFromNotification: true, // click on notification to open downloaded file (for Android)
               );
