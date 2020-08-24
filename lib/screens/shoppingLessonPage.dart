@@ -12,7 +12,7 @@ import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/shopping_basket.dart';
 import 'package:provider/provider.dart';
 
-class PurchaseLesson extends StatelessWidget {
+class ShoppingLessonPage extends StatelessWidget {
   ShoppingLessonViewModel viewModel;
   ShoppingBasketViewModel shoppingBasketViewModel;
 
@@ -25,6 +25,7 @@ class PurchaseLesson extends StatelessWidget {
             courseName: item.title,
             price: item.amount,
             explanation: item.description,
+            lessonId: item.id,
           ));
         },
         onAdd: () {
@@ -32,6 +33,7 @@ class PurchaseLesson extends StatelessWidget {
             courseName: item.title,
             price: item.amount,
             explanation: item.description,
+            lessonId: item.id
           ));
         },
       );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:pishgamv2/components/shoppingCard.dart';
 import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/setting_screen.dart';
 import 'package:equatable/equatable.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
-import 'package:pishgamv2/screens/purchaseLessonPage.dart';
+import 'package:pishgamv2/screens/shoppingLessonPage.dart';
 
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
@@ -25,7 +26,7 @@ abstract class AuthBase {
 
   Future<bool> signOut();
 
-  Future<bool> payWithZarinpall(@required int amount);
+  Future<String> payWithZarinpall(List<BasketItem> items);
 
   Future<void> initCitiesMap();
 
@@ -58,7 +59,7 @@ class Auth extends AuthBase {
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.4:8000";
+  String mainpath = "http://192.168.1.3:8000";
 
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
@@ -128,24 +129,32 @@ class Auth extends AuthBase {
   @override
   Future<User> currentUser() async {
     final String _methodName = 'currentuser';
-    final Map<dynamic, dynamic> result =
-        await _currentUserChannel.invokeMethod(_methodName);
-    if (result == null)
-      return null;
-    //todo : pass this user to homeScreen in Authbloc
-    else {
-      _currentUser = User(
-        firstname: result["firstname"],
-        lastname: result["lastname"],
-        username: result["username"],
-        password: result["password"],
-        gender: result["gender"],
-        phoneNumber: result["phone_number"],
-        grade: result["grades"],
-        city: result["city"],
-      );
-      return _currentUser;
-    }
+    print('23');
+    final String result = await _currentUserChannel.invokeMethod(_methodName);
+    print('24');
+
+    if (result == null) return null;
+
+    final dynamic data = result != null && result.toString().isNotEmpty
+        ? jsonDecode(result)
+        : null;
+
+    print("current user: ");
+    print(result);
+
+
+    _currentUser = User(
+      firstname: data["first_name"],
+      lastname: data["last_name"],
+      username: data["username"],
+      gender: data["gender"].toString(),
+      phoneNumber: data["phone_number"],
+      grade: data["grade"],
+      city: data["cityTitle"],
+      avatar: mainpath + data["avatar"],
+    );
+
+    return _currentUser;
   }
 
   @override
@@ -204,19 +213,29 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<bool> payWithZarinpall(int amount) async {
+  Future<String> payWithZarinpall(List<BasketItem> items) async {
     final String _methodName = "zarinpall";
-    // fixme : remove try catch from here --> must handel in bloc
-    try {
-      final String result =
-          await _zarinpallChannel.invokeMethod(_methodName, {'amount': amount});
-      if (result == 'done')
-        return true;
-      else if (result == 'failed') return false;
-      return null;
-    } catch (_) {
-      throw Exception('payment process failed');
-    }
+    const String callbackLink = "tabeshunilink://payedwithzarinpal/pay";
+
+    int totalPrice = 0;
+    List<int> itemIds = List();
+
+    items.forEach((element) {
+      totalPrice += element.price.toInt();
+      itemIds.add(element.lessonId);
+    });
+
+    final String result = await _zarinpallChannel.invokeMethod(_methodName, {
+      'total_pr': totalPrice.toString(),
+      'total_id': itemIds.join(' '),
+      'url': callbackLink,
+    });
+
+    final dynamic data = result != null && result.toString().isNotEmpty
+        ? jsonDecode(result)
+        : null;
+
+    return data["url"];
   }
 
   @override
@@ -258,8 +277,14 @@ class Auth extends AuthBase {
         firstname: data['user']['first_name'],
         lastname: data['user']['last_name'],
         username: data['user']['username'],
-        grade: data['user']['grade'] != null && data['user']['grade'].toString().isNotEmpty ? data['user']['grade'] : null,
-        city: data['user']['cityTitle'] != null && data['user']['cityTitle'].toString().isNotEmpty ? data['user']['cityTitle'] : null,
+        grade: data['user']['grade'] != null &&
+                data['user']['grade'].toString().isNotEmpty
+            ? data['user']['grade']
+            : null,
+        city: data['user']['cityTitle'] != null &&
+                data['user']['cityTitle'].toString().isNotEmpty
+            ? data['user']['cityTitle']
+            : null,
         isBoy: data['user']['gender'],
         phoneNumber: data['user']['phone_number'],
         avatar: Image.network(mainpath + data['user']['avatar']),
@@ -303,10 +328,16 @@ class Auth extends AuthBase {
   Future<HomeViewModel> initializeHome() async {
     final String _dashboardMethodName = "acountlessons";
     final String _curentUserMethodName = "currentuser";
+    print('12');
     final Map<dynamic, dynamic> dResult =
         await _homePropertiesChannel.invokeMethod(_dashboardMethodName);
-    final Map<dynamic, dynamic> cResult =
+    print('13');
+    final String cResult =
         await _currentUserChannel.invokeMethod(_curentUserMethodName);
+    print('14');
+    final dynamic data = cResult != null && cResult.toString().isNotEmpty
+        ? jsonDecode(cResult)
+        : null;
 
 //    DateTime now = DateTime.parse(dResult['now']);
     Duration timeLeft;
@@ -329,15 +360,15 @@ class Auth extends AuthBase {
       );
     }
 
-    Image avatar = Image.network(cResult["avatar"]);
+    Image avatar = Image.network(mainpath + data["avatar"]);
 
     return HomeViewModel(
       title: dResult["title"],
       teacher: dResult["teacher"],
-      name: cResult["firstname"] + " " + cResult["lastname"],
+      name: data["first_name"] + " " + data["last_name"],
       timeLeft: timeLeft,
       url: dResult["url"] == "null" ? null : dResult["url"],
-      grade: cResult["grades"],
+      grade: data["grade"],
       isActive: dResult["is_active"],
       avatar: avatar,
     );
@@ -388,10 +419,10 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<ShoppingLessonViewModel> initializeShoppingLesson({String grade, String teacher, String parentLesson}) async {
+  Future<ShoppingLessonViewModel> initializeShoppingLesson(
+      {String grade, String teacher, String parentLesson}) async {
     final String _shoppingLessonMethodName = "shoppinglist";
 
-    print('here');
     print(gradesMap.values.firstWhere(
         (element) => grade != null && gradesMap[grade.trim()] == element,
         orElse: () => null));
@@ -400,7 +431,8 @@ class Auth extends AuthBase {
         orElse: () => null));
     print(parentLessonsMap.values.firstWhere(
         (element) =>
-            parentLesson != null && parentLessonsMap[parentLesson.trim()] == element,
+            parentLesson != null &&
+            parentLessonsMap[parentLesson.trim()] == element,
         orElse: () => null));
     print('finish');
 
@@ -410,11 +442,13 @@ class Auth extends AuthBase {
           (element) => grade != null && gradesMap[grade.trim()] == element,
           orElse: () => null),
       "teacher": teachersMap.values.firstWhere(
-          (element) => teacher != null && teachersMap[teacher.trim()] == element,
+          (element) =>
+              teacher != null && teachersMap[teacher.trim()] == element,
           orElse: () => null),
       "parentLesson": parentLessonsMap.values.firstWhere(
           (element) =>
-              parentLesson != null && parentLessonsMap[parentLesson.trim()] == element,
+              parentLesson != null &&
+              parentLessonsMap[parentLesson.trim()] == element,
           orElse: () => null),
     });
 
@@ -431,6 +465,7 @@ class Auth extends AuthBase {
             " " +
             m['end_date'].toString().substring(11)),
         code: m['code'],
+        id: m['id'],
         amount: m['amount'],
         description: m['description'],
         image: Image.network(m['image']),
@@ -478,9 +513,11 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<MyLessonFilesViewModel> initializeMyLessonFiles(String courseId) async {
+  Future<MyLessonFilesViewModel> initializeMyLessonFiles(
+      String courseId) async {
     final String _lessonFilesMethodName = "lessonFiles";
-    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+    String result =
+        await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
       "course_id": courseId,
     });
 
@@ -489,7 +526,8 @@ class Auth extends AuthBase {
 
     for (Map m in data["documents"]) {
       DocumentModel model = DocumentModel(
-        title: m["title"] + "." + m["upload_document"].toString().split('.').last,
+        title:
+            m["title"] + "." + m["upload_document"].toString().split('.').last,
         sender: m["sender"],
         description: m["description"],
         url: mainpath + m["upload_document"],

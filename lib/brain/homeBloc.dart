@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
-import 'package:pishgamv2/screens/purchaseLessonPage.dart';
+import 'package:pishgamv2/screens/shoppingLessonPage.dart';
 import 'package:pishgamv2/screens/setting_screen.dart';
 
 import 'authClass.dart';
@@ -171,7 +171,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(event) async* {
     if (event is InitializeHome) {
       try {
+        print('slslslslslsllslsslsllslsl');
         HomeViewModel viewModel = await auth.initializeHome();
+        print('slslslslslsllslsslsllslsl222');
         yield HomeInitiallized(viewModel);
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);

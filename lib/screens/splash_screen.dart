@@ -39,7 +39,6 @@ class _LanidngPageState extends State<LanidngPage>
   @override
   Widget build(BuildContext context) {
     initAnimation();
-
     return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
       if (state is StartAnimation) {
         startAnimation().then((_) {

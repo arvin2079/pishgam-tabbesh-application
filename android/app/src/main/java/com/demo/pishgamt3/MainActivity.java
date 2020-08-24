@@ -324,6 +324,9 @@ public class MainActivity extends FlutterActivity {
                         SharePref pref = new SharePref(getApplicationContext());
                         String token = pref.load("token");
                         //checking file for token
+
+                        Log.i("tokenCurent))", token);
+
                         if (token == null || token.isEmpty()) result.success(null);
                         else {
                             OkHttpClient client = new OkHttpClient();
@@ -345,13 +348,13 @@ public class MainActivity extends FlutterActivity {
 
                                         @Override
                                         public void onResponse(Call call, Response response) throws IOException {
+                                            final String resbody = response.body().string();
 
-                                            JsonParser jsonParser = new JsonParser();
                                             switch (response.code()) {
                                                 case 200:
                                                     try {
-                                                        mainresult.success(jsonParser.currentUser(response.body().string()));
-                                                    } catch (JSONException e) {
+                                                        mainresult.success(resbody);
+                                                    } catch (Exception e) {
                                                         e.printStackTrace();
                                                     } finally {
                                                         break;
@@ -869,6 +872,49 @@ public class MainActivity extends FlutterActivity {
 
                     }
                 });
+
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), "zarinpall")
+                .setMethodCallHandler(((call, result) -> {
+                    if (call.method.equals("zarinpall")) {
+                        MainThreadResult mainresult = new MainThreadResult(result);
+                        SharePref pref = new SharePref(getApplicationContext());
+                        OkHttpClient client = new OkHttpClient();
+
+                        String json = "{\"total_pr\" : " + call.argument("total_pr") + " , \"total_id\": \"" + call.argument("total_id") + "\" , \"url\" : \"" + call.argument("url") + "\"}";
+
+                        Request request = new Request.Builder()
+                                .url(path.getPayWithZarinpal())
+                                .addHeader("Accept", "application/json")
+                                .addHeader("Authorization", "Token " + pref.load("token"))
+                                .post(RequestBody
+                                        .create(MediaType
+                                                .parse("application/json"), json))
+                                .build();
+
+                        try {
+                            client.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mainresult.error("در حال حاضر ارتباط با سرور ممکن نیست", "خطا", null);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    int resCode = response.code();
+                                    String resBody = response.body().string();
+
+                                    if (resCode == 200)
+                                        mainresult.success(resBody);
+                                    else if (resCode == 406)
+                                        mainresult.error("متاسفانه انجام عملیات پرداخت برای دروس مورد نظر شما با شکست مواجه شد", "ناموفق", null);
+
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }));
 
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), "searchFilter")
                 .setMethodCallHandler(((call, result) -> {

@@ -11,9 +11,7 @@ import 'package:pishgamv2/constants/Constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:pishgamv2/dialogs/alertDialogs.dart';
 import 'package:pishgamv2/dialogs/waiterDialog.dart';
-import 'package:pishgamv2/screens/myLessonsPage.dart';
-import 'package:pishgamv2/screens/purchaseLessonPage.dart';
-import 'package:pishgamv2/screens/setting_screen.dart';
+import 'package:pishgamv2/screens/shoppingLessonPage.dart';
 import 'package:pishgamv2/screens/shopping_basket.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_countdown_clock/slide_countdown_clock.dart';
@@ -60,10 +58,7 @@ class _HomePageState extends State<HomePage>
       buttonText: 'مشاهده',
       onPressed: () {
         _homeBloc.add(InitializeMyLesson());
-        Navigator.of(context).push(MaterialPageRoute<void>(
-          fullscreenDialog: true,
-          builder: (context) => MyLessons(),
-        ));
+        Navigator.pushNamed(context, "/mylessons");
       },
     ));
     _sliderItems.add(
@@ -74,9 +69,10 @@ class _HomePageState extends State<HomePage>
         onPressed: () {
           _homeBloc.add(InitializeShoppingLesson());
           Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (context) => ChangeNotifierProvider<ShoppingBasketViewModel>(
+            builder: (context) =>
+                ChangeNotifierProvider<ShoppingBasketViewModel>(
               create: (context) => ShoppingBasketViewModel(List<BasketItem>()),
-              child: PurchaseLesson(),
+              child: ShoppingLessonPage(),
             ),
           ));
         },
@@ -363,9 +359,7 @@ class _HomePageState extends State<HomePage>
                               elevation: 5,
                               onPressed: () {
                                 _homeBloc.add(InitializeEditProfile());
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SettingScreen(),
-                                ));
+                                Navigator.pushNamed(context, "/setting");
                               },
                             ),
                             Text(

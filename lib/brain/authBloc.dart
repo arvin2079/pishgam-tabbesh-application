@@ -145,7 +145,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         User user;
         try {
           user = await auth.currentUser();
-          print(user.toString());
           await auth.initCitiesMap();
           await auth.initGradesMap();
         } on PlatformException catch (err) {
@@ -155,14 +154,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ));
         } catch (err) {
           print('error --> ' + err.toString());
-//          print('error happend in flutter code!');
         }
         yield user == null ? StartAnimation() : Home();
       } else {
         yield AuthenticationError(
             message: "اشکال در اتصال به اینترنت",
-            details:
-                "لطفا از اتصال خود به اینترنت اطمینان حاصل کرده و دوباره تلاش کنید.",
+            details: "لطفا از اتصال خود به اینترنت اطمینان حاصل کرده و دوباره تلاش کنید.",
             onPressed: () async {
               await Future.delayed(Duration(milliseconds: 500));
               this.add(CheckIfSignedInBefor());

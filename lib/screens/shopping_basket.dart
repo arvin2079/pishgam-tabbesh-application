@@ -1,48 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pishgamv2/brain/authClass.dart';
+import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/shoppingCard.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ShoppingBasket extends StatelessWidget {
+import 'myLessonsPage.dart';
+
+class ShoppingBasket extends StatefulWidget {
+  @override
+  _ShoppingBasketState createState() => _ShoppingBasketState();
+}
+
+class _ShoppingBasketState extends State<ShoppingBasket> {
   ShoppingBasketViewModel viewModel;
+  StreamSubscription _sub;
+  HomeBloc _homeBloc;
 
-//  List<BasketItem> items = <BasketItem>[
-//    BasketItem(
-//      courseName: 'اولین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//    BasketItem(
-//      courseName: 'دومین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//    BasketItem(
-//      courseName: 'سومین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//    BasketItem(
-//      courseName: 'چهارمین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//    BasketItem(
-//      courseName: 'پنجمین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//    BasketItem(
-//      courseName: 'شیشمین کورس',
-//      grade: 'اول دبیرستان',
-//      explanation: 'توضیحات مربوط به کورس',
-//      price: 18000,
-//    ),
-//  ];
   Iterable<Widget> get _basketWidgets sync* {
     for (BasketItem item in viewModel.basketItems) {
       yield ShoppingItemCard(
@@ -54,10 +33,49 @@ class ShoppingBasket extends StatelessWidget {
     }
   }
 
+  void _payWithZarinpal(BuildContext context) async {
+    Auth auth = Auth();
+    viewModel.isPaying(true);
+    try {
+      String link = await auth.payWithZarinpall(viewModel.basketItems);
+      if (link != null && await canLaunch(link)) {
+        await launch(link);
+      } else {
+        _homeBloc
+            .add(ShowMessage('خطا', 'امکان پرداخت در حال حاظر وجود ندارد'));
+      }
+    } on PlatformException catch (e) {
+      _homeBloc.add(ShowMessage(e.message, e.code));
+    } catch (e) {
+      print('exception catched in shopping basket');
+      print(e.toString());
+    }
+
+    await Future.delayed(Duration(seconds: 1));
+    viewModel.isPaying(false);
+  }
+
+  @override
+  void initState() {
+    _sub ??= getUriLinksStream().listen((Uri uri) {
+      _homeBloc.add(InitializeMyLesson());
+      Navigator.popUntil(context, ModalRoute.withName("/home"));
+      Future.delayed(Duration(milliseconds: 300));
+      Navigator.pushNamed(context, "/mylessons");
+      if(_sub != null) _sub.cancel();
+    }, onError: (Object err) {
+      _homeBloc.add(ShowMessage(
+        'خطا',
+        '',
+      ));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
     viewModel = Provider.of<ShoppingBasketViewModel>(context, listen: false);
-
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -79,6 +97,7 @@ class ShoppingBasket extends StatelessWidget {
             actions: <Widget>[
               IconButton(
                 onPressed: () {
+                  if (_sub != null) _sub.cancel();
                   Navigator.of(context).pop();
                 },
                 icon: Icon(Icons.close),
@@ -104,7 +123,8 @@ class ShoppingBasket extends StatelessWidget {
                       ),
                     ),
                     Consumer<ShoppingBasketViewModel>(
-                      builder: (context, shoppingBasketViewModel, child) => Text(
+                      builder: (context, shoppingBasketViewModel, child) =>
+                          Text(
                         viewModel.totalPrice.toString(),
                         style: TextStyle(
                           fontFamily: 'WeblogmaYekan',
@@ -129,7 +149,8 @@ class ShoppingBasket extends StatelessWidget {
                       ),
                     ),
                     Consumer<ShoppingBasketViewModel>(
-                      builder: (context, shoppingBasketViewModel, child) => Text(
+                      builder: (context, shoppingBasketViewModel, child) =>
+                          Text(
                         viewModel.count.toString(),
                         style: TextStyle(
                           fontFamily: 'WeblogmaYekan',
@@ -144,26 +165,34 @@ class ShoppingBasket extends StatelessWidget {
                 SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
-                    elevation: 2,
-                    color: Colors.lime[500],
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      'پرداخت',
-                      style: TextStyle(
-                        fontFamily: 'vazir',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 19,
-                        color: Colors.black,
+                  child: Consumer<ShoppingBasketViewModel>(
+                    builder: (context, shoppingBasketViewModel, child) =>
+                        RaisedButton(
+                      elevation: 2,
+                      color: Colors.lime[500],
+                      disabledColor: Colors.grey[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'پرداخت',
+                        style: TextStyle(
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 19,
+                          color: Colors.black,
+                        ),
                       ),
+                      onPressed: !viewModel.isPayingNow && viewModel.count != 0
+                          ? () => _payWithZarinpal(context)
+                          : null,
                     ),
-                    onPressed: () {},
                   ),
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: Consumer<ShoppingBasketViewModel>(
+                    builder: (context, shoppingbasketViewModel, child) =>
+                        RaisedButton(
                       elevation: 2,
                       color: Colors.black45,
                       shape: RoundedRectangleBorder(
@@ -177,13 +206,18 @@ class ShoppingBasket extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      onPressed: () {
-                        viewModel.clearBasket();
-                      }),
+                      onPressed: !viewModel.isPayingNow && viewModel.count != 0
+                          ? () {
+                              viewModel.clearBasket();
+                            }
+                          : null,
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Consumer<ShoppingBasketViewModel>(
-                    builder: (context, shoppingBasketViewModel, child) => SingleChildScrollView(
+                    builder: (context, shoppingBasketViewModel, child) =>
+                        SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: _basketWidgets.toList(),
@@ -204,13 +238,14 @@ class ShoppingBasketViewModel extends ChangeNotifier {
   final List<BasketItem> basketItems;
   double totalPrice = 0.0;
   int count = 0;
+  bool _isPayingNow = false;
+
+  bool get isPayingNow => _isPayingNow;
 
   ShoppingBasketViewModel(this.basketItems);
 
   void removeItem(BasketItem item) {
-    print('remove');
     if (basketItems.isEmpty) return;
-    print('remove2');
     basketItems.removeWhere((element) => element.courseName == item.courseName);
     totalPrice -= item.price;
     count--;
@@ -218,7 +253,6 @@ class ShoppingBasketViewModel extends ChangeNotifier {
   }
 
   void addItem(BasketItem item) {
-    print('addd');
     basketItems.add(item);
     totalPrice += item.price;
     count++;
@@ -229,6 +263,11 @@ class ShoppingBasketViewModel extends ChangeNotifier {
     basketItems.clear();
     totalPrice = 0;
     count = 0;
+    notifyListeners();
+  }
+
+  void isPaying(bool isPaying) {
+    _isPayingNow = isPaying;
     notifyListeners();
   }
 }

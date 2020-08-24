@@ -77,7 +77,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 padding: const EdgeInsets.symmetric(
                     vertical: 5, horizontal: contentPaddingHoriz),
                 child: Text(
-                  widget.lessonInfo.description,
+                  widget.lessonInfo.description != null ? widget.lessonInfo.description : '',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'vazir',

@@ -103,9 +103,15 @@ class ShoppingItemCard extends StatelessWidget {
 }
 
 class BasketItem {
-  const BasketItem({this.courseName, this.explanation, this.price});
+  const BasketItem({this.lessonId, this.courseName, this.explanation, this.price});
+
+  @override
+  String toString() {
+    return 'BasketItem{courseName: $courseName, lessonId: $lessonId, explanation: $explanation, price: $price}';
+  }
 
   final String courseName;
+  final int lessonId;
   final String explanation;
   final double price;
 }

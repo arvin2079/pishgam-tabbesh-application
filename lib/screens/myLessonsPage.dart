@@ -15,20 +15,17 @@ class MyLessons extends StatefulWidget {
 class _MyLessonsState extends State<MyLessons> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      condition: (lastState, thisState) {
-        if(thisState is MyLessonsInitiallized)
-          return true;
-        return false;
-      },
-        builder: (context, state) {
-          if (state is MyLessonsInitiallized) {
-            widget.viewModel = state.viewModel;
-            return _buildMyLessonsBody(context);
-          } else {
-            return _buildLoaderScreen();
-          }
-        });
+    return BlocBuilder<HomeBloc, HomeState>(condition: (lastState, thisState) {
+      if (thisState is MyLessonsInitiallized) return true;
+      return false;
+    }, builder: (context, state) {
+      if (state is MyLessonsInitiallized) {
+        widget.viewModel = state.viewModel;
+        return _buildMyLessonsBody(context);
+      } else {
+        return _buildLoaderScreen();
+      }
+    });
   }
 
   Scaffold _buildLoaderScreen() {
@@ -38,8 +35,7 @@ class _MyLessonsState extends State<MyLessons> {
         child: Center(
           child: CircularProgressIndicator(
             backgroundColor: Colors.white,
-            valueColor:
-            AlwaysStoppedAnimation<Color>(Colors.grey[300]),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[300]),
           ),
         ),
       ),
@@ -157,6 +153,7 @@ class LessonModel {
   final Image image;
   final String title;
   final String code;
+  final int id;
   final double amount;
   final String teacherName;
   final String description;
@@ -171,19 +168,21 @@ class LessonModel {
     return 'LessonModel{startDate: $startDate, endDate: $endDate, courseCalendar: $courseCalendar, image: $image, title: $title, code: $code, amount: $amount, teacherName: $teacherName, description: $description, parent_id: $parent_id, parent_name: $parent_name, isActive: $isActive, firstClass: $firstClass, url: $url}';
   }
 
-  LessonModel(
-      {@required this.startDate,
-      @required this.endDate,
-      this.courseCalendar,
-      @required this.image,
-      @required this.title,
-      @required this.code,
-      this.amount,
-      @required this.teacherName,
-      this.description,
-      @required this.parent_id,
-      @required this.parent_name,
-      this.isActive,
-      this.firstClass,
-      this.url});
+  LessonModel({
+    @required this.startDate,
+    @required this.endDate,
+    this.courseCalendar,
+    @required this.image,
+    @required this.title,
+    @required this.code,
+    this.amount,
+    @required this.teacherName,
+    this.description,
+    @required this.parent_id,
+    @required this.parent_name,
+    this.isActive,
+    this.firstClass,
+    this.url,
+    this.id,
+  });
 }

@@ -37,6 +37,7 @@ dependencies:
   flutter_downloader: ^1.4.4
   path_provider: ^1.6.11
   characters: ^1.0.0
+  uni_links: ^0.4.0
 
 dev_dependencies:
   flutter_test:

@@ -6,8 +6,6 @@ import android.webkit.HttpAuthHandler;
 
 import androidx.annotation.RequiresApi;
 
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.demo.pishgamt3.Refrence.Path;
 
 import org.json.JSONArray;
@@ -176,7 +174,7 @@ public class JsonParser {
             lessons.put("url", jsonObject.getString("url"));
             lessons.put("is_active", jsonObject.getString("is_active"));
             lessons.put("first_class", jsonObject.getString("first_class"));
-            lessons.put("description", jsonObject.getString("description"));
+            lessons.put("description", jsonObject.getString("private_description"));
 
             hashMap.put(i + 1, lessons);
 
