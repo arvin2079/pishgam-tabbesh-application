@@ -71,10 +71,10 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(
                     right: contentPaddingHoriz,
-                    top: 8,
+                    top: 2,
                     left: contentPaddingHoriz),
                 child: Text(
-                  'قیمت : ' + widget.purchaseItem.amount.toString(),
+                  widget.purchaseItem.amount.toString() + ' تومان',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'vazir',
@@ -84,8 +84,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: contentPaddingHoriz, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: contentPaddingHoriz, vertical: 5),
                 child: Text(
                   widget.purchaseItem.description,
                   style: TextStyle(
@@ -113,6 +112,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   ),
                 ),
               ),
+              SizedBox(height: 3),
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
@@ -130,6 +130,7 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   ),
                 ),
               ),
+              SizedBox(height: 3),
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
@@ -147,15 +148,12 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                       padding:
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
-                        ' - ' +
-                            widget.purchaseItem.courseCalendar[0].day
-                                .toString() +
+                        ' + ' +
+                            widget.purchaseItem.courseCalendar[0].day.toString() +
                             " " +
-                            convertMonth(
-                                widget.purchaseItem.courseCalendar[0].month) +
+                            convertMonth(widget.purchaseItem.courseCalendar[0].month) +
                             " " +
-                            widget.purchaseItem.courseCalendar[0].year
-                                .toString(),
+                            widget.purchaseItem.courseCalendar[0].year.toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',
@@ -170,15 +168,12 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                       padding:
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
-                        ' - ' +
-                            widget.purchaseItem.courseCalendar[1].day
-                                .toString() +
+                        ' + ' +
+                            widget.purchaseItem.courseCalendar[1].day.toString() +
                             " " +
-                            convertMonth(
-                                widget.purchaseItem.courseCalendar[1].month) +
+                            convertMonth(widget.purchaseItem.courseCalendar[1].month) +
                             " " +
-                            widget.purchaseItem.courseCalendar[1].year
-                                .toString(),
+                            widget.purchaseItem.courseCalendar[1].year.toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',
@@ -193,15 +188,12 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                       padding:
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
-                        ' - ' +
-                            widget.purchaseItem.courseCalendar[2].day
-                                .toString() +
+                        ' + ' +
+                            widget.purchaseItem.courseCalendar[2].day.toString() +
                             " " +
-                            convertMonth(
-                                widget.purchaseItem.courseCalendar[2].month) +
+                            convertMonth(widget.purchaseItem.courseCalendar[2].month) +
                             " " +
-                            widget.purchaseItem.courseCalendar[2].year
-                                .toString(),
+                            widget.purchaseItem.courseCalendar[2].year.toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',

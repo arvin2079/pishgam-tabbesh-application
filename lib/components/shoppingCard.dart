@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShoppingItemCard extends StatelessWidget {
@@ -13,12 +14,12 @@ class ShoppingItemCard extends StatelessWidget {
       color: Colors.white,
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 5, right: 10),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 15.0, top: 5.0, bottom: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
@@ -35,7 +36,7 @@ class ShoppingItemCard extends StatelessWidget {
                       'حذف',
                       style: TextStyle(
                         color: Colors.red,
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.w500,
                         fontFamily: 'vazir',
                         fontSize: 16,
                       ),
@@ -44,58 +45,41 @@ class ShoppingItemCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-//            Padding(
-//              padding: EdgeInsets.only(right: 15, bottom: 18),
-//              child: Text(
-//                item.grade,
-//                style: TextStyle(
-//                  color: Colors.grey[700],
-//                  fontSize: 14,
-//                  fontFamily: 'WeblogmaYekan',
-//                  fontWeight: FontWeight.w400,
-//                ),
-//              ),
-//            ),
-            Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: Text(
+              Text(
                 item.explanation,
                 style: TextStyle(
-                  color: Colors.grey[700],
+                  color: Colors.grey[800],
                   fontSize: 15,
                   fontFamily: 'WeblogmaYekan',
                   fontWeight: FontWeight.w400,
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  Text(
-                    'قیمت',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 23,
-                      fontFamily: 'WeblogmaYekan',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
                   Text(
                     item.price.toString(),
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 22,
+                      fontSize: 18,
                       fontFamily: 'WeblogmaYekan',
                       fontWeight: FontWeight.w400,
                     ),
                   ),
+                  Text(
+                    '  تومان',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 17,
+                      fontFamily: 'WeblogmaYekan',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
