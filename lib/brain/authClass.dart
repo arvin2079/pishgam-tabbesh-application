@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:pishgamv2/screens/homePage.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/shoppingLessonPage.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 abstract class AuthBase {
 //  Stream<User> get onAuthStateChange;
@@ -59,7 +60,7 @@ class Auth extends AuthBase {
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.6:8000";
+  String mainpath = "http://192.168.1.7:8000";
 
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
@@ -339,7 +340,6 @@ class Auth extends AuthBase {
         ? jsonDecode(cResult)
         : null;
 
-//    DateTime now = DateTime.parse(dResult['now']);
     Duration timeLeft;
     String durationString;
     bool remainOneDay = dResult['timeLeft'].toString().substring(0, 2) == "1 ";
@@ -390,21 +390,21 @@ class Auth extends AuthBase {
         LessonModel model = LessonModel(
           code: m['code'],
           title: m['title'],
-          startDate: DateTime.parse(
+          startDate: Jalali.fromDateTime(DateTime.parse(
               m['start_date'].toString().substring(0, 10) +
                   " " +
-                  m['start_date'].toString().substring(11)),
-          endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
+                  m['start_date'].toString().substring(11))),
+          endDate: Jalali.fromDateTime(DateTime.parse(m['end_date'].toString().substring(0, 10) +
               " " +
-              m['end_date'].toString().substring(11)),
+              m['end_date'].toString().substring(11))),
           firstClass: m['first_class'] != null
-              ? DateTime.parse(m['first_class'].toString().substring(0, 10) +
+              ? Jalali.fromDateTime(DateTime.parse(m['first_class'].toString().substring(0, 10) +
                   " " +
-                  m['first_class'].toString().substring(11))
+                  m['first_class'].toString().substring(11)))
               : null,
           url: m['url'],
           isActive: m['is_active'],
-          description: m['description'],
+          description: m['private_description'],
           image: Image.network(m['image']),
           teacherName: m['teacher'],
           parent_name: m['parent']['title'],
@@ -458,12 +458,12 @@ class Auth extends AuthBase {
     for (Map m in data) {
       LessonModel model = LessonModel(
         title: m['title'],
-        startDate: DateTime.parse(m['start_date'].toString().substring(0, 10) +
+        startDate: Jalali.fromDateTime(DateTime.parse(m['start_date'].toString().substring(0, 10) +
             " " +
-            m['start_date'].toString().substring(11)),
-        endDate: DateTime.parse(m['end_date'].toString().substring(0, 10) +
+            m['start_date'].toString().substring(11))),
+        endDate: Jalali.fromDateTime(DateTime.parse(m['end_date'].toString().substring(0, 10) +
             " " +
-            m['end_date'].toString().substring(11)),
+            m['end_date'].toString().substring(11))),
         code: m['code'],
         id: m['id'],
         amount: m['amount'],
@@ -472,24 +472,24 @@ class Auth extends AuthBase {
         teacherName: m['teacher'],
         parent_name: m['parent']['title'],
         parent_id: m['parent']['id'].toString(),
-        courseCalendar: <DateTime>[
+        courseCalendar: <Jalali>[
           m['course_calendars'][0] != null
-              ? DateTime.parse(
+              ? Jalali.fromDateTime(DateTime.parse(
                   m['course_calendars'][0].toString().substring(0, 10) +
                       " " +
-                      m['course_calendars'][0].toString().substring(11))
+                      m['course_calendars'][0].toString().substring(11)))
               : null,
           m['course_calendars'][1] != null
-              ? DateTime.parse(
+              ? Jalali.fromDateTime(DateTime.parse(
                   m['course_calendars'][1].toString().substring(0, 10) +
                       " " +
-                      m['course_calendars'][1].toString().substring(11))
+                      m['course_calendars'][1].toString().substring(11)))
               : null,
           m['course_calendars'][2] != null
-              ? DateTime.parse(
+              ? Jalali.fromDateTime(DateTime.parse(
                   m['course_calendars'][2].toString().substring(0, 10) +
                       " " +
-                      m['course_calendars'][2].toString().substring(11))
+                      m['course_calendars'][2].toString().substring(11)))
               : null,
         ],
       );

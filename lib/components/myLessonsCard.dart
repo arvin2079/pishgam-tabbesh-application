@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
+import 'package:pishgamv2/constants/calender_convert.dart';
 import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,6 +26,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.lessonInfo.firstClass);
     const double contentPaddingHoriz = 12;
     MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
@@ -77,7 +79,9 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 padding: const EdgeInsets.symmetric(
                     vertical: 5, horizontal: contentPaddingHoriz),
                 child: Text(
-                  widget.lessonInfo.description != null ? widget.lessonInfo.description : '',
+                  widget.lessonInfo.description != null
+                      ? widget.lessonInfo.description
+                      : '',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'vazir',
@@ -89,7 +93,12 @@ class _MyLessonCardState extends State<MyLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
-                  'زمان شروع دوره :\n' + widget.lessonInfo.startDate.toString(),
+                  'زمان شروع دوره :\n' +
+                      widget.lessonInfo.startDate.day.toString() +
+                      " " +
+                      convertMonth(widget.lessonInfo.startDate.month) +
+                      " " +
+                      widget.lessonInfo.startDate.year.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -101,7 +110,12 @@ class _MyLessonCardState extends State<MyLessonCard> {
               Padding(
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
-                  'زمان پایان دوره :\n' + widget.lessonInfo.endDate.toString(),
+                  'زمان پایان دوره :\n' +
+                      widget.lessonInfo.endDate.day.toString() +
+                      " " +
+                      convertMonth(widget.lessonInfo.endDate.month) +
+                      " " +
+                      widget.lessonInfo.endDate.year.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -110,19 +124,26 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   ),
                 ),
               ),
-              widget.lessonInfo.firstClass != null ? Padding(
-                padding: const EdgeInsets.only(right: contentPaddingHoriz),
-                child: Text(
-                  'زمان شروع اولین کلاس :\n' +
-                      widget.lessonInfo.firstClass.toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ) : Container(),
+              widget.lessonInfo.firstClass != null
+                  ? Padding(
+                      padding:
+                          const EdgeInsets.only(right: contentPaddingHoriz),
+                      child: Text(
+                        'زمان شروع اولین کلاس :\n' +
+                            widget.lessonInfo.firstClass.day.toString() +
+                            " " +
+                            convertMonth(widget.lessonInfo.firstClass.month) +
+                            " " +
+                            widget.lessonInfo.firstClass.year.toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'vazir',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    )
+                  : Container(),
               Padding(
                 padding: const EdgeInsets.only(
                     bottom: 10,
@@ -135,8 +156,12 @@ class _MyLessonCardState extends State<MyLessonCard> {
                   children: <Widget>[
                     RaisedButton(
                       onPressed: () {
-                        _homeBloc.add(InitializeLessonFiles(widget.lessonInfo.code));
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MylessonFiles()));
+                        _homeBloc
+                            .add(InitializeLessonFiles(widget.lessonInfo.code));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MylessonFiles()));
                       },
                       padding: EdgeInsets.fromLTRB(30, 5, 30, 5),
                       child: Text(
@@ -195,7 +220,7 @@ class _MyLessonCardState extends State<MyLessonCard> {
   }
 
   bool _checkStartTime() {
-    if(widget.lessonInfo.firstClass == null) {
+    if (widget.lessonInfo.firstClass == null) {
       return false;
     }
     if (widget.lessonInfo.isActive &&
@@ -203,8 +228,11 @@ class _MyLessonCardState extends State<MyLessonCard> {
         widget.lessonInfo.url.isNotEmpty)
       return true;
     else {
-      if (widget.lessonInfo.firstClass.difference(DateTime.now()) < Duration(days: 2)) {
-        Future.delayed(widget.lessonInfo.firstClass.difference(DateTime.now()))
+      if (widget.lessonInfo.firstClass.toDateTime().difference(DateTime.now()) <
+          Duration(days: 2)) {
+        Future.delayed(widget.lessonInfo.firstClass
+                .toDateTime()
+                .difference(DateTime.now()))
             .whenComplete(() {
           _homeBloc.add(InitializeMyLesson());
         });

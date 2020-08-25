@@ -4,6 +4,7 @@ import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/lessonList.dart';
 import 'package:pishgamv2/components/myLessonsCard.dart';
 import 'package:pishgamv2/constants/Constants.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 class MyLessons extends StatefulWidget {
   MyLessonsViewModel viewModel;
@@ -147,9 +148,9 @@ class MyLessonsViewModel {
 }
 
 class LessonModel {
-  final DateTime startDate;
-  final DateTime endDate;
-  final List<DateTime> courseCalendar;
+  final Jalali startDate;
+  final Jalali endDate;
+  final List<Jalali> courseCalendar;
   final Image image;
   final String title;
   final String code;
@@ -160,7 +161,7 @@ class LessonModel {
   final String parent_id;
   final String parent_name;
   final bool isActive;
-  final DateTime firstClass;
+  final Jalali firstClass;
   final String url;
 
   @override
