@@ -59,7 +59,7 @@ class Auth extends AuthBase {
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.3:8000";
+  String mainpath = "http://192.168.1.6:8000";
 
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
@@ -516,22 +516,23 @@ class Auth extends AuthBase {
   Future<MyLessonFilesViewModel> initializeMyLessonFiles(
       String courseId) async {
     final String _lessonFilesMethodName = "lessonFiles";
-    String result =
-        await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+    print('in file system');
+    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
       "course_id": courseId,
     });
+    print('in file system2');
 
     List<DocumentModel> docs = List();
     final data = jsonDecode(result);
 
     for (Map m in data["documents"]) {
       DocumentModel model = DocumentModel(
-        title:
-            m["title"] + "." + m["upload_document"].toString().split('.').last,
-        sender: m["sender"],
+        title: m["title"] + "." + m["upload_document"].toString().split('.').last,
+        sender: m["sender_name"],
         description: m["description"],
         url: mainpath + m["upload_document"],
       );
+    print('in file system3');
       docs.add(model);
     }
 
