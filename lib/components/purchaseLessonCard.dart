@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pishgamv2/components/shoppingCard.dart';
+import 'package:pishgamv2/constants/calender_convert.dart';
 import 'package:pishgamv2/screens/myLessonsPage.dart';
 import 'package:pishgamv2/screens/shopping_basket.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +100,11 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
                   'زمان شروع دوره :\n' +
-                      widget.purchaseItem.startDate.toString(),
+                      widget.purchaseItem.startDate.day.toString() +
+                      " " +
+                      convertMonth(widget.purchaseItem.startDate.month) +
+                      " " +
+                      widget.purchaseItem.startDate.year.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -112,7 +117,11 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 padding: const EdgeInsets.only(right: contentPaddingHoriz),
                 child: Text(
                   'زمان پایان دوره :\n' +
-                      widget.purchaseItem.endDate.toString(),
+                      widget.purchaseItem.endDate.day.toString() +
+                      " " +
+                      convertMonth(widget.purchaseItem.endDate.month) +
+                      " " +
+                      widget.purchaseItem.endDate.year.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'vazir',
@@ -139,7 +148,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
                         ' - ' +
-                            widget.purchaseItem.courseCalendar[0].toString(),
+                            widget.purchaseItem.courseCalendar[0].day
+                                .toString() +
+                            " " +
+                            convertMonth(
+                                widget.purchaseItem.courseCalendar[0].month) +
+                            " " +
+                            widget.purchaseItem.courseCalendar[0].year
+                                .toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',
@@ -155,7 +171,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
                         ' - ' +
-                            widget.purchaseItem.courseCalendar[1].toString(),
+                            widget.purchaseItem.courseCalendar[1].day
+                                .toString() +
+                            " " +
+                            convertMonth(
+                                widget.purchaseItem.courseCalendar[1].month) +
+                            " " +
+                            widget.purchaseItem.courseCalendar[1].year
+                                .toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',
@@ -171,7 +194,14 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                           const EdgeInsets.only(right: contentPaddingHoriz),
                       child: Text(
                         ' - ' +
-                            widget.purchaseItem.courseCalendar[2].toString(),
+                            widget.purchaseItem.courseCalendar[2].day
+                                .toString() +
+                            " " +
+                            convertMonth(
+                                widget.purchaseItem.courseCalendar[2].month) +
+                            " " +
+                            widget.purchaseItem.courseCalendar[2].year
+                                .toString(),
                         style: TextStyle(
                           fontSize: 14,
                           fontFamily: 'vazir',
