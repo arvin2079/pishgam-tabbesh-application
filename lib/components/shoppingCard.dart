@@ -19,39 +19,47 @@ class ShoppingItemCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    item.courseName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 23,
-                      fontFamily: 'WeblogmaYekan',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  FlatButton(
-                    child: Text(
-                      'حذف',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'vazir',
-                        fontSize: 16,
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        item.courseName,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 23,
+                          fontFamily: 'WeblogmaYekan',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                    onPressed: onDelete,
-                  ),
-                ],
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red, size: 22),
+//                      child: Text(
+//                        'حذف',
+//                        style: TextStyle(
+//                          color: Colors.red,
+//                          fontWeight: FontWeight.w500,
+//                          fontFamily: 'vazir',
+//                          fontSize: 15,
+//                        ),
+//                      ),
+                      onPressed: onDelete,
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                item.explanation.length < 50 ? item.explanation : item.explanation.substring(50) + "...",
-                style: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 15,
-                  fontFamily: 'WeblogmaYekan',
-                  fontWeight: FontWeight.w400,
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Text(
+                  item.explanation.length < 120 ? item.explanation : item.explanation.substring(0, 120) + "...",
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 15,
+                    fontFamily: 'WeblogmaYekan',
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               SizedBox(height: 10),
@@ -61,17 +69,17 @@ class ShoppingItemCard extends StatelessWidget {
                   Text(
                     item.price.toString(),
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.red,
                       fontSize: 18,
                       fontFamily: 'WeblogmaYekan',
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   Text(
-                    '  تومان',
+                    ' تومان',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17,
+                      color: Colors.red,
+                      fontSize: 15,
                       fontFamily: 'WeblogmaYekan',
                       fontWeight: FontWeight.w500,
                     ),

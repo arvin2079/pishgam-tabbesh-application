@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pishgamv2/brain/authClass.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/components/shoppingCard.dart';
+import 'package:pishgamv2/constants/Constants.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,6 +32,7 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
         },
       );
     }
+    yield SizedBox(height: 15);
   }
 
   void _payWithZarinpal(BuildContext context) async {
@@ -217,12 +219,15 @@ class _ShoppingBasketState extends State<ShoppingBasket> {
                 Expanded(
                   child: Consumer<ShoppingBasketViewModel>(
                     builder: (context, shoppingBasketViewModel, child) =>
-                        SingleChildScrollView(
+                        ScrollConfiguration(
+                          behavior: MyBehavior(),
+                          child: SingleChildScrollView(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: _basketWidgets.toList(),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: _basketWidgets.toList(),
                       ),
                     ),
+                        ),
                   ),
                 ),
               ],
