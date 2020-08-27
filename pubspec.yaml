@@ -43,6 +43,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/tabesh_logo.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -76,6 +82,7 @@ flutter:
     - assets/images/background.png
     - assets/images/initalIconPishgam.png
     - assets/images/user.jpg
+    - assets/images/tabesh_logo.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

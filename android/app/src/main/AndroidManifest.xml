@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-
+        android:label="tabesh"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
