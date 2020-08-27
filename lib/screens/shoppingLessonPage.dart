@@ -48,7 +48,10 @@ class ShoppingLessonPage extends StatelessWidget {
       return false;
     }, builder: (context, state) {
       if (state is ShoppingLessonInitiallized) {
+        print('hereee');
         viewModel = state.viewmodel;
+        print('sss');
+        print(viewModel.lessons.toString());
         return _buildShoppingLessonBody(context);
       } else
         return _buildLoaderScreen();

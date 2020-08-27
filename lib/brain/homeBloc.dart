@@ -195,12 +195,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     else if (event is InitializeShoppingLesson) {
       try {
+        print('eeee1');
         ShoppingLessonViewModel viewModel = await auth.initializeShoppingLesson(
           grade: event.grade,
           teacher: event.teacher,
           parentLesson: event.parentLesson,
         );
+        print('eeee2');
         await auth.initSearchFilters();
+        print('eeee3');
         yield ShoppingLessonInitiallized(viewModel);
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);

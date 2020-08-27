@@ -212,11 +212,11 @@ class _SettingScreenState extends State<SettingScreen>
                           child: CircleAvatar(
                             radius: 47,
                             backgroundColor: Colors.grey[50],
-                            child: Icon(
+                            child: widget.viewModel.avatar == null ?Icon(
                                     Icons.add_a_photo,
                                     size: 31,
-                                    color: widget.viewModel.avatar == null ? Colors.grey[800] : Colors.white,
-                                  ),
+                                    color: Colors.grey[800],
+                                  ) : null,
                             backgroundImage: widget.viewModel.avatar == null
                                 ? null
                                 : _image == null
@@ -286,26 +286,24 @@ class _SettingScreenState extends State<SettingScreen>
 //                        maxLength: 10,
 //                      ),
                       SizedBox(height: 40),
-                      Row(
+                      Column(
                         textDirection: TextDirection.rtl,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Expanded(
-                            child: CustomDropDownButton(
-                              color: Colors.grey[600],
-                              hint: 'مقطع',
-                              initialItem: widget.viewModel.grade,
-                              items: widget.viewModel.grades,
-                              controller: _gradeDropDownController,
-                            ),
+                          CustomDropDownButton(
+                            color: Colors.grey[600],
+                            hint: 'مقطع',
+                            initialItem: widget.viewModel.grade,
+                            items: widget.viewModel.grades,
+                            controller: _gradeDropDownController,
                           ),
-                          Expanded(
-                            child: CustomDropDownButton(
-                              color: Colors.grey[600],
-                              hint: 'شهر',
-                              initialItem: widget.viewModel.city,
-                              items: widget.viewModel.cities,
-                              controller: _cityDropDownController,
-                            ),
+                          SizedBox(height: 8),
+                          CustomDropDownButton(
+                            color: Colors.grey[600],
+                            hint: 'شهر',
+                            initialItem: widget.viewModel.city,
+                            items: widget.viewModel.cities,
+                            controller: _cityDropDownController,
                           ),
                         ],
                       ),

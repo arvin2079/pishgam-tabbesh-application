@@ -17,12 +17,36 @@ class PurchaseLessonCard extends StatefulWidget {
 }
 
 class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
+  final double contentPaddingHoriz = 12;
+
+  Iterable<Widget> get courseCalendar sync* {
+    for(int i=0 ; i< widget.purchaseItem.courseCalendar.length ; i++) {
+      yield Padding(
+        padding: EdgeInsets.only(right: contentPaddingHoriz),
+        child: Text(
+          ' + ' +
+              widget.purchaseItem.courseCalendar[i].day.toString() +
+              " " +
+              convertMonth(widget.purchaseItem.courseCalendar[i].month) +
+              " " +
+              widget.purchaseItem.courseCalendar[i].year.toString(),
+          style: TextStyle(
+            fontSize: 14,
+            fontFamily: 'vazir',
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[600],
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    const double contentPaddingHoriz = 12;
     ShoppingBasketViewModel shoppingBasketViewModel =
         Provider.of<ShoppingBasketViewModel>(context);
 
-    const double contentPaddingHoriz = 12;
     MediaQueryData queryData = MediaQuery.of(context);
     return SizedBox(
       width: queryData.size.width - 50,
@@ -45,8 +69,9 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image(
+                  child: FadeInImage(
                     fit: BoxFit.fitWidth,
+                    placeholder: Image.asset("assets/images/user.jpg").image,
                     image: widget.purchaseItem.image.image,
                   ),
                 ),
@@ -143,66 +168,10 @@ class _PurchaseLessonCardState extends State<PurchaseLessonCard> {
                   ),
                 ),
               ),
-              widget.purchaseItem.courseCalendar[0] != null
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(right: contentPaddingHoriz),
-                      child: Text(
-                        ' + ' +
-                            widget.purchaseItem.courseCalendar[0].day.toString() +
-                            " " +
-                            convertMonth(widget.purchaseItem.courseCalendar[0].month) +
-                            " " +
-                            widget.purchaseItem.courseCalendar[0].year.toString(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    )
-                  : Container(),
-              widget.purchaseItem.courseCalendar[1] != null
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(right: contentPaddingHoriz),
-                      child: Text(
-                        ' + ' +
-                            widget.purchaseItem.courseCalendar[1].day.toString() +
-                            " " +
-                            convertMonth(widget.purchaseItem.courseCalendar[1].month) +
-                            " " +
-                            widget.purchaseItem.courseCalendar[1].year.toString(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    )
-                  : Container,
-              widget.purchaseItem.courseCalendar[2] != null
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(right: contentPaddingHoriz),
-                      child: Text(
-                        ' + ' +
-                            widget.purchaseItem.courseCalendar[2].day.toString() +
-                            " " +
-                            convertMonth(widget.purchaseItem.courseCalendar[2].month) +
-                            " " +
-                            widget.purchaseItem.courseCalendar[2].year.toString(),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'vazir',
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    )
-                  : Container(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: courseCalendar.toList(),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: SizedBox(

@@ -46,7 +46,7 @@ class ShoppingItemCard extends StatelessWidget {
                 ],
               ),
               Text(
-                item.explanation,
+                item.explanation.length < 50 ? item.explanation : item.explanation.substring(50) + "...",
                 style: TextStyle(
                   color: Colors.grey[800],
                   fontSize: 15,

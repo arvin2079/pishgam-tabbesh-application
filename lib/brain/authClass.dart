@@ -60,7 +60,7 @@ class Auth extends AuthBase {
 
   //singleton pattern  in dart
   static final Auth _instance = Auth._internalConst();
-  String mainpath = "http://192.168.1.7:8000";
+  String mainpath = "https://tabbesh.ir";
 
 //  String mainpath="http://192.168.43.139:8000";
 //  String mainpath="http://192.168.43.159:8000";
@@ -419,8 +419,7 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<ShoppingLessonViewModel> initializeShoppingLesson(
-      {String grade, String teacher, String parentLesson}) async {
+  Future<ShoppingLessonViewModel> initializeShoppingLesson({String grade, String teacher, String parentLesson}) async {
     final String _shoppingLessonMethodName = "shoppinglist";
 
     print(gradesMap.values.firstWhere(
@@ -456,6 +455,16 @@ class Auth extends AuthBase {
     List<LessonModel> lessonList = List();
 
     for (Map m in data) {
+      List<Jalali> courseCalendar = List();
+      for(String item in m['course_calendars']) {
+        courseCalendar.add(
+            Jalali.fromDateTime(DateTime.parse(
+                item.toString().substring(0, 10) +
+                    " " +
+                    item.toString().substring(11)))
+        );
+      }
+
       LessonModel model = LessonModel(
         title: m['title'],
         startDate: Jalali.fromDateTime(DateTime.parse(m['start_date'].toString().substring(0, 10) +
@@ -472,26 +481,7 @@ class Auth extends AuthBase {
         teacherName: m['teacher'],
         parent_name: m['parent']['title'],
         parent_id: m['parent']['id'].toString(),
-        courseCalendar: <Jalali>[
-          m['course_calendars'][0] != null
-              ? Jalali.fromDateTime(DateTime.parse(
-                  m['course_calendars'][0].toString().substring(0, 10) +
-                      " " +
-                      m['course_calendars'][0].toString().substring(11)))
-              : null,
-          m['course_calendars'][1] != null
-              ? Jalali.fromDateTime(DateTime.parse(
-                  m['course_calendars'][1].toString().substring(0, 10) +
-                      " " +
-                      m['course_calendars'][1].toString().substring(11)))
-              : null,
-          m['course_calendars'][2] != null
-              ? Jalali.fromDateTime(DateTime.parse(
-                  m['course_calendars'][2].toString().substring(0, 10) +
-                      " " +
-                      m['course_calendars'][2].toString().substring(11)))
-              : null,
-        ],
+        courseCalendar: courseCalendar,
       );
       lessonList.add(model);
     }

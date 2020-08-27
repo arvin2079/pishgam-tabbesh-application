@@ -113,6 +113,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(auth.citiesList.length);
+    print(auth.gradesList.length);
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SignUpLoadingFinished) {
@@ -242,21 +244,20 @@ class _SignUpPageState extends State<SignUpPage> {
                             textInputType: TextInputType.phone,
                           ),
                           SizedBox(height: 40),
-                          Row(
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              Expanded(
-                                child: CustomDropDownButton(
-                                  hint: 'مقطع',
-                                  items: auth.gradesList,
-                                  controller: _gradeDropDownController,
-                                ),
+                              CustomDropDownButton(
+                                hint: 'مقطع',
+                                items: auth.gradesList,
+                                controller: _gradeDropDownController,
                               ),
-                              Expanded(
-                                child: CustomDropDownButton(
-                                  hint: 'شهر',
-                                  items: auth.citiesList,
-                                  controller: _cityDropDownController,
-                                ),
+                              SizedBox(height: 5),
+                              CustomDropDownButton(
+                                hint: 'شهر',
+                                items: auth.citiesList,
+                                controller: _cityDropDownController,
                               ),
                             ],
                           ),

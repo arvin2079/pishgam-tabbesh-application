@@ -50,11 +50,10 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image(
+                  child: FadeInImage(
                     fit: BoxFit.fitWidth,
-                    image: widget.lessonInfo.image != null
-                        ? widget.lessonInfo.image.image
-                        : AssetImage('assets/images/lessons.jpg'),
+                    placeholder: Image.asset("assets/images/user.jpg").image,
+                    image: widget.lessonInfo.image.image
                   ),
                 ),
               ),
