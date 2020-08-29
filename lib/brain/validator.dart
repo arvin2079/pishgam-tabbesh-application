@@ -74,9 +74,9 @@ class SignupFieldValidator {
   final StringValidator lastnameValidator = PersianValidator();
   final StringValidator usernameValidator = EnglishValidator();
   final StringValidator phoneNumberValidator = PhoneNumberStringValidator();
-  final String inValidFirstnameErrorMassage = 'نام کوچک صحیح خود را وارد کنید';
-  final String inValidLastnameErrorMassage = 'نام خوانوادگی صحیح خود را وارد کنید';
-  final String inValidUsernameErrorMassage = 'نام کاربری صحیح خود را وارد کنید';
+  final String inValidFirstnameErrorMassage = 'نام کوچک صحیح خود را وارد کنید به صورت فارسی';
+  final String inValidLastnameErrorMassage = 'نام خوانوادگی صحیح خود را وارد کنید به صورت فارسی';
+  final String inValidUsernameErrorMassage = 'نام کاربری صحیح خود را وارد کنید به صورت انگلیسی';
   final String inValidPhoneNumberErrorMassage = 'شماره همراه صحیح خود را وارد کنید';
 }
 
@@ -87,9 +87,9 @@ class EditProfileValidator {
   final StringValidator phoneNumberValidator = PhoneNumberStringValidator();
   final StringValidator passwordValidator = NonEmptyStringValidator();
   final String notValidPasswordError = 'رمز عبور غیر مجاز';
-  final String inValidFirstnameErrorMassage = 'نام کوچک صحیح خود را وارد کنید';
-  final String inValidLastnameErrorMassage = 'نام خوانوادگی صحیح خود را وارد کنید';
-  final String inValidUsernameErrorMassage = 'نام کاربری صحیح خود را وارد کنید';
+  final String inValidFirstnameErrorMassage = 'نام کوچک صحیح خود را وارد کنید به صورت فارسی';
+  final String inValidLastnameErrorMassage = 'نام خوانوادگی صحیح خود را وارد کنید به صورت فارسی';
+  final String inValidUsernameErrorMassage = 'نام کاربری صحیح خود را وارد کنید به صورت انگلیسی';
   final String inValidPhoneNumberErrorMassage = 'شماره همراه صحیح خود را وارد کنید';
 }
 
