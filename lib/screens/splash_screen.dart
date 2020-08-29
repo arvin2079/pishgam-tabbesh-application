@@ -140,11 +140,11 @@ class _LanidngPageState extends State<LanidngPage>
                   ),
                   PositionedTransition(
                     child: Text(
-                      'Tetha',
+                      'طراحی و توسعه با تیم تتا',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w500,
                         shadows: [
                           Shadow(blurRadius: 10, color: Colors.black54)
                         ],
@@ -186,8 +186,8 @@ class _LanidngPageState extends State<LanidngPage>
     );
 
     _animationTetha = RelativeRectTween(
-      begin: RelativeRect.fromLTRB(width / 2 - 26, height - 88, 0, 0),
-      end: RelativeRect.fromLTRB(10, height - 88, 0, 0),
+      begin: RelativeRect.fromLTRB(width / 2 - 79, height - 77, 0, 0),
+      end: RelativeRect.fromLTRB(10, height - 77, 0, 0),
     ).animate(
       CurvedAnimation(
         parent: _controller,

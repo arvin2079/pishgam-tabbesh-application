@@ -161,7 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'پیشگامی ',
+                              text: 'تابشی ',
                               style: TextStyle(
                                 fontFamily: 'vazir',
                                 fontSize: 27,

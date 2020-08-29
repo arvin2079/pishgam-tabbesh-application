@@ -179,11 +179,11 @@ class _SignInFormState extends State<SignInForm> {
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10, left: 10),
           child: Text(
-            'Tetha',
+            'طراحی و توسعه با تیم تتا',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
               shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
               height: 2.7,
             ),
