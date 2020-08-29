@@ -48,7 +48,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
+#  ios: true
   image_path: "assets/images/tabesh_logo.png"
 
 
@@ -83,7 +83,6 @@ flutter:
     - assets/images/background.png
     - assets/images/initalIconPishgam.png
     - assets/images/user.jpg
-    - assets/images/tabesh_logo.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
