@@ -143,7 +143,6 @@ class Auth extends AuthBase {
     print("current user: ");
     print(result);
 
-
     _currentUser = User(
       firstname: data["first_name"],
       lastname: data["last_name"],
@@ -394,13 +393,15 @@ class Auth extends AuthBase {
               m['start_date'].toString().substring(0, 10) +
                   " " +
                   m['start_date'].toString().substring(11))),
-          endDate: Jalali.fromDateTime(DateTime.parse(m['end_date'].toString().substring(0, 10) +
-              " " +
-              m['end_date'].toString().substring(11))),
-          firstClass: m['first_class'] != null
-              ? Jalali.fromDateTime(DateTime.parse(m['first_class'].toString().substring(0, 10) +
+          endDate: Jalali.fromDateTime(DateTime.parse(
+              m['end_date'].toString().substring(0, 10) +
                   " " +
-                  m['first_class'].toString().substring(11)))
+                  m['end_date'].toString().substring(11))),
+          firstClass: m['first_class'] != null
+              ? Jalali.fromDateTime(DateTime.parse(
+                  m['first_class'].toString().substring(0, 10) +
+                      " " +
+                      m['first_class'].toString().substring(11)))
               : null,
           url: m['url'],
           isActive: m['is_active'],
@@ -419,7 +420,8 @@ class Auth extends AuthBase {
   }
 
   @override
-  Future<ShoppingLessonViewModel> initializeShoppingLesson({String grade, String teacher, String parentLesson}) async {
+  Future<ShoppingLessonViewModel> initializeShoppingLesson(
+      {String grade, String teacher, String parentLesson}) async {
     final String _shoppingLessonMethodName = "shoppinglist";
 
     print(gradesMap.values.firstWhere(
@@ -456,23 +458,23 @@ class Auth extends AuthBase {
 
     for (Map m in data) {
       List<Jalali> courseCalendar = List();
-      for(String item in m['course_calendars']) {
-        courseCalendar.add(
-            Jalali.fromDateTime(DateTime.parse(
-                item.toString().substring(0, 10) +
-                    " " +
-                    item.toString().substring(11)))
-        );
+      for (String item in m['course_calendars']) {
+        courseCalendar.add(Jalali.fromDateTime(DateTime.parse(
+            item.toString().substring(0, 10) +
+                " " +
+                item.toString().substring(11))));
       }
 
       LessonModel model = LessonModel(
         title: m['title'],
-        startDate: Jalali.fromDateTime(DateTime.parse(m['start_date'].toString().substring(0, 10) +
-            " " +
-            m['start_date'].toString().substring(11))),
-        endDate: Jalali.fromDateTime(DateTime.parse(m['end_date'].toString().substring(0, 10) +
-            " " +
-            m['end_date'].toString().substring(11))),
+        startDate: Jalali.fromDateTime(DateTime.parse(
+            m['start_date'].toString().substring(0, 10) +
+                " " +
+                m['start_date'].toString().substring(11))),
+        endDate: Jalali.fromDateTime(DateTime.parse(
+            m['end_date'].toString().substring(0, 10) +
+                " " +
+                m['end_date'].toString().substring(11))),
         code: m['code'],
         id: m['id'],
         amount: m['amount'],
@@ -507,7 +509,8 @@ class Auth extends AuthBase {
       String courseId) async {
     final String _lessonFilesMethodName = "lessonFiles";
     print('in file system');
-    String result = await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
+    String result =
+        await _lessonFilesChannel.invokeMethod(_lessonFilesMethodName, {
       "course_id": courseId,
     });
     print('in file system2');
@@ -516,13 +519,18 @@ class Auth extends AuthBase {
     final data = jsonDecode(result);
 
     for (Map m in data["documents"]) {
+      print(m["title"]);
+      print(m["sender"]);
+      print(m["description"]);
+      print(m["upload_document"]);
+
       DocumentModel model = DocumentModel(
-        title: m["title"] + "." + m["upload_document"].toString().split('.').last,
-        sender: m["sender_name"],
+        title: m['upload_document'] != null ? m["title"] + "." + m["upload_document"].toString().split('.').last : m["title"],
+        sender: m["sender"],
         description: m["description"],
-        url: mainpath + m["upload_document"],
+        url: m['upload_document'] != null ? mainpath + m["upload_document"] : null,
       );
-    print('in file system3');
+      print('in file system3');
       docs.add(model);
     }
 

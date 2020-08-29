@@ -95,8 +95,8 @@ abstract class HomeState extends Equatable {
 }
 
 class LessonFilesInitiallized extends HomeState {
-  const LessonFilesInitiallized(this.viewModel);
-  final MyLessonFilesViewModel viewModel;
+  LessonFilesInitiallized(this.viewModel);
+  MyLessonFilesViewModel viewModel;
 
   @override
   List<Object> get props => [Random().nextInt(10000)];
@@ -171,9 +171,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(event) async* {
     if (event is InitializeHome) {
       try {
-        print('slslslslslsllslsslsllslsl');
         HomeViewModel viewModel = await auth.initializeHome();
-        print('slslslslslsllslsslsllslsl222');
         yield HomeInitiallized(viewModel);
       } on PlatformException catch(e) {
         yield ShowMessageState(e.message, e.code);

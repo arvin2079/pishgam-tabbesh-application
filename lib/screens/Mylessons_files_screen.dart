@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,8 +53,9 @@ class _MylessonFilesState extends State<MylessonFiles> {
       if (thisState is LessonFilesInitiallized) return true;
       return false;
     }, builder: (context, state) {
-      if (state is LessonFilesInitiallized) {
+      if (state is LessonFilesInitiallized && state.viewModel != null) {
         viewModel = state.viewModel;
+        state.viewModel = null;
         return _buildFilesScreenBody(context);
       }
       return _buildLoaderScreen();

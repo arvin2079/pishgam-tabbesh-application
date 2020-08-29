@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:pishgamv2/brain/homeBloc.dart';
 import 'package:pishgamv2/constants/calender_convert.dart';
 import 'package:pishgamv2/screens/Mylessons_files_screen.dart';
@@ -75,18 +76,28 @@ class _MyLessonCardState extends State<MyLessonCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 5, horizontal: contentPaddingHoriz),
-                child: Text(
-                  widget.lessonInfo.description != null
-                      ? widget.lessonInfo.description
-                      : '',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'vazir',
-                    fontWeight: FontWeight.w100,
-                    color: Colors.grey[600],
-                  ),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: contentPaddingHoriz- 5),
+//                child: Text(
+//                  widget.lessonInfo.description != null
+//                      ? widget.lessonInfo.description
+//                      : '',
+//                  style: TextStyle(
+//                    fontSize: 16,
+//                    fontFamily: 'vazir',
+//                    fontWeight: FontWeight.w100,
+//                    color: Colors.grey[600],
+//                  ),
+//                ),
+                child: Html(
+                  data: widget.lessonInfo.description,
+                  onLinkTap: (link) async{
+                    if (link != null && await canLaunch(link)) {
+                    await launch(link);
+                    } else {
+                    _homeBloc
+                        .add(ShowMessage('خطا', 'در حال حاضر امکان باز شدن این لینک وجود ندارد'));
+                    }
+                  },
                 ),
               ),
               Padding(
